@@ -31,10 +31,15 @@ var Parallel = (function  () {
 		RemoteRef.prototype.data = undefined;
 
 		RemoteRef.prototype.fetch = function (cb) {
+			if (this.data === '___terminated') {
+				return;
+			}
+
 			return this.data ? (cb ? cb(this.data): this.data) : (setTimeout(_.bind(this.fetch, this, cb), 0) && undefined);
 		};
 
 		RemoteRef.prototype.terminate = function () {
+			this.data = '___terminated';
 			this.worker.terminate();
 		};
 
