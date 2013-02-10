@@ -1,8 +1,9 @@
 /*
  *	Library: parallel.js
  *	Author: Adam Savitzky
+ *  License: Creative Commons 3.0
  */
- 
+
 var Parallel = (function  () {
 
 	var spawn = (function () {
