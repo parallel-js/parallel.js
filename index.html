@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Parallel.js: Parallel computing with Javascript</title>
+        <meta name="description" content="Parallel.js is a library for performing parallel computing in Javascript using web workers.">
+        <meta name="viewport" content="width=device-width">
+
+        <link rel="stylesheet" href="css/examples.css">
+        <link rel="stylesheet" href="css/prettify.css">
+        <script src="js/vendor/modernizr.custom.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <div class="container">
+            <h1>Parallel.js</h1>
+            <p class="lead">Parallel Computing with Javascript</p>
+
+            <p>Parallel.js is a tiny library for multi-core processing in Javascript. It was created to take full advantage of the ever-maturing web-workers API. Javascript is fast, no doubt, but lacks the parallel computing capabilites of its peer languages due to its single-threaded computing model. In a world where the numbers of cores on a CPU are increasing faster than the speed of the cores themselves, isn't it a shame that we can't take advantage of this raw parallelism?</p>
+
+            <p>Parallel.js solves that problem by giving you high level access to multicore processing using web workers. It runs in your browser (as long as it supports web workers). Check it out.</p>
+
+            <h2 class="page-header">Download</h2>
+
+            <p>Unminified (Development): <a href="../parallel.js">parallel.js</a></p>
+            <p>Minified (Production): <a href="../parallel.min.js">parallel.min.js</a></p>
+            <p>Source: <a href="http://github.com/adambom/parallel.js">github</a></p>
+
+            <h2 class="page-header">Usage</h2>
+
+            <p>Include parallel.js in your project like so:</p>
+
+<pre class="prettyprint">
+&lt;script src="underscore.js"&gt;&lt;/script&gt;
+&lt;script src="parallel.js"&gt;&lt;/script&gt;
+</pre>
+
+            <p>This will give you access to the global variable, <code>Parallel</code>.</p>
+
+            <h3 id="spawn">Parallel.spawn</h3>
+
+            <p><code>spawn</code> takes a function and a list of arguments and spawns a worker thread for computing the result of your function. <code>spawn</code> takes two arguments, a function, and args, which may be any value that can be handled by <code>JSON.stringify</code>. Numbers, booleans, and objects/arrays should work. <code>spawn</code> will return a <code>RemoteReference</code>, which is essentially to a pointer to the result of your function, but on a different processor. To get the result of the computation, you can call <code>fetch</code> on the remote reference (see <a href="#remote-reference">RemoteReference</a>).</p>
+
+            <h4>Examples</h4>
+
+            <div class="example">
+                <p>Take the trivial case of returning the square root of a number:</p>
+
+<pre class="prettyprint linenums">
+// Spawn a remote RemoteReference
+var r = Parallel.spawn(Math.sqrt, 100);
+
+// Fetch the remote reference and log the result when it's complete
+r.fetch(function (result) {
+    console.log(result);
+});
+</pre>
+
+                <p>This example computes the square root of 100 by spawning a worker on another core. We then "fetch" the result of this computation. Since the result may not be ready when we call fetch (think a long-running computation), we pass a callback that will receive the result of the computation when the job is complete. <code>fetch</code> may also be called without the callback and will return the result if it is ready, otherwise it will return <code>undefined</code>.</p>
+</div>
+            <p>What might it look like if we spawn a longer running job?</p>
+
+            <div class="example" id="example-2">
+<pre class="prettyprint linenums">
+var slowSquare = function (n) { 
+    var i = 0; 
+    while (++i < n * n) {}
+    return i; 
+};
+
+// Spawn a remote reference
+var r = Parallel.spawn(slowSquare, 100000);
+
+// Call back when done
+r.fetch(yourCallBack);
+</pre>      
+
+                <button class="btn btn-primary">Try it</button>
+                <span class="result"></span>
+            </div>
+
+            <h3 id="mapreduce">Parallel.mapreduce</h3>
+
+            <p><code>mapreduce</code> should be used when you want to distribute a single operation across any arbitrary number of workers, splitting the data to be processed into chunks. The number of chunks will determine how many workers will be spawned. As a rule of thumb, pass as many chunks as you have cores. Keep in mind that your processer may allow multiple threads per core. In that case, multiply the number of threads by the number of cores and pass that many chunks. This function will return a <a href="#distributed-process">DistributedProcess</a> that has references to each of the spawned remote references.</p>
+
+            <p><code>mapreduce</code> takes three required arguments and one optional argument.</p>
+
+            <dl>
+                <dt>mapper</dt>
+                <dd>A function to be performed remotely on each chunk of data</dd>
+
+                <dt>reducer</dt>
+                <dd>A function that will be used to combine the results from each chunk</dd>
+
+                <dt>chunks</dt>
+                <dd>This is the data to be processed. Pass one chunk for each core.</dd>
+
+                <dt>callback(optional)</dt>
+                <dd>An optional function to fire when all cores return. This function gets the reduced results as a parameter.</dd>
+            </dl>
+
+            <h4>Examples</h4>
+
+            <p>Let's start with the square root example:</p>
+
+            <div class="example" id="example-3">
+<pre class="prettyprint linenums">
+// Our mapper (need to formulate it like this to avoid the browser compiling Math.sqrt to native code)
+var sqrt = function (n) { return Math.sqrt(n); };
+
+// Our reducer
+var add = function (a, b) { return a + b; };
+
+// Get the square root of each number and sum them together
+var d = Parallel.mapreduce(sqrt, add, [100, 200, 400, 600, 800]);
+
+// Fetch the distributed process and get the reduced value when complete
+d.fetch(function (result) {
+    console.log(result);
+});
+</pre>
+
+                <p>What we do here is define our map and reduce functions, then send them to the <code>mapreduce</code> function along with a list of chunks. Each chunk will be the argument passed to <code>sqrt</code>. To pass multiple arguments to the mapper, make each chunk and array.</p>
+
+                <p>Once we dispatch the computation, we get a <code>DistributedProcess</code> object, <code>d</code>. <code>d</code> contains references to the mapper, reducer, chunks, and the array of remote references being used.</p>
+
+                <p>Finally, we call fetch on the <code>DistributedProcess</code> to get the reduced value. Since the results will not be returned immediately, we give it a callback to be fired when the process is complete.</p>
+
+                <p><button class="btn btn-primary">Try It</button> <span class="result"></span></p>
+            </div>
+
+            <p>Now let's try a longer running job:</p>
+
+            <div class="example" id="example-4">
+<pre class="prettyprint linenums">
+// Our mapper
+var slowSquare = function (n) { 
+    var i = 0; 
+    while (++i < n * n) {}
+    return i; 
+};
+
+// Our reducer
+var add = function (a, b) { return a + b; };
+
+// Get the square root of each number and sum them together
+var d = Parallel.mapreduce(sqrt, add, [10000, 20000, 40000, 60000, 80000]);
+
+// Fetch the distributed process and get the reduced value when complete
+d.fetch(yourCallback);
+</pre>
+
+                <p><button class="btn btn-primary">Try It</button> <span class="result"></span></p>
+            </div>
+
+            <h3 id="remote-reference">RemoteReference</h3>
+
+            <p>You can think of a remote reference as a pointer, except that it points to a value on another processor. Remote references are returned from every call to <code>spawn</code> and are contained in a list of "refs" on every <code>DistributedProcess</code>.</p>
+
+            <p>Methods and properties of <code>RemoteReference</code>:</p>
+
+            <dl>
+                <dt>fetch</dt>
+                <dd>Used to fetch the result of the computation. Will return the value of the <code>RemoteReference.prototype.data</code> or undefined if the value is not available. If a callback is specified, fetch will wait until it has a value, then call the callback with that value.</dd>
+
+                <dt>data</dt>
+                <dd>The raw result of the computation. Will be undefined until the computation is complete.</dd>
+
+                <dt>terminate</dt>
+                <dd>Terminate the current worker.</dd>
+
+                <dt>onWorkerMsg</dt>
+                <dd>An internal function that gets called when the process is complete. May be overloaded for custom behavior.</dd>
+            </dl>
+
+            <h3 id="distributed-process">DistributedProcess</h3>
+
+            <p>A distributed process corresponds to a mapreduce job. It gets references to all of the remote references so you can keep track of each individually. It also implements methods for getting the results.</p>
+
+            <p>Methods and properties of <code>DistributedProcess</code>:</p>
+
+            <dl>
+                <dt>fetch</dt>
+                <dd>Used to fetch the result of the computation. Will return the value of the <code>RemoteReference.prototype.data</code> or undefined if the value is not available. If a callback is specified, fetch will wait until it has a value, then call the callback with that value.</dd>
+
+                <dt>fetchRefs</dt>
+                <dd>Fetches each remote reference individually and returns an array of the results. Optionally pass a callback that will be sent to the remote reference's <code>fetch</code> method.</dd>
+
+                <dt>terminate</dt>
+                <dd>Terminate the worker specifed by optional argument, <code>n</code>. <code>n</code> must be an integer. If n is not passed, all workers will be terminated.</dd>
+
+                <dt>onWorkerMsg</dt>
+                <dd>An internal function that gets called when the process is complete. May be overloaded for custom behavior.</dd>
+            </dl>
+
+            <hr>
+
+            <footer id="footer">
+                <p class="pull-right"><a href="#top">Back to top</a></p>
+
+                Made by <a target="_blank" href="http://adambom.github.com">Adam Savitzky</a>. Contact him <a href="mailto:adam.savitzky@gmail.com">adam.savitzky@gmail.com</a>.<br>
+                Code licensed under the <a target="_blank" href="http://www.apache.org/licenses/LICENSE-2.0">Apache License v2.0</a>.<br>
+                Based on <a target="_blank" href="http://twitter.github.com/bootstrap/">Bootstrap</a>. Hosted on <a target="_blank" href="http://pages.github.com/">GitHub</a>.<p></p>
+            </footer>
+        </div>
+
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+        <script src="js/vendor/underscore.min.js"></script>
+        <script src="js/vendor/prettify.js"></script>
+        <script src="../parallel.js"></script>
+        <script src="js/main.js"></script>
+    </body>
+</html>
