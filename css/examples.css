@@ -29,3 +29,7 @@
 	color: #9da0a4;
 	border-radius: 4px 0 4px 0;
 }
+
+.no-webworkers .btn {
+	display: none;
+}
