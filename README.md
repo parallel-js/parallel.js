@@ -30,7 +30,7 @@ Take the trivial case of returning the square root of a number:
 // Need to do it like this to avoid premature browser compilation of Math.sqrt
 var sqrt = function (n) { return Math.sqrt(n); };
 
-// Spawn a remote RemoteReference
+// Spawn a RemoteReference
 var r = Parallel.spawn(sqrt, 100);
  
 // Fetch the remote reference and log the result when it's complete
@@ -88,7 +88,7 @@ d.fetch(function (result) {
 });
 ```
 
-What we do here is define our map and reduce functions, then send them to the `mapreduce` function along with a list of chunks. Each chunk will be the argument passed to `sqrt`. To pass multiple arguments to the mapper, make each chunk and array.
+What we do here is define our map and reduce functions, then send them to the `mapreduce` function along with a list of chunks. Each chunk will be the argument passed to `sqrt`. To pass multiple arguments to the mapper, make each chunk an array.
 
 Once we dispatch the computation, we get a `DistributedProcess` object, d. d contains references to the mapper, reducer, chunks, and the array of remote references being used.
 
