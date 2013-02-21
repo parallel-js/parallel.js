@@ -6,11 +6,39 @@
 
 var Parallel = (function  () {
 
+    var require = (function () {
+        var state = {
+            files: [],
+            funcs: []
+        };
+
+        var setter = function () {
+            var args = _.toArray(arguments);
+
+            state.funcs = _.filter(args, _.isFunction);
+            state.files = _.filter(args, _.isString);
+        };
+
+        setter.state = state;
+
+        return setter;
+    })();
+
     var spawn = (function () {
 
-        var wrap = function (fn) {
-            return 'self.onmessage = function (e) { self.postMessage(JSON.stringify((' + fn.toString() + ').apply(self, JSON.parse(e.data)))); }';
+        var wrapMain = function (fn) {
+            return 'self.onmessage = function (e) { self.postMessage(JSON.stringify((' + fn.toString() + ').apply(self, JSON.parse(e.data)))); };';
         };
+
+        var wrapFiles = function (str) {
+            return (require.state.files.length ? 'importScripts("' + require.state.files.join('","') + '");' : '') + str;
+        };
+
+        var wrapFunctions = function (str) {
+            return str + (require.state.funcs.length ? _.invoke(require.state.funcs, 'toString').join(';') + ';' : '');
+        };
+
+        var wrap = _.compose(wrapFunctions, wrapFiles, wrapMain);
 
         var RemoteRef = function (fn) {
             var str = wrap(fn),
@@ -98,7 +126,8 @@ var Parallel = (function  () {
 
     return {
         mapreduce: mapreduce,
-        spawn: spawn
+        spawn: spawn,
+        require: require
     };
 
 })();
