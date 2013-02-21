@@ -12,11 +12,20 @@ var Parallel = (function  () {
             funcs: []
         };
 
+        var isUrl = function (test) {
+            var r = new RegExp('^(http|https|file)\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(:[a-zA-Z0-9]*)?/?([a-zA-Z0-9\-\._\?\,\'/\\\+&amp;%\$#\=~])*$');
+            return r.test(test);
+        }
+
+        var makeUrl = function (fileName) {
+            return isUrl(fileName) ? fileName : [window.location.origin, fileName].join('/');
+        };
+
         var setter = function () {
             var args = _.toArray(arguments);
 
             state.funcs = _.filter(args, _.isFunction);
-            state.files = _.filter(args, _.isString);
+            state.files = _.chain(args).filter(_.isString).map(makeUrl).value();
         };
 
         setter.state = state;
@@ -124,7 +133,7 @@ var Parallel = (function  () {
         }
     })();
 
-    return {
+        return {
         mapreduce: mapreduce,
         spawn: spawn,
         require: require
