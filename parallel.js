@@ -5,6 +5,10 @@
  */
 (function (isNode, _) {
 
+var Worker = isNode ? require('./worker') : window.Worker,
+    URL = isNode ? require('./url') : window.URL,
+    Blob =  isNode ? require('./blob') : window.Blob;
+
 var Parallel = (function  () {
 
     var _require = (function () {
@@ -37,11 +41,17 @@ var Parallel = (function  () {
     var spawn = (function () {
 
         var wrapMain = function (fn) {
-            return 'self.onmessage = function (e) { self.postMessage(JSON.stringify((' + fn.toString() + ').apply(self, JSON.parse(e.data)))); };';
+            var op = fn.toString();
+
+            return isNode ?
+                'process.on("message", function (m) { process.send((' + op + ').apply(process, m)));' :
+                'self.onmessage = function (e) { self.postMessage(JSON.stringify((' + fn.toString() + ').apply(self, JSON.parse(e.data)))); };';
         };
 
         var wrapFiles = function (str) {
-            return (_require.state.files.length ? 'importScripts("' + _require.state.files.join('","') + '");' : '') + str;
+            return isNode ?
+                (_require.state.files.length ? _.map(_require.state.files, function (f) { return 'require(' + f + ');'; }).join('') : '') + str :
+                (_require.state.files.length ? 'importScripts("' + _require.state.files.join('","') + '");' : '') + str;
         };
 
         var wrapFunctions = function (str) {
