@@ -134,7 +134,7 @@ var Parallel = (function  () {
         }
     })();
 
-        return {
+    return {
         mapreduce: mapreduce,
         spawn: spawn,
         require: _require
