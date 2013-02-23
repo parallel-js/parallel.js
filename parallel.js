@@ -6,7 +6,7 @@
 
 var Parallel = (function  () {
 
-    var require = (function () {
+    var _require = (function () {
         var state = {
             files: [],
             funcs: []
@@ -40,11 +40,11 @@ var Parallel = (function  () {
         };
 
         var wrapFiles = function (str) {
-            return (require.state.files.length ? 'importScripts("' + require.state.files.join('","') + '");' : '') + str;
+            return (_require.state.files.length ? 'importScripts("' + _require.state.files.join('","') + '");' : '') + str;
         };
 
         var wrapFunctions = function (str) {
-            return str + (require.state.funcs.length ? _.invoke(require.state.funcs, 'toString').join(';') + ';' : '');
+            return str + (_require.state.funcs.length ? _.invoke(_require.state.funcs, 'toString').join(';') + ';' : '');
         };
 
         var wrap = _.compose(wrapFunctions, wrapFiles, wrapMain);
@@ -136,7 +136,7 @@ var Parallel = (function  () {
         return {
         mapreduce: mapreduce,
         spawn: spawn,
-        require: require
+        require: _require
     };
 
 })();
