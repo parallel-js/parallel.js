@@ -164,6 +164,59 @@ d.fetch(yourCallback);
                 <p><button class="btn btn-primary">Try It</button> <span class="result"></span></p>
             </div>
 
+            <h3 id="require">Parallel.require</h3>
+
+            <p><code>require</code> is used to share state between your workers. Require can be used to import libraries and functions into your worker threads.</p>
+
+            <p><code>require</code> takes any number of arguments, either functions or strings. If the argument is a function it will be converted into a string and included in your worker.</p>
+
+            <p><span class="badge badge-important">Important:</span> If you pass functions into <code>require</code> they <strong>must be named functions</strong>. Anonymous functions will not work.</p>
+
+            <h4>Example:</h4>
+            <div class="example" id="example-5">
+
+<pre class="prettyprint linenums">
+var wontWork = function (n) { return n * n; };
+
+function worksGreat(n) { return n * n };
+
+Parallel.require(wontWork);
+
+var r = Parallel.spawn(function (a) { return 2 * wontWork(a); }, 3);  // throws an error
+
+Parallel.require(worksGreat);
+
+var r = Parallel.spawn(function (a) { return 2 * worksGreat(a); }, 3); // returns 18 
+</pre>
+            </div>
+
+            <h4>Passing files as arguments to require</h4>
+
+            <p>`require` also accepts files as requirements. These should be passed as strings. The string may either be a url of the file you want to include or an <strong>absolute</strong> path.</p>
+
+            <h4>Examples</h4>
+
+            <dl>
+                <dt>Absolute url:</dt>
+                <dd><code>Parallel.require('http://mydomain.com/js/script.js')</code></dd>
+
+                <dt>Absolute path (assuming my document lives in http://mydomain.com/index.html)</dt>
+                <dd><code>Parallel.require('js/script.js')</code></dd>
+
+                <dt>Does not work (yet)</dt>
+                <dd><code>Parallel.require('../js/script.js')</code></dd>
+            </dl>
+
+            <p><span class="badge badge-important">Important:</span> browser security restrictions prevent loading files over the file protocol, so you will need to run an http server in order to load local files.</p>
+
+            <p>Personally, I like the npm package, <a href="https://github.com/nodeapps/http-server">http-server</a>. This can be installed and run pretty easily:</p>
+
+<pre class="prettyprint linenums">
+$ npm install http-server -g
+$ cd myproject
+$ http-server .
+</pre>            
+
             <h3 id="remote-reference">RemoteReference</h3>
 
             <p>You can think of a remote reference as a pointer, except that it points to a value on another processor. Remote references are returned from every call to <code>spawn</code> and are contained in a list of "refs" on every <code>DistributedProcess</code>.</p>
