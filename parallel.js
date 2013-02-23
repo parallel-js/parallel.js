@@ -3,6 +3,7 @@
  *  Author: Adam Savitzky
  *  License: Creative Commons 3.0
  */
+(function (isNode, _) {
 
 var Parallel = (function  () {
 
@@ -140,3 +141,13 @@ var Parallel = (function  () {
     };
 
 })();
+
+if (isNode) {
+    this.exports = Parallel;
+} else {
+    this.Parallel = Parallel;
+}
+
+}).call(typeof module !== 'undefined' && module.exports ? module : window, // context
+        typeof module !== 'undefined' && module.exports, // isNode
+        typeof module !== 'undefined' && module.exports ? require('underscore') : _); // underscore 
