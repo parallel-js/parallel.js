@@ -19,7 +19,7 @@
 	"dependencies": {
 		"underscore": ">=1.4.4"
 	},
-	"License": "http://creativecommons.org/licenses/by-sa/3.0/",
+	"License": "BSD",
 	"engines": {
 		"node": ">=0.9.10"
 	}
