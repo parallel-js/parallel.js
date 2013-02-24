@@ -6,10 +6,13 @@
  *  Note: Only used for node implementation
  */
 
-var FILE = __dirname + 'tmp/file.js';
+var FILE = __dirname + '/tmp/file.js',
+	fs = require('fs');
 
 var URL = {
-	createObjectURL: function (str) {
+	createObjectURL: function (blob) {
+		var str = blob.value;
+
 		fs.writeFileSync(FILE, str);
 
 		return FILE;

@@ -44,8 +44,8 @@ var Parallel = (function  () {
             var op = fn.toString();
 
             return isNode ?
-                'process.on("message", function (m) { process.send((' + op + ').apply(process, m)));' :
-                'self.onmessage = function (e) { self.postMessage(JSON.stringify((' + fn.toString() + ').apply(self, JSON.parse(e.data)))); };';
+                'process.on("message", function (m) { process.send({ data : JSON.stringify((' + op + ').apply(process, JSON.parse(m))) }); });' :
+                'self.onmessage = function (e) { self.postMessage(JSON.stringify((' + op + ').apply(self, JSON.parse(e.data)))); };';
         };
 
         var wrapFiles = function (str) {
@@ -66,7 +66,7 @@ var Parallel = (function  () {
                 url = URL.createObjectURL(blob),
                 worker = new Worker(url);
 
-            worker.onmessage = this.onWorkerMsg;
+            worker.onmessage = _.bind(this.onWorkerMsg, worker);
 
             this.worker = worker;
             this.worker.ref = this;
@@ -83,7 +83,11 @@ var Parallel = (function  () {
                 return;
             }
 
-            return this.data ? (cb ? cb(this.data): this.data) : (setTimeout(_.bind(this.fetch, this, cb), 0) && undefined);
+            var data = this.data ? (cb ? cb(this.data): this.data) : (setTimeout(_.bind(this.fetch, this, cb), 0) && undefined);
+
+            data && this.worker.terminate();
+
+            return data;
         };
 
         RemoteRef.prototype.terminate = function () {
