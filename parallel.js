@@ -83,11 +83,7 @@ var Parallel = (function  () {
                 return;
             }
 
-            var data = this.data ? (cb ? cb(this.data): this.data) : (setTimeout(_.bind(this.fetch, this, cb), 0) && undefined);
-
-            data && this.worker.terminate();
-
-            return data;
+            return this.data ? (cb ? cb(this.data): this.data) : (setTimeout(_.bind(this.fetch, this, cb), 0) && undefined);
         };
 
         RemoteRef.prototype.terminate = function () {
