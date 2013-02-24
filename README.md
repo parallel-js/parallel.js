@@ -119,7 +119,7 @@ var slowSquare = function (n) {
 var add = function (a, b) { return a + b; };
  
 // Get the square root of each number and sum them together
-var d = Parallel.mapreduce(sqrt, add, [10000, 20000, 40000, 60000, 80000]);
+var d = Parallel.mapreduce(slowSquare, add, [10000, 20000, 40000, 60000, 80000]);
  
 // Fetch the distributed process and get the reduced value when complete
 d.fetch(yourCallback);
