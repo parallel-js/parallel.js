@@ -187,3 +187,7 @@ Methods and properties of DistributedProcess:
 - fetchRefs: Fetches each remote reference individually and returns an array of the results. Optionally pass a callback that will be sent to the remote reference's fetch method.
 - terminate: Terminate the worker specifed by optional argument, n. n must be an integer. If n is not passed, all workers will be terminated.
 - onWorkerMsg: An internal function that gets called when the process is complete. May be overloaded for custom behavior.
+
+## License
+
+BSD
