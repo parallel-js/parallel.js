@@ -36,7 +36,7 @@
 
             <h2 class="page-header">Usage</h2>
 
-            <p>Include parallel.js in your project like so:</p>
+            <p>Include parallel.js in your web projects like so:</p>
 
 <pre class="prettyprint">
 &lt;script src="underscore.js"&gt;&lt;/script&gt;
@@ -45,6 +45,14 @@
 
             <p>This will give you access to the global variable, <code>Parallel</code>.</p>
 
+            <p>Parallel can also be included in node:</p>
+<pre class="prettyprint">
+$ npm install parallel.js
+</pre>
+
+<pre class="prettyprint">
+var Parallel = require('parallel.js');
+</pre>
             <h3 id="spawn">Parallel.spawn</h3>
 
             <p><code>spawn</code> takes a function and a list of arguments and spawns a worker thread for computing the result of your function. <code>spawn</code> takes two arguments, a function, and args, which may be any value that can be handled by <code>JSON.stringify</code>. Numbers, booleans, and objects/arrays should work. <code>spawn</code> will return a <code>RemoteReference</code>, which is essentially to a pointer to the result of your function, but on a different processor. To get the result of the computation, you can call <code>fetch</code> on the remote reference (see <a href="#remote-reference">RemoteReference</a>).</p>
