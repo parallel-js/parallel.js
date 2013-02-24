@@ -74,6 +74,10 @@ var Parallel = (function  () {
 
         RemoteRef.prototype.onWorkerMsg = function (e) {
             this.ref.data = JSON.parse(e.data);
+
+            if (isNode) {
+                this.ref.worker.terminate();
+            }
         };
 
         RemoteRef.prototype.data = undefined;
