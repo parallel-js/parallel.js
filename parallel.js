@@ -70,10 +70,14 @@ var Parallel = (function  () {
 
             this.worker = worker;
             this.worker.ref = this;
+
+            this.callbacks = [];
         };
 
         RemoteRef.prototype.onWorkerMsg = function (e) {
             this.ref.data = JSON.parse(e.data);
+
+            _.invoke(this.ref.callbacks, 'call', null, this.ref.data);
 
             if (isNode) {
                 this.ref.worker.terminate();
@@ -87,7 +91,9 @@ var Parallel = (function  () {
                 return;
             }
 
-            return this.data ? (cb ? cb(this.data): this.data) : (setTimeout(_.bind(this.fetch, this, cb), 0) && undefined);
+            return this.data 
+                ? (cb ? cb(this.data): this.data) 
+                : (this.callbacks.push(cb) && undefined);
         };
 
         RemoteRef.prototype.terminate = function () {
@@ -116,23 +122,15 @@ var Parallel = (function  () {
         };
 
         DistributedProcess.prototype.fetch = function (cb) {
-            var results = this.fetchRefs(),
+            var results = [],
+                len = this.refs.length,
                 that = this;
-
-            if (_.isEqual(results, _.without(results, undefined))) {
-                return cb ? cb(_.reduce(results, this.reducer)) : _.reduce(results, this.reducer);
-            }
-
-            setTimeout(function () {
-                that.fetch(cb);
-            }, 100);
-        };
-
-
-        DistributedProcess.prototype.fetchRefs = function (cb) {
-            return _.map(this.refs, function (ref) {
-                return ref.fetch(cb || undefined);
-            }, this);
+            _.invoke(this.refs, 'fetch', function (data) {
+                results.push(data);
+                if (results.length === len) {
+                    cb(_.reduce(results, that.reducer));
+                }
+            });
         };
 
         DistributedProcess.prototype.terminate = function (n) {
