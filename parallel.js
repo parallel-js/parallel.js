@@ -60,24 +60,37 @@ var Parallel = (function  () {
 
         var wrap = _.compose(wrapFunctions, wrapFiles, wrapMain);
 
-        var RemoteRef = function (fn) {
-            var str = wrap(fn),
-                blob = new Blob([str], { type: 'text/javascript' }),
-                url = URL.createObjectURL(blob),
-                worker = new Worker(url);
-
-            worker.onmessage = _.bind(this.onWorkerMsg, worker);
-
-            this.worker = worker;
-            this.worker.ref = this;
+        var RemoteRef = function (fn, args) {
+            try {
+                var str = wrap(fn),
+                    blob = new Blob([str], { type: 'text/javascript' }),
+                    url = URL.createObjectURL(blob),
+                    worker = new Worker(url);
+    
+                worker.onmessage = _.bind(this.onWorkerMsg, this);
+    
+                this.worker = worker;
+                this.worker.ref = this;
+                
+                if (isNode) {
+                    this.worker.postMessage(JSON.stringify([].concat(args)));
+                } else {
+                    this.worker.postMessage([].concat(args));
+                }
+            } catch (e) {
+                if (console && console.error) {
+                    console.error(e);
+                }
+                this.onWorkerMsg({data: fn.apply(window, args)});
+            }
         };
 
         RemoteRef.prototype.onWorkerMsg = function (e) {
             if (isNode) {
-                this.ref.data = JSON.parse(e.data);
-                this.ref.worker.terminate();
+                this.data = JSON.parse(e.data);
+                this.worker.terminate();
             } else {
-                this.ref.data = e.data;
+                this.data = e.data;
             }
         };
 
@@ -97,12 +110,7 @@ var Parallel = (function  () {
         };
 
         return function (fn, args) {
-            var r = new RemoteRef(fn);
-            if (isNode) {
-                r.worker.postMessage(JSON.stringify([].concat(args)));
-            } else {
-                r.worker.postMessage([].concat(args));
-            }
+            var r = new RemoteRef(fn, args);
 
             return r;
         };
