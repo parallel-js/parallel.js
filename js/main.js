@@ -27,6 +27,34 @@ $(function () {
         r.fetch(check());
     });
 
+
+    $('#example-5 .btn').click(function () {
+        var that = this;
+
+        var sum = function (n) { 
+            var total = 0; 
+            for (var i=0; i < n.length; ++i) {
+                total += n[i];
+            }
+            return total; 
+        };
+
+        var check = function () {
+            if (!r.fetch()) {
+                $(that).siblings('.result').html('Computation started: ' + Math.floor((Date.now() - start) / 1000) + 's ago');
+            } else {
+                return $(that).siblings('.result').html('Result is: ' + r.fetch() + '. Computed in: ' + Math.floor((Date.now() - start) / 1000) + ' seconds.');
+            }
+
+            setTimeout(check, 10);
+        }
+
+        var start = Date.now();
+        var r = Parallel.spawn(sum, new Uint8Array([1,2,3]));
+
+        r.fetch(check());
+    });
+
     $('#example-3 .btn').click(function () {
         var that = this;
 
