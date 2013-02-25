@@ -45,7 +45,7 @@ var Parallel = (function  () {
 
             return isNode ?
                 'process.on("message", function (m) { process.send({ data : JSON.stringify((' + op + ').apply(process, JSON.parse(m))) }); });' :
-                'self.onmessage = function (e) { self.postMessage(JSON.stringify((' + op + ').apply(self, JSON.parse(e.data)))); };';
+                'self.onmessage = function (e) { self.postMessage((' + op + ').apply(self, e.data)); };';
         };
 
         var wrapFiles = function (str) {
@@ -73,10 +73,11 @@ var Parallel = (function  () {
         };
 
         RemoteRef.prototype.onWorkerMsg = function (e) {
-            this.ref.data = JSON.parse(e.data);
-
             if (isNode) {
+                this.ref.data = JSON.parse(e.data);
                 this.ref.worker.terminate();
+            } else {
+                this.ref.data = e.data;
             }
         };
 
@@ -97,7 +98,11 @@ var Parallel = (function  () {
 
         return function (fn, args) {
             var r = new RemoteRef(fn);
-            r.worker.postMessage(JSON.stringify([].concat(args)));
+            if (isNode) {
+                r.worker.postMessage(JSON.stringify([].concat(args)));
+            } else {
+                r.worker.postMessage([].concat(args));
+            }
 
             return r;
         };

@@ -97,6 +97,28 @@ r.fetch(yourCallBack);
                 <button class="btn btn-primary">Try it</button>
                 <span class="result"></span>
             </div>
+            <p>You can even transmit transferable objects:</p>
+
+            <div class="example" id="example-5">
+<pre class="prettyprint linenums">
+var sum = function (n) { 
+    var total = 0; 
+    for (var i=0; i < n.length; ++i) {
+        total += n[i];
+    }
+    return total; 
+};
+
+// Spawn a remote reference
+var r = Parallel.spawn(sum, new Uint8Array([1,2,3]));
+
+// Call back when done
+r.fetch(yourCallBack);
+</pre>      
+
+                <button class="btn btn-primary">Try it</button>
+                <span class="result"></span>
+            </div>
 
             <h3 id="mapreduce">Parallel.mapreduce</h3>
 
