@@ -78,6 +78,9 @@ var Parallel = (function  () {
                     this.worker.postMessage([].concat(args));
                 }
             } catch (e) {
+                if (console && console.error) {
+                    console.error(e);
+                }
                 this.onWorkerMsg({data: fn.apply(window, args)});
             }
         };
