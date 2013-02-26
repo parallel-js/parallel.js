@@ -81,7 +81,8 @@ var Parallel = (function  () {
                 if (console && console.error) {
                     console.error(e);
                 }
-                this.onWorkerMsg({data: fn.apply(window, args)});
+
+                this.onWorkerMsg({ data: fn.apply(window, args) });
             }
         };
 
