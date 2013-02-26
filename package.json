@@ -1,26 +1,26 @@
 {
-	"name": "parallel.js",
-	"version": "0.1.0",
-	"author": "Adam Savitzky <adam.savitzky@gmail.com>",
-	"description": "Parallel.js is a tiny library for multi-core processing in Javascript",
-	"main": "parallel.js",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/adambom/parallel.js.git"
-	},
-	"keywords": [
-		"parallel",
-		"spawn",
-		"distributed",
-		"mapreduce",
-		"parallel.js",
-		"workers"
-	],
-	"dependencies": {
-		"underscore": ">=1.4.4"
-	},
-	"License": "BSD",
-	"engines": {
-		"node": ">=0.9.10"
-	}
+    "name": "parallel.js",
+    "version": "0.1.0",
+    "author": "Adam Savitzky <adam.savitzky@gmail.com>",
+    "description": "Parallel.js is a tiny library for multi-core processing in Javascript",
+    "main": "parallel.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/adambom/parallel.js.git"
+    },
+    "keywords": [
+        "parallel",
+        "spawn",
+        "distributed",
+        "mapreduce",
+        "parallel.js",
+        "workers"
+    ],
+    "dependencies": {
+        "underscore": ">=1.4.4"
+    },
+    "License": "BSD",
+    "engines": {
+        "node": ">=0.9.10"
+    }
 }

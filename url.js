@@ -7,16 +7,16 @@
  */
 
 var FILE = __dirname + '/tmp/file.js',
-	fs = require('fs');
+    fs = require('fs');
 
 var URL = {
-	createObjectURL: function (blob) {
-		var str = blob.value;
+    createObjectURL: function (blob) {
+        var str = blob.value;
 
-		fs.writeFileSync(FILE, str);
+        fs.writeFileSync(FILE, str);
 
-		return FILE;
-	}
+        return FILE;
+    }
 };
 
 module.exports = URL;

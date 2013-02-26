@@ -7,19 +7,19 @@
  */
 
 var Blob = function (arr, options) {
-	this.arr = arr;
-	this.type = options && options.type || undefined;
+    this.arr = arr;
+    this.type = options && options.type || undefined;
 };
 
 Blob.prototype = {
 
-	get size() {
-		return this.value.length;
-	},
+    get size() {
+        return this.value.length;
+    },
 
-	get value() {
-		return this.arr.join('');
-	}
+    get value() {
+        return this.arr.join('');
+    }
 
 }
 
