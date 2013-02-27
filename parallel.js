@@ -10,7 +10,7 @@ var Worker = isNode ? require('./worker') : window.Worker,
     Blob =  isNode ? require('./blob') : window.Blob;
 
 var Parallel = (function  () {
-
+    
     var _require = (function () {
         var state = {
             files: [],
@@ -38,8 +38,7 @@ var Parallel = (function  () {
         return setter;
     })();
 
-    var spawn = (function () {
-
+    var RemoteRef = (function () {
         var wrapMain = function (fn) {
             var op = fn.toString();
 
@@ -61,6 +60,9 @@ var Parallel = (function  () {
         var wrap = _.compose(wrapFunctions, wrapFiles, wrapMain);
 
         var RemoteRef = function (fn, args) {
+            this.handlers = [];
+            this.errorHandlers = [];
+
             try {
                 var str = wrap(fn),
                     blob = new Blob([str], { type: 'text/javascript' }),
@@ -84,89 +86,172 @@ var Parallel = (function  () {
 
                 this.onWorkerMsg({ data: fn.apply(window, args) });
             }
-        };
+        }
 
         RemoteRef.prototype.onWorkerMsg = function (e) {
+            var data;
+
             if (isNode) {
-                this.data = JSON.parse(e.data);
+                data = JSON.parse(e.data);
                 this.worker.terminate();
             } else {
-                this.data = e.data;
-            }
-        };
-
-        RemoteRef.prototype.data = undefined;
-
-        RemoteRef.prototype.fetch = function (cb) {
-            if (this.data === '___terminated') {
-                return;
+                data = e.data;
             }
 
-            return this.data ? (cb ? cb(this.data): this.data) : (setTimeout(_.bind(this.fetch, this, cb), 0) && undefined);
+            this.resolve(data);
         };
 
         RemoteRef.prototype.terminate = function () {
-            this.data = '___terminated';
             this.worker.terminate();
+
+            return this.resolve();
         };
 
-        return function (fn, args) {
-            var r = new RemoteRef(fn, args);
+        RemoteRef.prototype.then = function (onResolved, onError) {
+            onResolved && this.handlers.push(onResolved);
+            onError && this.errorHandlers.push(onError);
 
-            return r;
+            return this;
         };
 
+        RemoteRef.prototype.resolve = function (value) {
+            if (!this.handlers.length) return this;
+
+            this.errorHandlers.shift();
+
+            return this.resolve(this.handlers.shift()(value));
+        };
+         
+        RemoteRef.prototype.reject = function (error) {
+            // TODO: Figure out a way to call this;
+            if (!this.errorHandlers.length) return this;
+
+            this.handlers.shift();
+
+            return this.reject(this.errorHandlers.shift()(value));
+        };
+
+        return RemoteRef;
     })();
 
-    var mapreduce = (function () {
+    var DistributedProcess = (function () {
 
-        var DistributedProcess = function (mapper, reducer, chunks) {
-            this.mapper = mapper;
-            this.reducer = reducer;
-            this.chunks = chunks;
+        var DistributedProcess = function (fn, chunks) {
+            this.handlers = [];
+            this.errorHandlers = [];
+            this.values = [];
+
             this.refs = _.map(chunks, function (chunk) {
-                return spawn(mapper, [].concat(chunk));
-            });
-        };
-
-        DistributedProcess.prototype.fetch = function (cb) {
-            var results = this.fetchRefs(),
-                that = this;
-
-            if (_.isEqual(results, _.without(results, undefined))) {
-                return cb ? cb(_.reduce(results, this.reducer)) : _.reduce(results, this.reducer);
-            }
-
-            setTimeout(function () {
-                that.fetch(cb);
-            }, 100);
-        };
-
-
-        DistributedProcess.prototype.fetchRefs = function (cb) {
-            return _.map(this.refs, function (ref) {
-                return ref.fetch(cb || undefined);
+                return spawn(fn, [].concat(chunk)).then(_.bind(this.resolve, this));
             }, this);
+
+            this.workers = this.refs.length;
+        };
+
+        DistributedProcess.prototype.then = function (onResolved, onError) {
+            onResolved && this.handlers.push(onResolved);
+            onError && this.errorHandlers.push(onError);
+
+            return this;
+        };
+
+        DistributedProcess.prototype.resolve = function (value) {
+            this.workers = Math.max(this.workers - 1, 0);
+
+            value && this.values.push(value);
+
+            if (this.workers !== 0) return this;
+            if (!this.handlers.length) return this;
+
+            this.errorHandlers.shift();
+
+            return this.resolve(this.handlers.shift()(this.values));
+        };
+
+        DistributedProcess.prototype.reject = function (error) {
+            // TODO: Figure out a way to call this;
+            this.workers = Math.max(this.workers - 1, 0);
+
+            if (this.workers !== 0) return this;
+            if (!this.errorHandlers.length) return this;
+
+            this.handlers.shift();
+
+            return this.reject(this.errorHandlers.shift()(error));
         };
 
         DistributedProcess.prototype.terminate = function (n) {
             n !== undefined ? this.refs[n].terminate() : _.invoke(this.refs, 'terminate');
         };
 
-        return function (mapper, reducer, chunks, cb) {
-            var d = new DistributedProcess(mapper, reducer, chunks);
+        return DistributedProcess;
 
-            d.fetch(cb);
-
-            return d;
-        }
     })();
 
-    return {
-        mapreduce: mapreduce,
-        spawn: spawn,
-        require: _require
-    };
+    // Define Interface:
+    {
+        var P = function (data) {
+            if (data instanceof P) return data;
+            if (!(this instanceof P)) return new P(data);
+            this._wrapped = data;
+        };
+    
+        var spawn = P.spawn = function (fn, data) {
+            return new RemoteRef(fn, data || this._wrapped);
+        };
+    
+        var map = P.map = function (fn) {
+            var that = this;
+
+            this._mapreduce = this._mapreduce || new DistributedProcess(fn, this._wrapped).then(function (values) {
+                that._wrapped = values;
+            });
+    
+            return this;
+        };
+    
+        var reduce = P.reduce = function (fn) {
+            var that = this;
+
+            if (this._mapreduce) {
+                this._mapreduce.then(function (values) {
+                    that._wrapped = _.reduce(values, fn);
+                });
+
+                return this;
+            }
+
+            return _.reduce(this._wrapped, fn);
+        };
+
+        var then = P.then = function (fn) {
+            var that = this;
+
+            this._mapreduce.then(function () {
+                fn(that._wrapped);
+            });
+
+            return this;
+        };
+    
+        P.require = _require;
+    
+        P.mixin = function (obj) {
+            _.each(_.functions(obj), function (name) {
+                var func = P[name] = obj[name];
+    
+                P.prototype[name] = function () {
+                    var args = [this._wrapped];
+                    [].push.apply(args, arguments);
+                    return func.apply(this, arguments);
+                };
+            });
+        };
+    
+        P.mixin(P);
+    }
+
+    return P;
 
 })();
 
