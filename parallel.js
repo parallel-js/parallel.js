@@ -57,18 +57,29 @@ var Parallel = (function  () {
 
         var wrap = _.compose(wrapFunctions, wrapFiles, wrapMain);
 
-        var RemoteRef = function (fn, args) {
+        var RemoteRef = function (fn, args, evaljs) {
+            var str, blob, url, worker;
             try {
-                var str = wrap(fn),
-                    blob = new Blob([str], { type: 'text/javascript' }),
-                    url = URL.createObjectURL(blob),
+                str = wrap(fn),
+                blob = new Blob([str], { type: 'text/javascript' }),
+                url = URL.createObjectURL(blob);
+
+                try {
                     worker = new Worker(url);
-    
+                } catch (e) {
+                    if (e.code === 18 && evaljs) { // cross-origin error
+                        worker = new Worker(evaljs);
+                        worker.postMessage(str);
+                    } else {
+                        throw e;
+                    }
+                }
+
                 worker.onmessage = _.bind(this.onWorkerMsg, this);
-    
+
                 this.worker = worker;
                 this.worker.ref = this;
-                
+
                 if (isNode) {
                     this.worker.postMessage(JSON.stringify([].concat(args)));
                 } else {
@@ -78,8 +89,7 @@ var Parallel = (function  () {
                 if (console && console.error) {
                     console.error(e);
                 }
-
-                this.onWorkerMsg({ data: fn.apply(window, args) });
+                this.onWorkerMsg({data: fn.apply(window, args)});
             }
         };
 
@@ -107,8 +117,10 @@ var Parallel = (function  () {
             this.worker.terminate();
         };
 
-        return function (fn, args) {
-            var r = new RemoteRef(fn, args);
+        return function (fn, args, evaljs) {
+            if (!evaljs) evaljs = '/eval.js';
+            
+            var r = new RemoteRef(fn, args, evaljs);
 
             return r;
         };
