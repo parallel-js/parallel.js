@@ -17,13 +17,10 @@ var Parallel = (function  () {
             funcs: []
         };
 
-        var isUrl = function (test) {
-            var r = new RegExp('^(http|https|file)\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(:[a-zA-Z0-9]*)?/?([a-zA-Z0-9\-\._\?\,\'/\\\+&amp;%\$#\=~])*$');
-            return r.test(test);
-        }
-
         var makeUrl = function (fileName) {
-            return isUrl(fileName) ? fileName : [window.location.origin, fileName].join('/');
+            var link = document.createElement("link");
+            link.href = fileName;
+            return link.href;
         };
 
         var setter = function () {
