@@ -70,7 +70,7 @@ var Parallel = (function  () {
                     worker = new Worker(url);
     
                 worker.onmessage = _.bind(this.onWorkerMsg, this);
-    
+                worker.onerror = _.bind(this.reject, this);
                 this.worker = worker;
                 this.worker.ref = this;
                 
