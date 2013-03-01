@@ -124,12 +124,12 @@ var Parallel = (function  () {
          
         RemoteRef.prototype.reject = function (error) {
             error.preventDefault();
-            // TODO: Figure out a way to call this;
+
             if (!this.errorHandlers.length) return this;
 
             this.handlers.shift();
 
-            return this.reject(this.errorHandlers.shift()(error.message));
+            return this.reject(this.errorHandlers.shift()(error));
         };
 
         return RemoteRef;
