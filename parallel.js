@@ -70,7 +70,7 @@ var Parallel = (function  () {
                     worker = new Worker(url);
     
                 worker.onmessage = _.bind(this.onWorkerMsg, this);
-    
+                worker.onerror = _.bind(this.reject, this);
                 this.worker = worker;
                 this.worker.ref = this;
                 
@@ -123,12 +123,13 @@ var Parallel = (function  () {
         };
          
         RemoteRef.prototype.reject = function (error) {
+            error.preventDefault();
             // TODO: Figure out a way to call this;
             if (!this.errorHandlers.length) return this;
 
             this.handlers.shift();
 
-            return this.reject(this.errorHandlers.shift()(value));
+            return this.reject(this.errorHandlers.shift()(error.message));
         };
 
         return RemoteRef;
