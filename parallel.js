@@ -194,43 +194,77 @@ var Parallel = (function  () {
         var P = function (data) {
             if (data instanceof P) return data;
             if (!(this instanceof P)) return new P(data);
-            this._wrapped = data;
+            this._data = data;
+            this._mappers = [];
+            this._reducers = [];
+            this._callbacks = [];
+            this._mapping = undefined;
         };
     
         var spawn = P.spawn = function (fn, data) {
-            return new RemoteRef(fn, data || this._wrapped);
+            return new RemoteRef(fn, data || this._data);
         };
     
         var map = P.map = function (fn) {
             var that = this;
 
-            this._mapreduce = this._mapreduce || new DistributedProcess(fn, this._wrapped).then(function (values) {
-                that._wrapped = values;
-            });
-    
-            return this;
+            if (this._mapping) return this._mappers.push(fn) && this;
+
+            return processMaps.call(this, fn);
         };
-    
+
         var reduce = P.reduce = function (fn) {
             var that = this;
 
-            if (this._mapreduce) {
-                this._mapreduce.then(function (values) {
-                    that._wrapped = _.reduce(values, fn);
-                });
+            this._reducers.push(fn);
 
-                return this;
-            }
+            if (this._mapping) return this;
+            
+            _.defer(function () {
+                processReductions.call(that)
+            });
 
-            return _.reduce(this._wrapped, fn);
+            return this;
         };
 
         var then = P.then = function (fn) {
+            this._callbacks.push(fn);
+
+            return this;
+        };
+
+        var processMaps = function (fn) {
             var that = this;
 
-            this._mapreduce.then(function () {
-                fn(that._wrapped);
+            this._reduce = undefined;
+
+            fn = fn || this._mappers.shift();
+
+            this._mapping = new DistributedProcess(fn, this._data).then(function (values) {
+                that._data = values;
+
+                return that._mappers.length ? processMaps.call(that) : processReductions.call(that);
             });
+
+            return this;
+        };
+
+        var processReductions = function (fn) {
+            var that = this;
+
+            this._mapping = undefined;
+
+            fn = fn || this._reducers.shift();
+
+            return fn ? 
+                (that._data = _.reduce([].concat(that._data), fn)) && processReductions.call(that) && this : 
+                processCallbacks.call(that) && this;
+        };
+
+        var processCallbacks = function () {
+            _.compose.apply(this, this._callbacks.reverse())(this._data);
+
+            this._callbacks = [];
 
             return this;
         };
@@ -242,7 +276,7 @@ var Parallel = (function  () {
                 var func = P[name] = obj[name];
     
                 P.prototype[name] = function () {
-                    var args = [this._wrapped];
+                    var args = [this._data];
                     [].push.apply(args, arguments);
                     return func.apply(this, arguments);
                 };
