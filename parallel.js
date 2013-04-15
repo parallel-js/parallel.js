@@ -66,7 +66,7 @@
 	};
 
 	var defaults = {
-		ie5shim: !isNode
+		ie10shim: !isNode
 	};
 
 	function Parallel(data, options) {
