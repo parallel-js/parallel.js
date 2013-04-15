@@ -101,9 +101,12 @@
 	};
 
 	Parallel.prototype.then = function (cb, errCb) {
+		var that = this;
 		var newOp = new Operation();
-		newOp.then(cb, errCb);
-		this.operation.then(newOp.resolve.bind(newOp, null), newOp.resolve.bind(newOp));
+		this.operation.then(function () {
+			that.data = cb(that.data);
+			newOp.resolve(null, that.data);
+		}, errCb);
 		this.operation = newOp;
 		return this;
 	};

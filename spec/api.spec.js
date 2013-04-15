@@ -140,4 +140,35 @@ describe('API', function () {
 			expect(result).toEqual(9);
 		});
 	});
+
+	it('should process data returned from .then()', function () {
+		var Parallel = require('../parallel.js');
+		var p = new Parallel([1, 2, 3]);
+
+		var done = false;
+		var result = null;
+
+		runs(function () {
+			p.map(function (el) {
+				return el + 1;
+			}).then(function (data) {
+				var sum = 0;
+				for (var i = 0; i < data.length; ++i) {
+					sum += data[i];
+				}
+				return sum;
+			}).then(function (data) {
+				result = data;
+				done = true;
+			});
+		});
+
+		waitsFor(function () {
+			return done;
+		}, "it should finish", 500);
+
+		runs(function () {
+			expect(result).toEqual(9);
+		});
+	});
 });
