@@ -1,0 +1,28 @@
+﻿{
+	"name": "parallel.js",
+	"version": "0.0.1",
+	"author": "Sebastian Mayr <sebmaster16@gmail.com>",
+	"description": "Parallel.js is a tiny library for multi-core processing in Javascript",
+	"main": "parallel.js",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Sebmaster/parallel.js.git"
+	},
+	"keywords": [
+		"parallel",
+		"spawn",
+		"distributed",
+		"parallel.js",
+		"workers"
+	],
+	"dependencies": {
+		"node-temp": ">=0.5.0"
+	},
+	"main": {
+		
+	},
+	"license": "MIT",
+	"engines": {
+		"node": ">=0.9.10"
+	}
+}
