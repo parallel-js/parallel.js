@@ -6,7 +6,7 @@
 	"main": "parallel.js",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/Sebmaster/parallel.js.git"
+		"url": "https://github.com/Sebmaster/parallel.js.git#rewrite"
 	},
 	"keywords": [
 		"parallel",
@@ -16,11 +16,15 @@
 		"workers"
 	],
 	"dependencies": {
-		"node-temp": ">=0.5.0"
+		"temp": ">=0.5.0"
 	},
-	"main": {
-		
+	"devDependencies": {
+		"jasmine-node": "x"
 	},
+	"scripts": {
+		"test": "jasmine-node spec"
+	},
+	"main": "parallel.js",
 	"license": "MIT",
 	"engines": {
 		"node": ">=0.9.10"
