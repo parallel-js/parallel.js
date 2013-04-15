@@ -57,7 +57,7 @@ describe('API', function () {
 			expect(result).toEqual(['something', 'completly', 'else']);
 		});
 	});
-	
+
 	it('should .map() correctly', function () {
 		var Parallel = require('../parallel.js');
 		var p = new Parallel([1, 2, 3]);
@@ -82,7 +82,7 @@ describe('API', function () {
 			expect(result).toEqual([2, 3, 4]);
 		});
 	});
-	
+
 	it('should chain .map() correctly', function () {
 		var Parallel = require('../parallel.js');
 		var p = new Parallel([1, 2, 3]);
@@ -93,7 +93,7 @@ describe('API', function () {
 		runs(function () {
 			p.map(function (el) {
 				return el + 1;
-			}).map(function(el) {
+			}).map(function (el) {
 				return el - 1;
 			}).then(function (data) {
 				result = data;
