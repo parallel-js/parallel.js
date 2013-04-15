@@ -2,6 +2,86 @@
 describe('API', function () {
 	it('should be a constructor', function () {
 		var Parallel = require('../parallel.js');
-		expect(typeof Parallel).toBe('function');
+		expect(Parallel).toEqual(jasmine.any(Function));
+	});
+
+	it('should define a .then(cb) function', function () {
+		var Parallel = require('../parallel.js');
+		var p = new Parallel([1, 2, 3]);
+		expect(p.then).toEqual(jasmine.any(Function));
+	});
+
+	it('should define a .map(cb) function', function () {
+		var Parallel = require('../parallel.js');
+		var p = new Parallel([1, 2, 3]);
+		expect(p.map).toEqual(jasmine.any(Function));
+	});
+
+	it('should execute a .then function without an operation immediately', function () {
+		var Parallel = require('../parallel.js');
+		var p = new Parallel([1, 2, 3]);
+		expect(p.then).toEqual(jasmine.any(Function));
+
+		var done = false;
+		runs(function () {
+			p.then(function () {
+				done = true;
+			});
+		});
+		waitsFor(function () {
+			return done;
+		}, "it should finish", 500);
+	});
+
+	it('should .map() correctly', function () {
+		var Parallel = require('../parallel.js');
+		var p = new Parallel([1, 2, 3]);
+
+		var done = false;
+		var result = null;
+
+		runs(function () {
+			p.map(function (el) {
+				return el + 1;
+			}).then(function (data) {
+				result = data;
+				done = true;
+			});
+		});
+
+		waitsFor(function () {
+			return done;
+		}, "it should finish", 500);
+
+		runs(function () {
+			expect(result).toEqual([2, 3, 4]);
+		});
+	});
+	
+	it('should chain .map() correctly', function () {
+		var Parallel = require('../parallel.js');
+		var p = new Parallel([1, 2, 3]);
+
+		var done = false;
+		var result = null;
+
+		runs(function () {
+			p.map(function (el) {
+				return el + 1;
+			}).map(function(el) {
+				return el - 1;
+			}).then(function (data) {
+				result = data;
+				done = true;
+			});
+		});
+
+		waitsFor(function () {
+			return done;
+		}, "it should finish", 500);
+
+		runs(function () {
+			expect(result).toEqual([1, 2, 3]);
+		});
 	});
 });
