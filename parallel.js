@@ -76,6 +76,17 @@
 		this.operation.resolve(null, this.data);
 	}
 
+	Parallel.prototype.spawn = function (cb) {
+		var that = this;
+		var newOp = new Operation();
+		this.operation.then(function () {
+			that.data = cb(that.data);
+			newOp.resolve(null, that.data);
+		});
+		this.operation = newOp;
+		return this;
+	};
+
 	Parallel.prototype.map = function (cb) {
 		var that = this;
 		var newOp = new Operation();

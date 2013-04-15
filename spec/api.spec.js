@@ -33,6 +33,31 @@ describe('API', function () {
 		}, "it should finish", 500);
 	});
 
+	it('should execute .spawn() correctly', function () {
+		var Parallel = require('../parallel.js');
+		var p = new Parallel([1, 2, 3]);
+
+		var done = false;
+		var result = null;
+
+		runs(function () {
+			p.spawn(function (data) {
+				return ['something', 'completly', 'else'];
+			}).then(function (data) {
+				result = data;
+				done = true;
+			});
+		});
+
+		waitsFor(function () {
+			return done;
+		}, "it should finish", 500);
+
+		runs(function () {
+			expect(result).toEqual(['something', 'completly', 'else']);
+		});
+	});
+	
 	it('should .map() correctly', function () {
 		var Parallel = require('../parallel.js');
 		var p = new Parallel([1, 2, 3]);
@@ -82,6 +107,37 @@ describe('API', function () {
 
 		runs(function () {
 			expect(result).toEqual([1, 2, 3]);
+		});
+	});
+
+	it('should mix .spawn and .map() correctly', function () {
+		var Parallel = require('../parallel.js');
+		var p = new Parallel([1, 2, 3]);
+
+		var done = false;
+		var result = null;
+
+		runs(function () {
+			p.map(function (el) {
+				return el + 1;
+			}).spawn(function (data) {
+				var sum = 0;
+				for (var i = 0; i < data.length; ++i) {
+					sum += data[i];
+				}
+				return sum;
+			}).then(function (data) {
+				result = data;
+				done = true;
+			});
+		});
+
+		waitsFor(function () {
+			return done;
+		}, "it should finish", 500);
+
+		runs(function () {
+			expect(result).toEqual(9);
 		});
 	});
 });
