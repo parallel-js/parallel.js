@@ -76,11 +76,19 @@
 		this.operation.resolve(null, this.data);
 	}
 
-	Parallel.getWorkerSource = function (cb) {
+	Parallel.getSpawnWorkerSource = function (cb) {
 		if (isNode) {
 			return 'process.on("message", function(msg) {process.send((' + cb.toString() + ')(JSON.parse(msg)))})';
 		} else {
 			return 'self.onmessage = function(e) {self.postMessage((' + cb.toString() + ')(e.data))}';
+		}
+	};
+
+	Parallel.getMapSource = function (cb) {
+		if (isNode) {
+			return 'process.on("message", function(msg) {process.send((function(data){for (var i=0; i < data.length; ++i){data[i]=(' + cb.toString() + ')(data[i])}return data})(JSON.parse(msg)))})';
+		} else {
+			return 'self.onmessage = function(e) {self.postMessage((function(data){for (var i=0; i < data.length; ++i){data[i]=(' + cb.toString() + ')(data[i])}return data})(e.data))}';
 		}
 	};
 
@@ -89,7 +97,7 @@
 		var newOp = new Operation();
 		this.operation.then(function () {
 			var wrk = new Worker(__dirname + '/eval.js');
-			wrk.postMessage(Parallel.getWorkerSource(cb));
+			wrk.postMessage(Parallel.getSpawnWorkerSource(cb));
 			wrk.postMessage(isNode ? JSON.stringify(that.data) : that.data);
 			wrk.onmessage = function (msg) {
 				wrk.terminate();
@@ -105,10 +113,14 @@
 		var that = this;
 		var newOp = new Operation();
 		this.operation.then(function () {
-			for (var i = 0; i < that.data.length; ++i) {
-				that.data[i] = cb(that.data[i]);
-			}
-			newOp.resolve(null, that.data);
+			var wrk = new Worker(__dirname + '/eval.js');
+			wrk.postMessage(Parallel.getMapSource(cb));
+			wrk.postMessage(isNode ? JSON.stringify(that.data) : that.data);
+			wrk.onmessage = function (msg) {
+				wrk.terminate();
+				that.data = msg;
+				newOp.resolve(null, that.data);
+			};
 		});
 		this.operation = newOp;
 		return this;
