@@ -1,5 +1,4 @@
-﻿
-describe('API', function () {
+﻿describe('API', function () {
 	it('should be a constructor', function () {
 		var Parallel = require('../parallel.js');
 		expect(Parallel).toEqual(jasmine.any(Function));
