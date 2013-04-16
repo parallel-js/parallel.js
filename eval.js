@@ -1,7 +1,7 @@
 ﻿var isNode = module && module.exports;
 
 if (isNode) {
-	process.on('message', function (code) {
+	process.once('message', function (code) {
 		eval(code);
 	});
 } else {
