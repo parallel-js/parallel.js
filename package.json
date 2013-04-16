@@ -22,7 +22,6 @@
 		"test": "jasmine-node spec"
 	},
 	"main": "parallel.js",
-	"license": "MIT",
 	"engines": {
 		"node": ">=0.9.10"
 	}
