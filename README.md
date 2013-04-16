@@ -15,5 +15,7 @@ Code style is equivalent to the Visual Studio default code formatting settings, 
 * Tabs
 * when using anonymous functions, put a space between function and the paranthesis ```function () {```
 * no spaces around parameters, only after commas
+* Use semilicons
+* no newline before curly braces
 * single quotes for strings
 * tests, tests, tests. If you change something and it's testable, there **has** to be a test
