@@ -1,5 +1,5 @@
 ﻿(function () {
-	var isNode = module !== undefined && module.exports;
+	var isNode = typeof module !== 'undefined' && module.exports;
 	var setImmediate = setImmediate || function (cb) {
 		setTimeout(cb, 0);
 	};

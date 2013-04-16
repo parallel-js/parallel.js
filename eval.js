@@ -1,4 +1,4 @@
-﻿var isNode = module && module.exports;
+﻿var isNode = typeof module !== 'undefined' && module.exports;
 
 if (isNode) {
 	process.once('message', function (code) {
