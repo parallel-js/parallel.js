@@ -19,7 +19,7 @@
 		"jasmine-node": "x"
 	},
 	"scripts": {
-		"test": "jasmine-node spec"
+		"test": "jasmine-node --verbose spec"
 	},
 	"main": "parallel.js",
 	"engines": {
