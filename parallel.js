@@ -3,6 +3,9 @@
 	var setImmediate = setImmediate || function (cb) {
 		setTimeout(cb, 0);
 	};
+	if (isNode) {
+		var Worker = require('./Worker.js');
+	}
 
 	function extend(from, to) {
 		if (!to) to = {};
