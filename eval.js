@@ -2,10 +2,10 @@
 
 if (isNode) {
 	process.once('message', function (code) {
-		eval(code);
+		eval(JSON.parse(code).data);
 	});
 } else {
 	self.onmessage = function (code) {
-		eval(code);
+		eval(code.data);
 	};
 }

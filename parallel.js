@@ -78,17 +78,18 @@
 
 	Parallel.getSpawnWorkerSource = function (cb) {
 		if (isNode) {
-			return 'process.on("message", function(msg) {process.send((' + cb.toString() + ')(JSON.parse(msg)))})';
+			return 'process.on("message", function(e) {process.send(JSON.stringify((' + cb.toString() + ')(JSON.parse(e).data)))})';
 		} else {
 			return 'self.onmessage = function(e) {self.postMessage((' + cb.toString() + ')(e.data))}';
 		}
 	};
 
 	Parallel.getMapSource = function (cb) {
+		var func = 'function(data){for (var i=0; i < data.length; ++i){data[i]=(' + cb.toString() + ')(data[i])}return data}';
 		if (isNode) {
-			return 'process.on("message", function(msg) {process.send((function(data){for (var i=0; i < data.length; ++i){data[i]=(' + cb.toString() + ')(data[i])}return data})(JSON.parse(msg)))})';
+			return 'process.on("message", function(e) {process.send(JSON.stringify((' + func + ')(JSON.parse(e).data)))})';
 		} else {
-			return 'self.onmessage = function(e) {self.postMessage((function(data){for (var i=0; i < data.length; ++i){data[i]=(' + cb.toString() + ')(data[i])}return data})(e.data))}';
+			return 'self.onmessage = function(e) {self.postMessage((' + func + ')(e.data))}';
 		}
 	};
 
@@ -96,12 +97,12 @@
 		var that = this;
 		var newOp = new Operation();
 		this.operation.then(function () {
-			var wrk = new Worker(__dirname + '/eval.js');
+			var wrk = new Worker('./eval.js');
 			wrk.postMessage(Parallel.getSpawnWorkerSource(cb));
-			wrk.postMessage(isNode ? JSON.stringify(that.data) : that.data);
+			wrk.postMessage(that.data);
 			wrk.onmessage = function (msg) {
 				wrk.terminate();
-				that.data = msg;
+				that.data = msg.data;
 				newOp.resolve(null, that.data);
 			};
 		});
@@ -113,12 +114,12 @@
 		var that = this;
 		var newOp = new Operation();
 		this.operation.then(function () {
-			var wrk = new Worker(__dirname + '/eval.js');
+			var wrk = new Worker('./eval.js');
 			wrk.postMessage(Parallel.getMapSource(cb));
-			wrk.postMessage(isNode ? JSON.stringify(that.data) : that.data);
+			wrk.postMessage(that.data);
 			wrk.onmessage = function (msg) {
 				wrk.terminate();
-				that.data = msg;
+				that.data = msg.data;
 				newOp.resolve(null, that.data);
 			};
 		});

@@ -8,13 +8,13 @@ describe('eval.js', function () {
 
 	it('should eval the given code', function () {
 		var wrk = new Worker('eval.js');
-		wrk.postMessage('process.send("abc")');
+		wrk.postMessage('process.send(JSON.stringify("abc"))');
 
 		var result = null;
 		var done = false;
 		runs(function () {
 			wrk.onmessage = function (msg) {
-				result = msg;
+				result = msg.data;
 				done = true;
 				wrk.terminate();
 			};
