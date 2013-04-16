@@ -76,12 +76,26 @@
 		this.operation.resolve(null, this.data);
 	}
 
+	Parallel.getWorkerSource = function (cb) {
+		if (isNode) {
+			return 'process.on("message", function(msg) {process.send((' + cb.toString() + ')(JSON.parse(msg)))})';
+		} else {
+			return 'self.onmessage = function(e) {self.postMessage((' + cb.toString() + ')(e.data))}';
+		}
+	};
+
 	Parallel.prototype.spawn = function (cb) {
 		var that = this;
 		var newOp = new Operation();
 		this.operation.then(function () {
-			that.data = cb(that.data);
-			newOp.resolve(null, that.data);
+			var wrk = new Worker(__dirname + '/eval.js');
+			wrk.postMessage(Parallel.getWorkerSource(cb));
+			wrk.postMessage(isNode ? JSON.stringify(that.data) : that.data);
+			wrk.onmessage = function (msg) {
+				wrk.terminate();
+				that.data = msg;
+				newOp.resolve(null, that.data);
+			};
 		});
 		this.operation = newOp;
 		return this;
