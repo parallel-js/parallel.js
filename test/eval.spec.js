@@ -1,13 +1,13 @@
 ﻿var isNode = module && module.exports;
 
 if (isNode) {
-	var Worker = require(__dirname + '/../Worker.js');
+	var Worker = require(__dirname + '/../lib/Worker.js');
 }
 
 describe('eval.js', function () {
 
 	it('should eval the given code', function () {
-		var wrk = new Worker('eval.js');
+		var wrk = new Worker(__dirname + '/../lib/eval.js');
 		wrk.postMessage('process.send(JSON.stringify("abc"))');
 
 		var result = null;

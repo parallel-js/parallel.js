@@ -3,10 +3,14 @@
 	"version": "0.0.1",
 	"author": "Sebastian Mayr <sebmaster16@gmail.com>",
 	"description": "Parallel.js is a tiny library for multi-core processing in Javascript",
-	"main": "parallel.js",
+	"main": "lib/parallel.js",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/Sebmaster/parallel.js.git#rewrite"
+	},
+	"directories": {
+		"lib": "lib",
+		"test": "test"
 	},
 	"keywords": [
 		"parallel",
@@ -19,7 +23,7 @@
 		"jasmine-node": "x"
 	},
 	"scripts": {
-		"test": "jasmine-node --verbose spec"
+		"test": "jasmine-node --verbose test"
 	},
 	"engines": {
 		"node": ">=0.9.10"
