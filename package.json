@@ -1,5 +1,5 @@
 ﻿{
-	"name": "parallel.js",
+	"name": "parallel2",
 	"version": "0.0.1",
 	"author": "Sebastian Mayr <sebmaster16@gmail.com>",
 	"description": "Parallel.js is a tiny library for multi-core processing in Javascript",
@@ -21,7 +21,6 @@
 	"scripts": {
 		"test": "jasmine-node --verbose spec"
 	},
-	"main": "parallel.js",
 	"engines": {
 		"node": ">=0.9.10"
 	}
