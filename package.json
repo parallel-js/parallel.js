@@ -15,9 +15,6 @@
 		"parallel.js",
 		"workers"
 	],
-	"dependencies": {
-		"temp": ">=0.5.0"
-	},
 	"devDependencies": {
 		"jasmine-node": "x"
 	},
