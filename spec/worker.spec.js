@@ -1,7 +1,7 @@
 ﻿var isNode = module && module.exports;
 
 if (isNode) {
-	Worker = require(__dirname + '/../Worker.js');
+	var Worker = require(__dirname + '/../Worker.js');
 }
 
 describe('WebWorker-API', function () {
