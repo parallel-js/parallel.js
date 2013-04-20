@@ -140,6 +140,30 @@
 		});
 	});
 
+	it('should execute .reduce() correctly', function () {
+		var Parallel = require('../lib/parallel.js');
+		var p = new Parallel([1, 2, 3]);
+		var done = false;
+		var result = null;
+
+		runs(function () {
+			p.reduce(function (data) {
+				return data[0] + data[1];
+			}).then(function (data) {
+				result = data;
+				done = true;
+			});
+		});
+
+		waitsFor(function () {
+			return done;
+		}, "it should finish", 500);
+
+		runs(function () {
+			expect(result).toEqual(6);
+		});
+	});
+
 	it('should process data returned from .then()', function () {
 		var Parallel = require('../lib/parallel.js');
 		var p = new Parallel([1, 2, 3]);
