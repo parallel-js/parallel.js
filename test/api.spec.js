@@ -82,6 +82,31 @@
 		});
 	});
 
+	it('should queue map work correctly', function () {
+		var Parallel = require('../lib/parallel.js');
+		var p = new Parallel([1, 2, 3], {maxWorkers: 2});
+
+		var done = false;
+		var result = null;
+
+		runs(function () {
+			p.map(function (el) {
+				return el + 1;
+			}).then(function (data) {
+				result = data;
+				done = true;
+			});
+		});
+
+		waitsFor(function () {
+			return done;
+		}, "it should finish", 500);
+
+		runs(function () {
+			expect(result).toEqual([2, 3, 4]);
+		});
+	});
+
 	it('should chain .map() correctly', function () {
 		var Parallel = require('../lib/parallel.js');
 		var p = new Parallel([1, 2, 3]);
