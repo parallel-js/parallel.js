@@ -22,6 +22,7 @@
 	"devDependencies": {
 		"jasmine-node": "x"
 	},
+	"license": "BSD",
 	"scripts": {
 		"test": "jasmine-node --verbose test"
 	},
