@@ -8,7 +8,6 @@ describe('eval.js', function () {
 
 	it('should eval the given code', function () {
 		var wrk = new Worker(__dirname + '/../lib/eval.js');
-		wrk.postMessage('process.send(JSON.stringify("abc"))');
 
 		var result = null;
 		var done = false;
@@ -18,6 +17,7 @@ describe('eval.js', function () {
 				done = true;
 				wrk.terminate();
 			};
+			wrk.postMessage('process.send(JSON.stringify("abc"))');
 		});
 
 		waitsFor(function () {
