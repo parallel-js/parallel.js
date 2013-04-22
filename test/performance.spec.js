@@ -9,9 +9,9 @@
 			return i;
 		};
 
-		var Parallel = require('../lib/thread.js');
-		var p = new Parallel([1000, 2000, 3000]);
-		var p2 = new Parallel([1000, 2000, 3000]);
+		var Thread = require('../lib/thread.js');
+		var p = new Thread([1000, 2000, 3000]);
+		var p2 = new Thread([1000, 2000, 3000]);
 
 		var start = Date.now();
 		var start2 = Date.now();
