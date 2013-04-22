@@ -14,34 +14,38 @@
 		var p2 = new Thread([1000, 2000, 3000]);
 
 		var start = Date.now();
-		var start2 = Date.now();
-
 		var time = null;
-		var time2 = null;
 
 		runs(function () {
 			p.spawn(function (data) {
 				for (var i = 0; i < data.length; ++i) {
 					var n = data[i];
-					var i = 0;
-					while (++i < n * n) { }
-					data[i] = i;
+					var square;
+					for (square = 0; square < n * n; ++square) { }
+					data[i] = square;
 				}
 				return data;
 			}).then(function (data) {
 				time = Date.now() - start;
-				result = data;
-			});
-
-			p2.map(slowSquare).then(function (data) {
-				time2 = Date.now() - start2;
-				result = data;
 			});
 		});
 
 		waitsFor(function () {
-			return time != null && time2 != null;
-		}, "it should finish", 5000);
+			return time !== null;
+		}, "Sequential should finish", 5000);
+
+		var start2 = Date.now();
+		var time2 = null;
+
+		runs(function () {
+			p2.map(slowSquare).then(function (data) {
+				time2 = Date.now() - start2;
+			});
+		});
+
+		waitsFor(function () {
+			return time2 !== null;
+		}, "Parallel should finish", 5000);
 
 		runs(function () {
 			expect(time2).toBeLessThan(time / cpus);
