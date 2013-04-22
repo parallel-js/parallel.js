@@ -27,12 +27,11 @@
 				return data;
 			}).then(function (data) {
 				time = Date.now() - start;
-				result = data;
 			});
 		});
 
 		waitsFor(function () {
-			return time != null;
+			return time !== null;
 		}, "Sequential should finish", 5000);
 
 		var start2 = Date.now();
@@ -41,12 +40,11 @@
 		runs(function () {
 			p2.map(slowSquare).then(function (data) {
 				time2 = Date.now() - start2;
-				result = data;
 			});
 		});
 
 		waitsFor(function () {
-			return time2 != null;
+			return time2 !== null;
 		}, "Parallel should finish", 5000);
 
 		runs(function () {
