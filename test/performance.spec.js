@@ -1,6 +1,5 @@
 ﻿describe('Performance', function () {
 	var isNode = typeof module !== 'undefined' && module.exports;
-	var cpus = isNode && require('os').cpus().length > 2 ? 2 : 1;
 
 	it('.map() should be using multi-threading (could fail on single-core)', function () {
 		var slowSquare = function (n) {
@@ -10,13 +9,15 @@
 		};
 
 		var Thread = require('../lib/thread.js');
-		var p = new Thread([1000, 2000, 3000]);
-		var p2 = new Thread([1000, 2000, 3000]);
+		var p = new Thread([10000, 20000, 30000]);
+		var p2 = new Thread([10000, 20000, 30000]);
 
-		var start = Date.now();
+		var start;
 		var time = null;
 
 		runs(function () {
+			start = Date.now();
+
 			p.spawn(function (data) {
 				for (var i = 0; i < data.length; ++i) {
 					var n = data[i];
@@ -34,10 +35,12 @@
 			return time !== null;
 		}, "Sequential should finish", 5000);
 
-		var start2 = Date.now();
+		var start2;
 		var time2 = null;
 
 		runs(function () {
+			start2 = Date.now();
+
 			p2.map(slowSquare).then(function (data) {
 				time2 = Date.now() - start2;
 			});
@@ -48,7 +51,7 @@
 		}, "Parallel should finish", 5000);
 
 		runs(function () {
-			expect(time2).toBeLessThan(time / cpus);
+			expect(time2).toBeLessThan(time * 0.8);
 		});
 	});
 });
