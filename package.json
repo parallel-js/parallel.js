@@ -1,12 +1,12 @@
 ﻿{
-	"name": "parallel2",
+	"name": "thread.js",
 	"version": "0.0.1",
 	"author": "Sebastian Mayr <sebmaster16@gmail.com>",
-	"description": "Parallel.js is a tiny library for multi-core processing in Javascript",
-	"main": "lib/parallel.js",
+	"description": "thread.js enables easy multi-thread processing in javascript",
+	"main": "lib/thread.js",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/Sebmaster/parallel.js.git#rewrite"
+		"url": "https://github.com/Sebmaster/thread.js.git"
 	},
 	"directories": {
 		"lib": "lib",
@@ -15,9 +15,11 @@
 	"keywords": [
 		"parallel",
 		"spawn",
-		"distributed",
+		"map",
+		"thread",
 		"parallel.js",
-		"workers"
+		"workers",
+		"webworkers"
 	],
 	"devDependencies": {
 		"jasmine-node": "x"

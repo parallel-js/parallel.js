@@ -1,4 +1,4 @@
-Parallel.js
+thread.js
 ===
 
 Parallel Computing with Javascript

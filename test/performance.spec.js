@@ -9,7 +9,7 @@
 			return i;
 		};
 
-		var Parallel = require('../lib/parallel.js');
+		var Parallel = require('../lib/thread.js');
 		var p = new Parallel([1000, 2000, 3000]);
 		var p2 = new Parallel([1000, 2000, 3000]);
 
