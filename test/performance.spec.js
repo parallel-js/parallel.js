@@ -8,9 +8,9 @@
 			return i;
 		};
 
-		var Thread = require('../lib/thread.js');
-		var p = new Thread([10000, 20000, 30000]);
-		var p2 = new Thread([10000, 20000, 30000]);
+		var Parallel = require('../lib/parallel.js');
+		var p = new Parallel([10000, 20000, 30000]);
+		var p2 = new Parallel([10000, 20000, 30000]);
 
 		var start;
 		var time = null;

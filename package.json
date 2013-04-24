@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"author": "Sebastian Mayr <sebmaster16@gmail.com>",
 	"description": "thread.js enables easy multi-thread processing in javascript",
-	"main": "lib/thread.js",
+	"main": "lib/parallel.js",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/Sebmaster/thread.js.git"

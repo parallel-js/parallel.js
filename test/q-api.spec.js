@@ -5,8 +5,8 @@
 		var Q = require('q');
 
 		it('should execute .spawn() correctly', function () {
-			var Thread = require('../lib/thread.js');
-			var p = new Thread([1, 2, 3]);
+			var Parallel = require('../lib/parallel.js');
+			var p = new Parallel([1, 2, 3]);
 
 			var done = false;
 			var result = null;
@@ -30,8 +30,8 @@
 		});
 
 		it('should .map() correctly', function () {
-			var Thread = require('../lib/thread.js');
-			var p = new Thread([1, 2, 3]);
+			var Parallel = require('../lib/parallel.js');
+			var p = new Parallel([1, 2, 3]);
 
 			var done = false;
 			var result = null;
@@ -55,8 +55,8 @@
 		});
 
 		it('should queue map work correctly', function () {
-			var Thread = require('../lib/thread.js');
-			var p = new Thread([1, 2, 3], { maxWorkers: 2 });
+			var Parallel = require('../lib/parallel.js');
+			var p = new Parallel([1, 2, 3], { maxWorkers: 2 });
 
 			var done = false;
 			var result = null;
@@ -80,8 +80,8 @@
 		});
 
 		it('should chain .map() correctly', function () {
-			var Thread = require('../lib/thread.js');
-			var p = new Thread([1, 2, 3]);
+			var Parallel = require('../lib/parallel.js');
+			var p = new Parallel([1, 2, 3]);
 
 			var done = false;
 			var result = null;
@@ -109,8 +109,8 @@
 		});
 
 		it('should mix .spawn and .map() correctly', function () {
-			var Thread = require('../lib/thread.js');
-			var p = new Thread([1, 2, 3]);
+			var Parallel = require('../lib/parallel.js');
+			var p = new Parallel([1, 2, 3]);
 
 			var done = false;
 			var result = null;
@@ -142,8 +142,8 @@
 		});
 
 		it('should execute .reduce() correctly', function () {
-			var Thread = require('../lib/thread.js');
-			var p = new Thread([1, 2, 3]);
+			var Parallel = require('../lib/parallel.js');
+			var p = new Parallel([1, 2, 3]);
 			var done = false;
 			var result = null;
 
@@ -166,8 +166,8 @@
 		});
 
 		it('should process data returned from .then()', function () {
-			var Thread = require('../lib/thread.js');
-			var p = new Thread([1, 2, 3]);
+			var Parallel = require('../lib/parallel.js');
+			var p = new Parallel([1, 2, 3]);
 
 			var done = false;
 			var result = null;

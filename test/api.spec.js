@@ -1,24 +1,24 @@
 ﻿describe('API', function () {
 	it('should be a constructor', function () {
-		var Thread = require('../lib/thread.js');
-		expect(Thread).toEqual(jasmine.any(Function));
+		var Parallel = require('../lib/parallel.js');
+		expect(Parallel).toEqual(jasmine.any(Function));
 	});
 
 	it('should define a .then(cb) function', function () {
-		var Thread = require('../lib/thread.js');
-		var p = new Thread([1, 2, 3]);
+		var Parallel = require('../lib/parallel.js');
+		var p = new Parallel([1, 2, 3]);
 		expect(p.then).toEqual(jasmine.any(Function));
 	});
 
 	it('should define a .map(cb) function', function () {
-		var Thread = require('../lib/thread.js');
-		var p = new Thread([1, 2, 3]);
+		var Parallel = require('../lib/parallel.js');
+		var p = new Parallel([1, 2, 3]);
 		expect(p.map).toEqual(jasmine.any(Function));
 	});
 
 	it('should execute a .then function without an operation immediately', function () {
-		var Thread = require('../lib/thread.js');
-		var p = new Thread([1, 2, 3]);
+		var Parallel = require('../lib/parallel.js');
+		var p = new Parallel([1, 2, 3]);
 		expect(p.then).toEqual(jasmine.any(Function));
 
 		var done = false;
@@ -33,8 +33,8 @@
 	});
 
 	it('should execute .spawn() correctly', function () {
-		var Thread = require('../lib/thread.js');
-		var p = new Thread([1, 2, 3]);
+		var Parallel = require('../lib/parallel.js');
+		var p = new Parallel([1, 2, 3]);
 
 		var done = false;
 		var result = null;
@@ -58,8 +58,8 @@
 	});
 
 	it('should .map() correctly', function () {
-		var Thread = require('../lib/thread.js');
-		var p = new Thread([1, 2, 3]);
+		var Parallel = require('../lib/parallel.js');
+		var p = new Parallel([1, 2, 3]);
 
 		var done = false;
 		var result = null;
@@ -83,8 +83,8 @@
 	});
 
 	it('should queue map work correctly', function () {
-		var Thread = require('../lib/thread.js');
-		var p = new Thread([1, 2, 3], {maxWorkers: 2});
+		var Parallel = require('../lib/parallel.js');
+		var p = new Parallel([1, 2, 3], {maxWorkers: 2});
 
 		var done = false;
 		var result = null;
@@ -108,8 +108,8 @@
 	});
 
 	it('should chain .map() correctly', function () {
-		var Thread = require('../lib/thread.js');
-		var p = new Thread([1, 2, 3]);
+		var Parallel = require('../lib/parallel.js');
+		var p = new Parallel([1, 2, 3]);
 
 		var done = false;
 		var result = null;
@@ -135,8 +135,8 @@
 	});
 
 	it('should mix .spawn and .map() correctly', function () {
-		var Thread = require('../lib/thread.js');
-		var p = new Thread([1, 2, 3]);
+		var Parallel = require('../lib/parallel.js');
+		var p = new Parallel([1, 2, 3]);
 
 		var done = false;
 		var result = null;
@@ -166,8 +166,8 @@
 	});
 
 	it('should execute .reduce() correctly', function () {
-		var Thread = require('../lib/thread.js');
-		var p = new Thread([1, 2, 3]);
+		var Parallel = require('../lib/parallel.js');
+		var p = new Parallel([1, 2, 3]);
 		var done = false;
 		var result = null;
 
@@ -190,8 +190,8 @@
 	});
 
 	it('should process data returned from .then()', function () {
-		var Thread = require('../lib/thread.js');
-		var p = new Thread([1, 2, 3]);
+		var Parallel = require('../lib/parallel.js');
+		var p = new Parallel([1, 2, 3]);
 
 		var done = false;
 		var result = null;
