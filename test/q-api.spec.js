@@ -1,5 +1,5 @@
 ﻿describe('Q-API', function () {
-	var isNode = module && module.exports;
+	var isNode = typeof module !== 'undefined' && module.exports;
 
 	if (isNode) {
 		var Q = require('q');

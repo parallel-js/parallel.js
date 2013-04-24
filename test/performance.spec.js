@@ -1,5 +1,6 @@
 ﻿describe('Performance', function () {
 	var isNode = typeof module !== 'undefined' && module.exports;
+	var Parallel = isNode ? require('../lib/parallel.js') : self.Parallel;
 
 	it('.map() should be using multi-threading (could fail on single-core)', function () {
 		var slowSquare = function (n) {
@@ -8,7 +9,6 @@
 			return i;
 		};
 
-		var Parallel = require('../lib/parallel.js');
 		var p = new Parallel([10000, 20000, 30000]);
 		var p2 = new Parallel([10000, 20000, 30000]);
 

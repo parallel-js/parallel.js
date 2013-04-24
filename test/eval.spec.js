@@ -1,13 +1,9 @@
-﻿var isNode = module && module.exports;
-
-if (isNode) {
-	var Worker = require(__dirname + '/../lib/Worker.js');
-}
-
-describe('eval.js', function () {
+﻿describe('eval.js', function () {
+	var isNode = typeof module !== 'undefined' && module.exports;
+	var Worker = isNode ? require(__dirname + '/../lib/Worker.js') : self.Worker;
 
 	it('should eval the given code', function () {
-		var wrk = new Worker(__dirname + '/../lib/eval.js');
+		var wrk = new Worker(isNode ? __dirname + '/../lib/eval.js' : 'lib/eval.js');
 
 		var result = null;
 		var done = false;
@@ -17,7 +13,7 @@ describe('eval.js', function () {
 				done = true;
 				wrk.terminate();
 			};
-			wrk.postMessage('process.send(JSON.stringify("abc"))');
+			wrk.postMessage(isNode ? 'process.send(JSON.stringify("abc"))' : 'self.postMessage("abc")');
 		});
 
 		waitsFor(function () {

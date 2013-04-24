@@ -1,14 +1,10 @@
-﻿var isNode = module && module.exports;
-
-if (isNode) {
-	var Worker = require(__dirname + '/../lib/Worker.js');
-}
-
-describe('WebWorker-API', function () {
+﻿describe('WebWorker-API', function () {
+	var isNode = typeof module !== 'undefined' && module.exports;
+	var Worker = isNode ? require(__dirname + '/../lib/Worker.js') : self.Worker;
 
 	it('should define the used API', function () {
 		expect(Worker).toEqual(jasmine.any(Function));
-		var wrk = new Worker(__dirname + '/../lib/eval.js');
+		var wrk = new Worker(isNode ? __dirname + '/../lib/eval.js' : 'lib/eval.js');
 		expect(wrk.postMessage).toEqual(jasmine.any(Function));
 		expect(wrk.terminate).toEqual(jasmine.any(Function));
 		wrk.terminate();
