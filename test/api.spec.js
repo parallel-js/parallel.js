@@ -16,6 +16,11 @@
 		expect(p.map).toEqual(jasmine.any(Function));
 	});
 
+	it('should define a require(string|function|{ name: string, fn: function }) function', function () {
+		var p = new Parallel([1, 2, 3]);
+		expect(p.require).toEqual(jasmine.any(Function));
+	});
+
 	it('should execute a .then function without an operation immediately', function () {
 		var p = new Parallel([1, 2, 3]);
 		expect(p.then).toEqual(jasmine.any(Function));
@@ -80,7 +85,7 @@
 	});
 
 	it('should queue map work correctly', function () {
-		var p = new Parallel([1, 2, 3], {maxWorkers: 2});
+		var p = new Parallel([1, 2, 3], { maxWorkers: 2 });
 
 		var done = false;
 		var result = null;
@@ -209,6 +214,61 @@
 
 		runs(function () {
 			expect(result).toEqual(9);
+		});
+	});
+
+	if (!isNode) {
+		it('should work with require()d scripts (web-exclusive)', function () {
+			var p = new Parallel([1, 2, 3]);
+			p.require('../test/test.js'); // relative to eval.js
+
+			var done = false;
+			var result = null;
+
+			runs(function () {
+				p.map(function (el) {
+					return myCalc(el, 25);
+				}).then(function (data) {
+					result = data;
+					done = true;
+				});
+			});
+
+			waitsFor(function () {
+				return done;
+			}, "it should finish", 500);
+
+			runs(function () {
+				expect(result).toEqual([26, 27, 28]);
+			});
+		});
+	}
+
+	it('should work with require()d anonymous functions', function () {
+		var fn = function (el, amount) {
+			return el + amount;
+		};
+		var p = new Parallel([1, 2, 3]);
+		p.require({ name: 'fn', fn: fn });
+
+		var done = false;
+		var result = null;
+
+		runs(function () {
+			p.map(function (el) {
+				return fn(el, 25);
+			}).then(function (data) {
+				result = data;
+				done = true;
+			});
+		});
+
+		waitsFor(function () {
+			return done;
+		}, "it should finish", 500);
+
+		runs(function () {
+			expect(result).toEqual([26, 27, 28]);
 		});
 	});
 });
