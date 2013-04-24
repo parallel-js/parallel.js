@@ -22,7 +22,8 @@
 		"webworkers"
 	],
 	"devDependencies": {
-		"jasmine-node": "x"
+		"jasmine-node": "x",
+		"q": "x"
 	},
 	"license": "BSD",
 	"scripts": {
