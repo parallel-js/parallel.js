@@ -42,6 +42,8 @@ var p = new Parallel([1, 2, 3, 4, 5]);
 console.log(p.data); // prints [1, 2, 3, 4, 5]
 ```
 
+*******
+
 #### `spawn(fn)`
 This function will spawn a new process on a worker thread. Pass it the function you want to call. Your
 function will receive one argument, which is the current data. The value returned from your spawned function will
@@ -65,6 +67,8 @@ p.spawn(function (data) {
   console.log(data) // logs sdrawrof
 });
 ```
+
+*******
 
 #### `map(fn)`
 Map will apply the supplied function to every element in the wrapped data. Parallel will spawn one worker for
@@ -91,6 +95,8 @@ p.map(fib).then(log)
 // Logs the first 7 Fibonnaci numbers, woot!
 ```
 
+*******
+
 #### `reduce(fn)`
 Reduce applies an operation to every member of the wrapped data, and returns a scalar value produced by the operation.
 Use it for combining the results of a map operation, by summing numbers for example. This takes a reducing function,
@@ -113,6 +119,8 @@ p.require(factorial)
 p.map(function (n) { return Math.pow(10, n); }).reduce(add).then(log);
 ```
 
+*******
+
 #### `then(success, fail)`
 The functions given to `then` are called after the last requested operation has finished.
 `success` receives the resulting data object, while `fail` will receive an error object.
@@ -134,6 +142,8 @@ p.map(dbl).map(dbl).map(dbl).then(function (data) {
 // Approximate e^10
 p.map(function (n) { return Math.pow(10, n); }).reduce(add).then(log);
 ```
+
+*******
 
 #### `require(state)`
 If you have state that you want to share between your main thread and the worker threads, this is how. Require
