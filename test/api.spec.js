@@ -7,22 +7,22 @@
 	});
 
 	it('should define a .then(cb) function', function () {
-		var p = new Parallel([1, 2, 3]);
+		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
 		expect(p.then).toEqual(jasmine.any(Function));
 	});
 
 	it('should define a .map(cb) function', function () {
-		var p = new Parallel([1, 2, 3]);
+		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
 		expect(p.map).toEqual(jasmine.any(Function));
 	});
 
 	it('should define a require(string|function|{ name: string, fn: function }) function', function () {
-		var p = new Parallel([1, 2, 3]);
+		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
 		expect(p.require).toEqual(jasmine.any(Function));
 	});
 
 	it('should execute a .then function without an operation immediately', function () {
-		var p = new Parallel([1, 2, 3]);
+		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
 		expect(p.then).toEqual(jasmine.any(Function));
 
 		var done = false;
@@ -37,7 +37,7 @@
 	});
 
 	it('should execute .spawn() correctly', function () {
-		var p = new Parallel([1, 2, 3]);
+		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
 
 		var done = false;
 		var result = null;
@@ -61,7 +61,7 @@
 	});
 
 	it('should .map() correctly', function () {
-		var p = new Parallel([1, 2, 3]);
+		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
 
 		var done = false;
 		var result = null;
@@ -85,7 +85,7 @@
 	});
 
 	it('should queue map work correctly', function () {
-		var p = new Parallel([1, 2, 3], { maxWorkers: 2 });
+		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js', maxWorkers: 2 });
 
 		var done = false;
 		var result = null;
@@ -109,7 +109,7 @@
 	});
 
 	it('should chain .map() correctly', function () {
-		var p = new Parallel([1, 2, 3]);
+		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
 
 		var done = false;
 		var result = null;
@@ -135,7 +135,7 @@
 	});
 
 	it('should mix .spawn and .map() correctly', function () {
-		var p = new Parallel([1, 2, 3]);
+		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
 
 		var done = false;
 		var result = null;
@@ -165,7 +165,7 @@
 	});
 
 	it('should execute .reduce() correctly', function () {
-		var p = new Parallel([1, 2, 3]);
+		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
 		var done = false;
 		var result = null;
 
@@ -188,7 +188,7 @@
 	});
 
 	it('should process data returned from .then()', function () {
-		var p = new Parallel([1, 2, 3]);
+		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
 
 		var done = false;
 		var result = null;
@@ -219,7 +219,7 @@
 
 	if (!isNode) {
 		it('should work with require()d scripts (web-exclusive)', function () {
-			var p = new Parallel([1, 2, 3]);
+			var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
 			p.require('../test/test.js'); // relative to eval.js
 
 			var done = false;
@@ -248,7 +248,7 @@
 		var fn = function (el, amount) {
 			return el + amount;
 		};
-		var p = new Parallel([1, 2, 3]);
+		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
 		p.require({ name: 'fn', fn: fn });
 
 		var done = false;
