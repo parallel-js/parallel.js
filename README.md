@@ -147,7 +147,9 @@ p.map(function (n) { return Math.pow(10, n) / factorial(n); }).reduce(add).then(
 
 #### `require(state)`
 If you have state that you want to share between your main thread and the worker threads, this is how. Require
-takes either a string or a function. A string should point to a file name.
+takes either a string or a function. A string should point to a file name. Note that in order to
+use ```require``` with a file name as an argument, you have to provide the evalPath property in the options
+object.
 
 *Example*
 ```javascript
