@@ -140,7 +140,7 @@ p.map(dbl).map(dbl).map(dbl).then(function (data) {
 });
 
 // Approximate e^10
-p.map(function (n) { return Math.pow(10, n); }).reduce(add).then(log);
+p.map(function (n) { return Math.pow(10, n) / factorial(n); }).reduce(add).then(log);
 ```
 
 *******
