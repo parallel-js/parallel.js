@@ -271,4 +271,35 @@
 			expect(result).toEqual([26, 27, 28]);
 		});
 	});
+
+	it('should accept more than one requirement', function () {
+		var fn = function (el, amount) {
+			return el + amount;
+		};
+
+		function factorial(n) { return n < 2 ? 1 : n * factorial(n - 1); }
+
+		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
+		p.require({ name: 'fn', fn: fn }, factorial);
+
+		var done = false;
+		var result = null;
+
+		runs(function () {
+			p.map(function (el) {
+				return fn(factorial(el), 25);
+			}).then(function (data) {
+				result = data;
+				done = true;
+			});
+		});
+
+		waitsFor(function () {
+			return done;
+		}, "it should finish", 500);
+
+		runs(function () {
+			expect(result).toEqual([26, 27, 31]);
+		});
+	});
 });
