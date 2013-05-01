@@ -16,7 +16,7 @@ Just include it via a script tag in your HTML page
 Parallel.js is also available as a node module:
 
 ```bash
-npm install parallel.js -g
+npm install parallel.js
 ```
 
 # Usage
