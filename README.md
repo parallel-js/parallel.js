@@ -32,8 +32,9 @@ operations on the provided data.
 *Arguments*
 * `data`: This is the data you wish to operate on. Will often be an array, but the only restrictions are that your values are serializable as JSON.
 * `options` (optional): Some options for your job
-  * `legacyEvalPath` (optional): The file eval.js must be included for IE 10 support. This option specifies the path to the eval.js file. By default it will look in the same location as parallel.js
+  * `evalPath` (optional): This is the path to the file eval.js. This is required when running in node, and required for some browsers (IE 10) in order to work around cross-domain restrictions for web workers. Defaults to the same location as parallel.js in node environments, and `null` in the browser.
   * `maxWorkers` (optional): The maximum number of permitted worker threads. This will default to 4, or the number of cpus on your computer if you're running node
+  * `synchronous` (optional): If webworkers are not available, whether or not to fall back to synchronous processing using `setTimeout`. Defaults to `true`.
 
 *Example*
 ```javascript
