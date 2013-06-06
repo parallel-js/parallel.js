@@ -154,7 +154,7 @@ object.
 
 *Example*
 ```javascript
-var p = new Parallel([1, 2, 3]);
+var p = new Parallel([1, 2, 3], { evalPath: 'https://raw.github.com/adambom/parallel.js/master/lib/eval.js' });
 
 function cubeRoot(n) { return Math.pow(n, 1 / 3); }
 
