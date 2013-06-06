@@ -5,7 +5,7 @@
 		var Q = require('q');
 
 		it('should execute .spawn() correctly', function () {
-			var Parallel = require('../lib/parallel.js');
+			var Parallel = require('../../lib/parallel.js');
 			var p = new Parallel([1, 2, 3]);
 
 			var done = false;
@@ -30,7 +30,7 @@
 		});
 
 		it('should .map() correctly', function () {
-			var Parallel = require('../lib/parallel.js');
+			var Parallel = require('../../lib/parallel.js');
 			var p = new Parallel([1, 2, 3]);
 
 			var done = false;
@@ -55,7 +55,7 @@
 		});
 
 		it('should queue map work correctly', function () {
-			var Parallel = require('../lib/parallel.js');
+			var Parallel = require('../../lib/parallel.js');
 			var p = new Parallel([1, 2, 3], { maxWorkers: 2 });
 
 			var done = false;
@@ -80,7 +80,7 @@
 		});
 
 		it('should chain .map() correctly', function () {
-			var Parallel = require('../lib/parallel.js');
+			var Parallel = require('../../lib/parallel.js');
 			var p = new Parallel([1, 2, 3]);
 
 			var done = false;
@@ -109,7 +109,7 @@
 		});
 
 		it('should mix .spawn and .map() correctly', function () {
-			var Parallel = require('../lib/parallel.js');
+			var Parallel = require('../../lib/parallel.js');
 			var p = new Parallel([1, 2, 3]);
 
 			var done = false;
@@ -142,7 +142,7 @@
 		});
 
 		it('should execute .reduce() correctly', function () {
-			var Parallel = require('../lib/parallel.js');
+			var Parallel = require('../../lib/parallel.js');
 			var p = new Parallel([1, 2, 3]);
 			var done = false;
 			var result = null;
@@ -166,7 +166,7 @@
 		});
 
 		it('should process data returned from .then()', function () {
-			var Parallel = require('../lib/parallel.js');
+			var Parallel = require('../../lib/parallel.js');
 			var p = new Parallel([1, 2, 3]);
 
 			var done = false;

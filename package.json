@@ -30,9 +30,16 @@
 	},
 	"license": "BSD",
 	"scripts": {
-		"test": "jasmine-node --verbose test"
+		"test": "jasmine-node --verbose test/specs"
 	},
 	"engines": {
 		"node": ">=0.9.10"
+	},
+	"testling" : {
+		"scripts": [
+			"test/lib/jasmine/jasmine.js",
+			"test/specs/*.js",
+			"test/runner.js"
+		]
 	}
 }

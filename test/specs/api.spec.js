@@ -1,6 +1,6 @@
 ﻿describe('API', function () {
 	var isNode = typeof module !== 'undefined' && module.exports;
-	var Parallel = isNode ? require('../lib/parallel.js') : self.Parallel;
+	var Parallel = isNode ? require('../../lib/parallel.js') : self.Parallel;
 
 	it('should be a constructor', function () {
 		expect(Parallel).toEqual(jasmine.any(Function));

@@ -1,9 +1,9 @@
 ﻿describe('eval.js', function () {
 	var isNode = typeof module !== 'undefined' && module.exports;
-	var Worker = isNode ? require(__dirname + '/../lib/Worker.js') : self.Worker;
+	var Worker = isNode ? require(__dirname + '/../../lib/Worker.js') : self.Worker;
 
 	it('should eval the given code', function () {
-		var wrk = new Worker(isNode ? __dirname + '/../lib/eval.js' : 'lib/eval.js');
+		var wrk = new Worker(isNode ? __dirname + '/../../lib/eval.js' : 'lib/eval.js');
 
 		var result = null;
 		var done = false;
