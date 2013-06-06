@@ -75,7 +75,7 @@ var Parallel = require('parallel.js');
             <dt>options (optional): Some options for your job</dt>
             <dd>
                 <ul>
-                    <li>evalPath (optional): This is the path to the file eval.js. This is required when running in node, and required for some browsers (IE 10) in order to work around cross-domain restrictions for web workers. Defaults to the same location as parallel.js in node environments, and <code>null</code> in the browser</li>
+                    <li>evalPath (optional): This is the path to the file eval.js. This is required when running in node, and required when requiring files in browser environments (to work around cross-domain restrictions for web workers in IE 10). Defaults to the same location as parallel.js in node environments, and <code>null</code> in the browser</li>
                     <li>maxWorkers (optional): The maximum number of permitted worker threads. This will default to 4, or the number of cpus on your computer if you're running node</li>
                     <li>synchronous (optional): If webworkers are not available, whether or not to fall back to synchronous processing using <code>setTimeout</code>. Defaults to <code>true</code>.</li>
                 </ul>
@@ -283,18 +283,23 @@ var r = new Parallel(3).require({ fn: wontWork, name: 'wontWork' }).spawn(functi
         <h4>Passing files as arguments to require</h4>
 
         <p>`require` also accepts files as requirements. These should be passed as strings. The string may either be a url of the file you want to include or an <strong>absolute</strong> path.</p>
+        
+        <p><span class="badge badge-important">Important:</span> When requring files in the browser or node, yoi will need to be sure to include eval.js, and provide a path via the evalPath option in the constructor.</p>
 
         <h4>Examples</h4>
 
         <dl>
+            <dt>Include path to eval.js</dt>
+            <dd><code></code>p = new Parallel([2, 3, 3], { evalPath: 'js/eval.js' });</code></dd>
+        
             <dt>Absolute url:</dt>
-            <dd><code>Parallel.require('http://mydomain.com/js/script.js')</code></dd>
+            <dd><code>p.require('http://mydomain.com/js/script.js')</code></dd>
 
             <dt>Absolute path (assuming my document lives in http://mydomain.com/index.html)</dt>
-            <dd><code>Parallel.require('js/script.js')</code></dd>
+            <dd><code>p.require('js/script.js')</code></dd>
 
             <dt>Does not work (yet)</dt>
-            <dd><code>Parallel.require('../js/script.js')</code></dd>
+            <dd><code>p.require('../js/script.js')</code></dd>
         </dl>
 
         <p><span class="badge badge-important">Important:</span> browser security restrictions prevent loading files over the file protocol, so you will need to run an http server in order to load local files.</p>
