@@ -8,6 +8,9 @@ Parallel.js
 Parallel.js is a simple library for parallel computing in Javascript, either in Node.js or in the Web Browser.
 Parallel takes advantage of Web Workers for the web, and child processes for Node.
 
+#### Compatibility
+[![browser support](https://ci.testling.com/USER/PROJECT.png)](https://ci.testling.com/USER/PROJECT)
+
 # Installation
 You can download the raw javascript file [here](https://raw.github.com/adambom/parallel.js/master/lib/parallel.js)
 
