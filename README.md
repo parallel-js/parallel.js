@@ -170,4 +170,4 @@ p.map(function (d) {
 ```
 
 # Compatibility
-[![browser support](https://ci.testling.com/USER/PROJECT.png)](https://ci.testling.com/USER/PROJECT)
+[![browser support](https://ci.testling.com/adambom/parallel.js.png)](https://ci.testling.com/adambom/parallel.js)
