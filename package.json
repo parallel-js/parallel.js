@@ -1,11 +1,11 @@
 ﻿{
-	"name": "parallel.js",
+	"name": "paralleljs",
 	"version": "0.2.0",
 	"author": "Adam Savitzky <adam.savitzky@gmail.com>",
 	"contributors": [
 		"Sebastian Mayr <sebmaster16@gmail.com> (http://s3bmaster.blogspot.co.at/)"
 	],
-	"description": "thread.js enables easy multi-thread processing in javascript",
+	"description": "parallel.js enables easy multi-thread processing in javascript",
 	"main": "lib/parallel.js",
 	"repository": {
 		"type": "git",
