@@ -244,6 +244,13 @@
 		});
 	}
 
+	it('should allow chaining require()', function () {
+		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
+		var ret = p.require({ name: 'fn', fn: function () { } });
+
+		expect(ret).toEqual(jasmine.any(Parallel));
+	});
+
 	it('should work with require()d anonymous functions', function () {
 		var fn = function (el, amount) {
 			return el + amount;
