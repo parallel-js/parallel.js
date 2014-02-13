@@ -309,4 +309,122 @@
 			expect(result).toEqual([26, 27, 31]);
 		});
 	});
+
+	it('should allow environment to be passed in constructor', function () {
+		var environment = { a: 1, b: 2 };
+		var p
+		var doneSpawn = false;
+		var doneMap = false;
+		var doneReduce = false;
+		var resultSpawn = null;
+		var resultMap = null;
+		var resultReduce = null;
+
+		runs(function () {
+			p = new Parallel([1, 2, 3], {
+				evalPath: isNode ? undefined : 'lib/eval.js',
+				environment: environment
+			});
+
+			p.spawn(function (data, env) {
+				return env.a * 2;
+			}).then(function (data) {
+				resultSpawn = data;
+				doneSpawn = true;
+			});
+
+			p = new Parallel([1, 2, 3], {
+				evalPath: isNode ? undefined : 'lib/eval.js',
+				environment: environment
+			});
+
+			p.map(function (data, env) {
+				return data * env.b;
+			}).then(function (data) {
+				resultMap= data;
+				doneMap = true;
+			});
+
+			p = new Parallel([1, 2, 3], {
+				evalPath: isNode ? undefined : 'lib/eval.js',
+				environment: environment
+			});
+
+			p.reduce(function (data, env) {
+				return data[0] + data[1] * env.b;
+			}).then(function (data) {
+				resultReduce= data;
+				doneReduce = true;
+			});
+		});
+
+		waitsFor(function () {
+			return doneSpawn && doneMap && doneReduce;
+		}, "it should finish", 500);
+
+		runs(function () {
+			expect(resultSpawn).toEqual(2);
+			expect(resultMap).toEqual([2, 4, 6]);
+			expect(resultReduce).toEqual(13);
+		});
+	});
+
+	it('should allow environment to be passed in function to override', function () {
+		var environment = { a: 1, b: 2 };
+		var p
+		var doneSpawn = false;
+		var doneMap = false;
+		var doneReduce = false;
+		var resultSpawn = null;
+		var resultMap = null;
+		var resultReduce = null;
+
+		runs(function () {
+			p = new Parallel([1, 2, 3], {
+				evalPath: isNode ? undefined : 'lib/eval.js',
+				environment: environment
+			});
+
+			p.spawn(function (data, env) {
+				return env.a * 2;
+			}, { a: 3 }).then(function (data) {
+				resultSpawn = data;
+				doneSpawn = true;
+			});
+
+			p = new Parallel([1, 2, 3], {
+				evalPath: isNode ? undefined : 'lib/eval.js',
+				environment: environment
+			});
+
+			p.map(function (data, env) {
+				return data * env.b;
+			}).then(function (data) {
+				resultMap= data;
+				doneMap = true;
+			}, { b: 3 });
+
+			p = new Parallel([1, 2, 3], {
+				evalPath: isNode ? undefined : 'lib/eval.js',
+				environment: environment
+			});
+
+			p.reduce(function (data, env) {
+				return data[0] + data[1] * env.b;
+			}).then(function (data) {
+				resultReduce= data;
+				doneReduce = true;
+			}, { b: 3 });
+		});
+
+		waitsFor(function () {
+			return doneSpawn && doneMap && doneReduce;
+		}, "it should finish", 500);
+
+		runs(function () {
+			expect(resultSpawn).toEqual(6);
+			expect(resultMap).toEqual([3, 6, 9]);
+			expect(resultReduce).toEqual(19);
+		});
+	});
 });
