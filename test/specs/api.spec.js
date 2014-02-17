@@ -369,6 +369,65 @@
 		});
 	});
 
+	it('should allow overriding default environment', function () {
+		var env = { a: 1, b: 2 };
+		var p
+		var doneSpawn = false;
+		var doneMap = false;
+		var doneReduce = false;
+		var resultSpawn = null;
+		var resultMap = null;
+		var resultReduce = null;
+
+		runs(function () {
+			p = new Parallel([1, 2, 3], {
+				evalPath: isNode ? undefined : 'lib/eval.js',
+				env: env
+			});
+
+			p.spawn(function (data) {
+				return global.env.a * 2;
+			}, { a: 2 }).then(function (data) {
+				resultSpawn = data;
+				doneSpawn = true;
+			});
+
+			p = new Parallel([1, 2, 3], {
+				evalPath: isNode ? undefined : 'lib/eval.js',
+				env: env
+			});
+
+			p.map(function (data) {
+				return data * global.env.b;
+			}, { b: 3 }).then(function (data) {
+				resultMap= data;
+				doneMap = true;
+			});
+
+			p = new Parallel([1, 2, 3], {
+				evalPath: isNode ? undefined : 'lib/eval.js',
+				env: env
+			});
+
+			p.reduce(function (data) {
+				return data[0] + data[1] * global.env.b;
+			}, { b: 3 }).then(function (data) {
+				resultReduce= data;
+				doneReduce = true;
+			});
+		});
+
+		waitsFor(function () {
+			return doneSpawn && doneMap && doneReduce;
+		}, "it should finish", 500);
+
+		runs(function () {
+			expect(resultSpawn).toEqual(4);
+			expect(resultMap).toEqual([3, 6, 9]);
+			expect(resultReduce).toEqual(24);
+		});
+	});
+
 	it('should allow configuring global namespace', function () {
 		var p = new Parallel([1, 2, 3], {
 			evalPath: isNode ? undefined : 'lib/eval.js',
