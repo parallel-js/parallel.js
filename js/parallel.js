@@ -1,9 +1,12 @@
 ﻿(function () {
-	var isNode = typeof module !== 'undefined' && module.exports;
+	var isCommonJS = typeof module !== 'undefined' && module.exports;
+	var isNode = typeof global !== "undefined" && {}.toString.call(global) == '[object global]';
 	var setImmediate = setImmediate || function (cb) {
 		setTimeout(cb, 0);
 	};
 	var Worker = isNode ? require(__dirname + '/Worker.js') : self.Worker;
+	var URL = typeof self !== 'undefined' ? (self.URL ? self.URL : self.webkitURL) : null;
+	var _supports = (isNode || self.Worker) ? true : false; // node always supports parallel
 
 	function extend(from, to) {
 		if (!to) to = {};
@@ -69,7 +72,9 @@
 	var defaults = {
 		evalPath: isNode ? __dirname + '/eval.js' : null,
 		maxWorkers: isNode ? require('os').cpus().length : 4,
-		synchronous: true
+		synchronous: true,
+		env: {},
+		envNamespace: 'env'
 	};
 
 	function Parallel(data, options) {
@@ -81,7 +86,11 @@
 		this.requiredFunctions = [];
 	}
 
-	Parallel.prototype.getWorkerSource = function (cb) {
+	// static method
+	Parallel.isSupported=function(){ return _supports; }
+	
+	Parallel.prototype.getWorkerSource = function (cb, env) {
+		var that = this;
 		var preStr = '';
 		var i = 0;
 		if (!isNode && this.requiredScripts.length !== 0) {
@@ -96,10 +105,14 @@
 			}
 		}
 
+		env = JSON.stringify(env || {});
+
+		var ns = this.options.envNamespace;
+
 		if (isNode) {
-			return preStr + 'process.on("message", function(e) {process.send(JSON.stringify((' + cb.toString() + ')(JSON.parse(e).data)))})';
+			return preStr + 'process.on("message", function(e) {global.' + ns + ' = ' + env + ';process.send(JSON.stringify((' + cb.toString() + ')(JSON.parse(e).data)))})';
 		} else {
-			return preStr + 'self.onmessage = function(e) {self.postMessage((' + cb.toString() + ')(e.data))}';
+			return preStr + 'self.onmessage = function(e) {var global = {}; global.' + ns + ' = ' + env + ';self.postMessage((' + cb.toString() + ')(e.data))}';
 		}
 	};
 
@@ -113,16 +126,18 @@
 			if (typeof func === 'string') {
 				this.requiredScripts.push(func);
 			} else if (typeof func === 'function') {
-				this.requiredFunctions.push({ fn: func })
+				this.requiredFunctions.push({ fn: func });
 			} else if (typeof func === 'object') {
 				this.requiredFunctions.push(func);
 			}
 		}
+
+		return this;
 	};
 
-	Parallel.prototype._spawnWorker = function (cb) {
+	Parallel.prototype._spawnWorker = function (cb, env) {
 		var wrk;
-		var src = this.getWorkerSource(cb);
+		var src = this.getWorkerSource(cb, env);
 		if (isNode) {
 			wrk = new Worker(this.options.evalPath);
 			wrk.postMessage(src);
@@ -139,6 +154,8 @@
 					} else {
 						throw new Error('Can\'t use required scripts without eval.js!');
 					}
+				} else if (!URL) {
+					throw new Error('Can\'t create a blob URL in this browser!');
 				} else {
 					var blob = new Blob([src], { type: 'text/javascript' });
 					var url = URL.createObjectURL(blob);
@@ -158,11 +175,14 @@
 		return wrk;
 	};
 
-	Parallel.prototype.spawn = function (cb) {
+	Parallel.prototype.spawn = function (cb, env) {
 		var that = this;
 		var newOp = new Operation();
+
+		env = extend(this.options.env, env || {});
+
 		this.operation.then(function () {
-			var wrk = that._spawnWorker(cb);
+			var wrk = that._spawnWorker(cb, env);
 			if (wrk !== undefined) {
 				wrk.onmessage = function (msg) {
 					wrk.terminate();
@@ -183,9 +203,9 @@
 		return this;
 	};
 
-	Parallel.prototype._spawnMapWorker = function (i, cb, done) {
+	Parallel.prototype._spawnMapWorker = function (i, cb, done, env) {
 		var that = this;
-		var wrk = that._spawnWorker(cb);
+		var wrk = that._spawnWorker(cb, env);
 		if (wrk !== undefined) {
 			wrk.onmessage = function (msg) {
 				wrk.terminate();
@@ -203,9 +223,11 @@
 		}
 	};
 
-	Parallel.prototype.map = function (cb) {
+	Parallel.prototype.map = function (cb, env) {
+		env = extend(this.options.env, env || {});
+
 		if (!this.data.length) {
-			return this.spawn(cb);
+			return this.spawn(cb, env);
 		}
 
 		var that = this;
@@ -215,23 +237,23 @@
 			if (++doneOps === that.data.length) {
 				newOp.resolve(null, that.data);
 			} else if (startedOps < that.data.length) {
-				that._spawnMapWorker(startedOps++, cb, done);
+				that._spawnMapWorker(startedOps++, cb, done, env);
 			}
 		}
 
 		var newOp = new Operation();
 		this.operation.then(function () {
 			for (; startedOps - doneOps < that.options.maxWorkers && startedOps < that.data.length; ++startedOps) {
-				that._spawnMapWorker(startedOps, cb, done);
+				that._spawnMapWorker(startedOps, cb, done, env);
 			}
 		});
 		this.operation = newOp;
 		return this;
 	};
 
-	Parallel.prototype._spawnReduceWorker = function (data, cb, done) {
+	Parallel.prototype._spawnReduceWorker = function (data, cb, done, env) {
 		var that = this;
-		var wrk = that._spawnWorker(cb);
+		var wrk = that._spawnWorker(cb, env);
 		if (wrk !== undefined) {
 			wrk.onmessage = function (msg) {
 				wrk.terminate();
@@ -249,7 +271,9 @@
 		}
 	};
 
-	Parallel.prototype.reduce = function (cb) {
+	Parallel.prototype.reduce = function (cb, env) {
+		env = extend(this.options.env, env || {});
+
 		if (!this.data.length) {
 			throw new Error('Can\'t reduce non-array data');
 		}
@@ -263,7 +287,7 @@
 				newOp.resolve(null, that.data);
 			} else if (that.data.length > 1) {
 				++runningWorkers;
-				that._spawnReduceWorker([that.data[0], that.data[1]], cb, done);
+				that._spawnReduceWorker([that.data[0], that.data[1]], cb, done, env);
 				that.data.splice(0, 2);
 			}
 		}
@@ -275,7 +299,7 @@
 			} else {
 				for (var i = 0; i < that.options.maxWorkers && i < Math.floor(that.data.length / 2); ++i) {
 					++runningWorkers;
-					that._spawnReduceWorker([that.data[i * 2], that.data[i * 2 + 1]], cb, done);
+					that._spawnReduceWorker([that.data[i * 2], that.data[i * 2 + 1]], cb, done, env);
 				}
 
 				that.data.splice(0, i * 2);
@@ -299,7 +323,7 @@
 		return this;
 	};
 
-	if (isNode) {
+	if (isCommonJS) {
 		module.exports = Parallel;
 	} else {
 		self.Parallel = Parallel;
