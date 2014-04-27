@@ -312,11 +312,11 @@ $ cd myproject
 $ http-server .
 </pre>
 
-        <h4>Passing environement to functions</h4>
+        <h3 id="gloabls">Passing environement to functions</h3>
         
         <p>You can pass data to threads that will be global to that worker. This data will be global in each called function. The data will be available under the <code>global.env</code> namespace. The namespace can be configured by passing the <code>envNamespace</code> option to the <code>Parallel</code> constructor. The data you wish to pass should be provided as the <code>env</code> optionn to the parallel constructor.</p>
 
-        <p><span class="badge badge-important">Important:</span> Global can not be mutated between threads.</p>
+        <p><span class="badge badge-important">Important:</span> Globals can not be mutated between threads.</p>
 
         <h4>Examples</h4>
 
