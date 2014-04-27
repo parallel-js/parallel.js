@@ -312,6 +312,39 @@ $ cd myproject
 $ http-server .
 </pre>
 
+        <h4>Passing environement to functions</h4>
+        
+        <p>You can pass data to threads that will be global to that worker. This data will be global in each called function. The data will be available under the <code>global.env</code> namespace. The namespace can be configured by passing the <code>envNamespace</code> option to the <code>Parallel</code> constructor. The data you wish to pass should be provided as the <code>env</code> optionn to the parallel constructor.</p>
+
+        <p><span class="badge badge-important">Important:</span> Global can not be mutated between threads.</p>
+
+        <h4>Examples</h4>
+
+        <pre class="prettyprint linenums">
+var p = new Parallel([1, 2, 3], {
+  env: {
+    a: 10
+  }
+});
+
+// returns 10, 20, 30
+p.map(function (d) {
+  return d * global.env.a;
+});
+
+// Configure the namespace
+p = new Parallel([1, 2, 3], {
+  env: {
+    a: 10
+  },
+  envNamespace: 'parallel'
+});
+
+p.map(function (d) {
+  return d * global.parallel.a;
+});
+</pre>
+
         <hr>
 
         <footer id="footer">
