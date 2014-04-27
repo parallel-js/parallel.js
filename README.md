@@ -174,6 +174,8 @@ The data will be available under the `global.env` namespace. The namespace can b
 `envNamespace` option to the `Parallel` constructor. The data you wish to pass should be provided as the `env` option
 to the parallel constructor.
 
+Important: Globals can not be mutated between threads.
+
 *Example*
 ```javascript
 var p = new Parallel([1, 2, 3], {
