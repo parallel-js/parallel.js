@@ -168,6 +168,39 @@ p.map(function (d) {
   return blargh(20 * cubeRoot(d));
 });
 ```
+#### Passing environement to functions
+You can pass data to threads that will be global to that worker. This data will be global in each called function.
+The data will be available under the `global.env` namespace. The namespace can be configured by passing the 
+`envNamespace` option to the `Parallel` constructor. The data you wish to pass should be provided as the `env` option
+to the parallel constructor.
+
+*Example*
+```javascript
+var p = new Parallel([1, 2, 3], {
+  env: {
+    a: 10
+  }
+});
+
+// returns 10, 20, 30
+p.map(function (d) {
+  return d * global.env.a;
+});
+
+// Configure the namespace
+p = new Parallel([1, 2, 3], {
+  env: {
+    a: 10
+  },
+  envNamespace: 'parallel'
+});
+
+p.map(function (d) {
+  return d * global.parallel.a;
+});
+
+
+```
 
 # Compatibility
 [![browser support](https://ci.testling.com/adambom/parallel.js.png)](https://ci.testling.com/adambom/parallel.js)
