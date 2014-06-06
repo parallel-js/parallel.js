@@ -40,6 +40,16 @@
 			"test/lib/jasmine/jasmine.js",
 			"test/specs/*.js",
 			"test/runner.js"
+		],
+		"browsers": [
+			"ie/9..latest",
+			"chrome/22..latest",
+			"firefox/16..latest",
+			"safari/latest",
+			"opera/11.0..latest",
+			"iphone/6",
+			"ipad/6",
+			"android-browser/latest"
 		]
 	}
 }
