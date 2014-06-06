@@ -37,7 +37,9 @@
 	},
 	"testling" : {
 		"scripts": [
-			"test/lib/jasmine/jasmine.js",
+			"lib/parallel.js",
+			"test/jasmine/jasmine.js",
+			"test/jasmine/jasmine.tap_reporter.js",
 			"test/specs/*.js",
 			"test/runner.js"
 		],
