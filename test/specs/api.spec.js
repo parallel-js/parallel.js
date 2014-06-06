@@ -236,7 +236,7 @@
 
 			waitsFor(function () {
 				return done;
-			}, "it should finish", 500);
+			}, "it should finish", 1000);
 
 			runs(function () {
 				expect(result).toEqual([26, 27, 28]);
