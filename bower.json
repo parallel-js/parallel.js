@@ -1,0 +1,17 @@
+{
+  "name": "parallel.js",
+  "version": "0.3.0",
+  "homepage": "https://adambom.github.io/parallel.js/",
+  "authors": [
+    "Adam Savitzky <adam.savitzky@gmail.com>"
+  ],
+  "description": "Parallel.js is a simple library for parallel computing in Javascript, either in Node.js or in the Web Browser. Parallel takes advantage of Web Workers for the web, and child processes for Node.",
+  "license": "BSD",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
