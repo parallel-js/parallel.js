@@ -13,5 +13,6 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "main": "lib/parallel.js"
 }
