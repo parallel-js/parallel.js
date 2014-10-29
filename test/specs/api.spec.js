@@ -61,6 +61,8 @@
 	});
 
 	it('should .spawn() handle errors', function () {
+		if(isNode) return;
+
 		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
 
 		var done = false;
@@ -137,6 +139,8 @@
 	});
 
 	it('should map handle error correctly', function () {
+		if(isNode) return;
+
 		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js', maxWorkers: 2 });
 
 		var done = false;
@@ -248,6 +252,7 @@
 	});
 
 	it('should reduce handle error correctly', function () {
+		if(isNode) return;
 		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js', maxWorkers: 2 });
 
 		var done = false;
@@ -310,6 +315,7 @@
 	});
 
 	it('should process data returned from .then() when errCb occurs', function () {
+		if(isNode) return;
 		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
 
 		var done = false;
@@ -339,6 +345,7 @@
 	});
 
 	it('should process data returned from .then() when error occurs into then', function () {
+		if(isNode) return;
 		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
 
 		var done = false;
