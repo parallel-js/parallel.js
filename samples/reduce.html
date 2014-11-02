@@ -1,0 +1,26 @@
+<html>
+	<head>
+		<script src = '../lib/parallel.js'></script>
+		<script>
+			window.onload = function(){
+				var sum = function (n) {
+					//if(n[1] === 2) throw('Test error');
+					return n[0] + n[1]; 
+				};
+
+				// Create a job
+				var p = new Parallel([1,2,3,4,5]);
+
+				p
+				.reduce(sum, function(pg){
+					console.log(pg);
+				})
+				.then(function(res){
+					console.log(res);
+				});
+			}
+		</script>
+	</head>
+	<body>
+	</body>
+</html>

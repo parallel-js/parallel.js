@@ -1,0 +1,29 @@
+<html>
+	<head>
+		<script src = '../lib/parallel.js'></script>
+		<script>
+			window.onload = function(){
+				var slowSquare = function (n) { 
+					var i = 0;
+					throw new Error('Test error');
+					while (++i < n * n) {}
+					return i; 
+				};
+
+				// Create a job
+				var p = new Parallel(100);
+
+				p.spawn(slowSquare, {synchronous: true}).then(
+					function(res){
+						console.log(res);
+					}, 
+					function(error){
+						console.log(error);
+					}
+				);
+			}
+		</script>
+	</head>
+	<body>
+	</body>
+</html>
