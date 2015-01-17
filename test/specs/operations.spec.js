@@ -19,6 +19,6 @@
 
         waitsFor(function () {
             return done;
-        }, "it should finish", 500);
+        }, "it should finish", 1000);
     });
 });
