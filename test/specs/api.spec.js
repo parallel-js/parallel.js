@@ -84,6 +84,51 @@
 		});
 	});
 
+	it('should .map() progress works', function () {
+		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
+
+		var done = false;
+		var result = null;
+
+		var cbObj = {
+			progress: function(pg){
+				//some stuff
+			}
+		};
+
+		spyOn(cbObj, 'progress');
+
+		runs(function () {
+			p.map(function (el) {
+				return el + 1;
+			}, cbObj.progress).then(function (data) {
+				result = data;
+				done = true;
+			});
+		});
+
+		waitsFor(function () {
+			return done;
+		}, "it should finish", 500);
+
+		runs(function () {
+			expect(cbObj.progress).toHaveBeenCalled();
+			expect(cbObj.progress.calls.length).toEqual(3);
+			expect(cbObj.progress).toHaveBeenCalledWith({
+				total: 3,
+				done: 1
+			});
+			expect(cbObj.progress).toHaveBeenCalledWith({
+				total: 3,
+				done: 2
+			});
+			expect(cbObj.progress).toHaveBeenCalledWith({
+				total: 3,
+				done: 3
+			});
+		});
+	});
+
 	it('should queue map work correctly', function () {
 		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js', maxWorkers: 2 });
 
@@ -184,6 +229,46 @@
 
 		runs(function () {
 			expect(result).toEqual(6);
+		});
+	});
+
+	it('should call .reduce() progress correctly', function () {
+		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
+		var done = false;
+		var result = null;
+		var cbObj = {
+			progress: function(pg){
+				//some stuff
+			}
+		};
+
+		spyOn(cbObj, 'progress');
+
+		runs(function () {
+			p.reduce(function (data) {
+				return data[0] + data[1];
+			}, cbObj.progress).then(function (data) {
+				result = data;
+				done = true;
+			});
+		});
+
+		waitsFor(function () {
+			return done;
+		}, "it should finish", 500);
+
+		runs(function () {
+			expect(result).toEqual(6);
+			expect(cbObj.progress).toHaveBeenCalled();
+			expect(cbObj.progress.calls.length).toEqual(2);
+			expect(cbObj.progress).toHaveBeenCalledWith({
+				total: 2,
+				done: 1
+			});
+			expect(cbObj.progress).toHaveBeenCalledWith({
+				total: 2,
+				done: 2
+			});
 		});
 	});
 
