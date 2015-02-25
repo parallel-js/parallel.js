@@ -22,7 +22,7 @@
 
 			waitsFor(function () {
 				return done;
-			}, "it should finish", 500);
+			}, "it should finish", 2000);
 
 			runs(function () {
 				expect(result).toEqual(['something', 'completly', 'else']);
@@ -47,7 +47,7 @@
 
 			waitsFor(function () {
 				return done;
-			}, "it should finish", 500);
+			}, "it should finish", 2000);
 
 			runs(function () {
 				expect(result).toEqual([2, 3, 4]);
@@ -72,7 +72,7 @@
 
 			waitsFor(function () {
 				return done;
-			}, "it should finish", 500);
+			}, "it should finish", 2000);
 
 			runs(function () {
 				expect(result).toEqual([2, 3, 4]);
@@ -101,7 +101,7 @@
 
 			waitsFor(function () {
 				return done;
-			}, "it should finish", 500);
+			}, "it should finish", 2000);
 
 			runs(function () {
 				expect(result).toEqual([1, 2, 3]);
@@ -134,7 +134,7 @@
 
 			waitsFor(function () {
 				return done;
-			}, "it should finish", 500);
+			}, "it should finish", 2000);
 
 			runs(function () {
 				expect(result).toEqual(9);
@@ -158,7 +158,7 @@
 
 			waitsFor(function () {
 				return done;
-			}, "it should finish", 500);
+			}, "it should finish", 2000);
 
 			runs(function () {
 				expect(result).toEqual(6);
@@ -191,7 +191,7 @@
 
 			waitsFor(function () {
 				return done;
-			}, "it should finish", 500);
+			}, "it should finish", 2000);
 
 			runs(function () {
 				expect(result).toEqual(9);

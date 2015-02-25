@@ -33,7 +33,7 @@
 		});
 		waitsFor(function () {
 			return done;
-		}, "it should finish", 500);
+		}, "it should finish", 2000);
 	});
 
 	it('should execute .spawn() correctly', function () {
@@ -53,11 +53,41 @@
 
 		waitsFor(function () {
 			return done;
-		}, "it should finish", 500);
+		}, "it should finish", 2000);
 
 		runs(function () {
 			expect(result).toEqual(['something', 'completly', 'else']);
 		});
+	});
+
+	it('should .spawn() handle errors', function () {
+	  if (isNode) return;
+
+	  var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
+
+	  var done = false;
+	  var error = null;
+
+	  runs(function () {
+	    p.spawn(function (data) {
+	      throw ('Test error');
+	      return ['something', 'completly', 'else'];
+	    }).then(function () {
+
+	    }, function (e) {
+	      error = e;
+	      done = true;
+	    });
+	  });
+
+	  waitsFor(function () {
+	    return done;
+	  }, "it should finish", 2000);
+
+	  runs(function () {
+	    expect(typeof error).toEqual('object');
+	    expect(error.message).toMatch(/Test\serror/);
+	  });
 	});
 
 	it('should .map() correctly', function () {
@@ -77,7 +107,7 @@
 
 		waitsFor(function () {
 			return done;
-		}, "it should finish", 500);
+		}, "it should finish", 2000);
 
 		runs(function () {
 			expect(result).toEqual([2, 3, 4]);
@@ -101,11 +131,77 @@
 
 		waitsFor(function () {
 			return done;
-		}, "it should finish", 500);
+		}, "it should finish", 2000);
 
 		runs(function () {
 			expect(result).toEqual([2, 3, 4]);
 		});
+	});
+
+	it('should map handle error correctly', function () {
+		if(isNode) return;
+
+		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js', maxWorkers: 2 });
+
+		var done = false;
+		var fail = false;
+		var error = null;
+		var result = null;
+
+		runs(function () {
+			p.map(function (el) {
+				if(el === 2) throw('Test error');
+				return el + 1;
+			}).then(function (data) {
+				result = data;
+				done = true;
+			}, function(e){
+				error = e;
+				fail = true;
+			});
+		});
+
+		waitsFor(function () {
+			return fail;
+		}, "it should finish", 2000);
+
+		runs(function () {
+			expect(result).toEqual(null);
+			expect(typeof error).toEqual('object');
+			expect(error.message).toMatch(/Test\serror/);
+		});
+	});
+
+	it('should only fire promise once for errors + successful calls', function () {
+	  if (isNode) return;
+
+	  var p = new Parallel([1, 2, 3], { evalPath: 'lib/eval.js' });
+
+	  var done = false;
+	  var fires = 0;
+
+	  runs(function () {
+	    p.map(function (el) {
+	      if (el === 1) throw new Error('a');
+	      return el;
+	    }).then(function (data) {
+	      fires++;
+	    }, function () {
+	      fires++;
+	    });
+	  });
+
+	  setTimeout(function () {
+	  	done = true;
+	  }, 2000);
+
+	  waitsFor(function () {
+	    return done;
+	  }, "it should finish", 3000);
+
+	  runs(function () {
+	    expect(fires).toEqual(1);
+	  });
 	});
 
 	it('should chain .map() correctly', function () {
@@ -127,7 +223,7 @@
 
 		waitsFor(function () {
 			return done;
-		}, "it should finish", 500);
+		}, "it should finish", 2000);
 
 		runs(function () {
 			expect(result).toEqual([1, 2, 3]);
@@ -157,7 +253,7 @@
 
 		waitsFor(function () {
 			return done;
-		}, "it should finish", 500);
+		}, "it should finish", 2000);
 
 		runs(function () {
 			expect(result).toEqual(9);
@@ -180,10 +276,43 @@
 
 		waitsFor(function () {
 			return done;
-		}, "it should finish", 500);
+		}, "it should finish", 2000);
 
 		runs(function () {
 			expect(result).toEqual(6);
+		});
+	});
+
+	it('should reduce handle error correctly', function () {
+		if(isNode) return;
+		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js', maxWorkers: 2 });
+
+		var done = false;
+		var fail = false;
+		var error = null;
+		var result = null;
+
+		runs(function () {
+			p.reduce(function (n) {
+				if(n[1] === 2) throw('Test error');
+				return n[0] + n[1];
+			}).then(function (data) {
+				result = data;
+				done = true;
+			}, function(e){
+				error = e;
+				fail = true;
+			});
+		});
+
+		waitsFor(function () {
+			return fail;
+		}, "it should finish", 2000);
+
+		runs(function () {
+			expect(result).toEqual(null);
+			expect(typeof error).toEqual('object');
+			expect(error.message).toMatch(/Test\serror/);
 		});
 	});
 
@@ -210,10 +339,80 @@
 
 		waitsFor(function () {
 			return done;
-		}, "it should finish", 500);
+		}, "it should finish", 2000);
 
 		runs(function () {
 			expect(result).toEqual(9);
+		});
+	});
+
+	it('should process data returned from .then() when errCb occurs', function () {
+		if(isNode) return;
+		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
+
+		var done = false;
+		var result = null;
+
+		runs(function () {
+			p.map(function (el) {
+				if(el === 2) throw('Test error');
+				return el + 1;
+			}).then(function (data) {
+				// some stuff
+			}, function(e){
+				return 5;
+			}).then(function (data) {
+				result = data;
+				done = true;
+			});
+		});
+
+		waitsFor(function () {
+			return done;
+		}, "it should finish", 2000);
+
+		runs(function () {
+			expect(result).toEqual(5);
+		});
+	});
+
+	it('should process data returned from .then() when error occurs into then', function () {
+		if(isNode) return;
+		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
+
+		var done = false;
+		var result = null;
+		var fail = false;
+		var error = null;
+
+		runs(function () {
+			p.map(function (el) {
+				return el + 1;
+			}).then(function (data) {
+				throw('Test error');
+			}, function(e){
+				error = e;
+				fail = true;
+				return 5;
+			}).then(function (data) {
+				result = data;
+				done = true;
+			}, function(){
+				//some stuff
+			});
+		});
+
+		waitsFor(function () {
+			return done;
+		}, "it should finish", 2000);
+
+		waitsFor(function () {
+			return fail;
+		}, "it should finish", 2000);
+
+		runs(function () {
+			expect(result).toEqual(5);
+			expect(error).toMatch(/Test\serror/);
 		});
 	});
 
@@ -236,7 +435,7 @@
 
 			waitsFor(function () {
 				return done;
-			}, "it should finish", 1000);
+			}, "it should finish", 2000);
 
 			runs(function () {
 				expect(result).toEqual([26, 27, 28]);
@@ -272,7 +471,7 @@
 
 		waitsFor(function () {
 			return done;
-		}, "it should finish", 500);
+		}, "it should finish", 2000);
 
 		runs(function () {
 			expect(result).toEqual([26, 27, 28]);
@@ -303,7 +502,7 @@
 
 		waitsFor(function () {
 			return done;
-		}, "it should finish", 500);
+		}, "it should finish", 2000);
 
 		runs(function () {
 			expect(result).toEqual([26, 27, 31]);
@@ -360,7 +559,7 @@
 
 		waitsFor(function () {
 			return doneSpawn && doneMap && doneReduce;
-		}, "it should finish", 500);
+		}, "it should finish", 2000);
 
 		runs(function () {
 			expect(resultSpawn).toEqual(2);
@@ -419,7 +618,7 @@
 
 		waitsFor(function () {
 			return doneSpawn && doneMap && doneReduce;
-		}, "it should finish", 500);
+		}, "it should finish", 2000);
 
 		runs(function () {
 			expect(resultSpawn).toEqual(4);
@@ -449,7 +648,7 @@
 
 		waitsFor(function () {
 			return done;
-		}, "it should finish", 500);
+		}, "it should finish", 2000);
 
 		runs(function () {
 			expect(result).toEqual(2);
