@@ -33,7 +33,7 @@
 		});
 		waitsFor(function () {
 			return done;
-		}, "it should finish", 500);
+		}, "it should finish", 2000);
 	});
 
 	it('should execute .spawn() correctly', function () {
@@ -53,7 +53,7 @@
 
 		waitsFor(function () {
 			return done;
-		}, "it should finish", 500);
+		}, "it should finish", 2000);
 
 		runs(function () {
 			expect(result).toEqual(['something', 'completly', 'else']);
@@ -82,7 +82,7 @@
 
 	  waitsFor(function () {
 	    return done;
-	  }, "it should finish", 500);
+	  }, "it should finish", 2000);
 
 	  runs(function () {
 	    expect(typeof error).toEqual('object');
@@ -107,7 +107,7 @@
 
 		waitsFor(function () {
 			return done;
-		}, "it should finish", 500);
+		}, "it should finish", 2000);
 
 		runs(function () {
 			expect(result).toEqual([2, 3, 4]);
@@ -131,7 +131,7 @@
 
 		waitsFor(function () {
 			return done;
-		}, "it should finish", 500);
+		}, "it should finish", 2000);
 
 		runs(function () {
 			expect(result).toEqual([2, 3, 4]);
@@ -163,7 +163,7 @@
 
 		waitsFor(function () {
 			return fail;
-		}, "it should finish", 500);
+		}, "it should finish", 2000);
 
 		runs(function () {
 			expect(result).toEqual(null);
@@ -193,11 +193,11 @@
 
 	  setTimeout(function () {
 	  	done = true;
-	  }, 1000);
+	  }, 2000);
 
 	  waitsFor(function () {
 	    return done;
-	  }, "it should finish", 2000);
+	  }, "it should finish", 3000);
 
 	  runs(function () {
 	    expect(fires).toEqual(1);
@@ -223,7 +223,7 @@
 
 		waitsFor(function () {
 			return done;
-		}, "it should finish", 500);
+		}, "it should finish", 2000);
 
 		runs(function () {
 			expect(result).toEqual([1, 2, 3]);
@@ -253,7 +253,7 @@
 
 		waitsFor(function () {
 			return done;
-		}, "it should finish", 500);
+		}, "it should finish", 2000);
 
 		runs(function () {
 			expect(result).toEqual(9);
@@ -276,7 +276,7 @@
 
 		waitsFor(function () {
 			return done;
-		}, "it should finish", 500);
+		}, "it should finish", 2000);
 
 		runs(function () {
 			expect(result).toEqual(6);
@@ -307,7 +307,7 @@
 
 		waitsFor(function () {
 			return fail;
-		}, "it should finish", 500);
+		}, "it should finish", 2000);
 
 		runs(function () {
 			expect(result).toEqual(null);
@@ -339,7 +339,7 @@
 
 		waitsFor(function () {
 			return done;
-		}, "it should finish", 500);
+		}, "it should finish", 2000);
 
 		runs(function () {
 			expect(result).toEqual(9);
@@ -369,7 +369,7 @@
 
 		waitsFor(function () {
 			return done;
-		}, "it should finish", 500);
+		}, "it should finish", 2000);
 
 		runs(function () {
 			expect(result).toEqual(5);
@@ -404,11 +404,11 @@
 
 		waitsFor(function () {
 			return done;
-		}, "it should finish", 500);
+		}, "it should finish", 2000);
 
 		waitsFor(function () {
 			return fail;
-		}, "it should finish", 500);
+		}, "it should finish", 2000);
 
 		runs(function () {
 			expect(result).toEqual(5);
@@ -435,7 +435,7 @@
 
 			waitsFor(function () {
 				return done;
-			}, "it should finish", 1000);
+			}, "it should finish", 2000);
 
 			runs(function () {
 				expect(result).toEqual([26, 27, 28]);
@@ -471,7 +471,7 @@
 
 		waitsFor(function () {
 			return done;
-		}, "it should finish", 500);
+		}, "it should finish", 2000);
 
 		runs(function () {
 			expect(result).toEqual([26, 27, 28]);
@@ -502,7 +502,7 @@
 
 		waitsFor(function () {
 			return done;
-		}, "it should finish", 500);
+		}, "it should finish", 2000);
 
 		runs(function () {
 			expect(result).toEqual([26, 27, 31]);
@@ -559,7 +559,7 @@
 
 		waitsFor(function () {
 			return doneSpawn && doneMap && doneReduce;
-		}, "it should finish", 500);
+		}, "it should finish", 2000);
 
 		runs(function () {
 			expect(resultSpawn).toEqual(2);
@@ -618,7 +618,7 @@
 
 		waitsFor(function () {
 			return doneSpawn && doneMap && doneReduce;
-		}, "it should finish", 500);
+		}, "it should finish", 2000);
 
 		runs(function () {
 			expect(resultSpawn).toEqual(4);
@@ -648,7 +648,7 @@
 
 		waitsFor(function () {
 			return done;
-		}, "it should finish", 500);
+		}, "it should finish", 2000);
 
 		runs(function () {
 			expect(result).toEqual(2);
