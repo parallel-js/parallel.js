@@ -2,6 +2,14 @@
 	var isNode = typeof module !== 'undefined' && module.exports;
 	var Parallel = isNode ? require('../../lib/parallel.js') : self.Parallel;
 
+	function addOne(el) {
+		return el + 1;
+	}
+	
+	function sum(a, b) {
+		return a + b;
+	}
+
 	it('should be a constructor', function () {
 		expect(Parallel).toEqual(jasmine.any(Function));
 	});
@@ -21,424 +29,217 @@
 		expect(p.require).toEqual(jasmine.any(Function));
 	});
 
-	it('should execute a .then function without an operation immediately', function () {
+	it('should execute a .then function without an operation immediately', function (done) {
 		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
 		expect(p.then).toEqual(jasmine.any(Function));
 
-		var done = false;
-		runs(function () {
-			p.then(function () {
-				done = true;
-			});
+		p.then(function () {
+			expect('finished').toEqual('finished');
+			done();
 		});
-		waitsFor(function () {
-			return done;
-		}, "it should finish", 2000);
 	});
 
-	it('should execute .spawn() correctly', function () {
+	it('should execute .spawn() correctly', function (done) {
 		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
 
-		var done = false;
-		var result = null;
-
-		runs(function () {
-			p.spawn(function (data) {
-				return ['something', 'completly', 'else'];
-			}).then(function (data) {
-				result = data;
-				done = true;
-			});
-		});
-
-		waitsFor(function () {
-			return done;
-		}, "it should finish", 2000);
-
-		runs(function () {
-			expect(result).toEqual(['something', 'completly', 'else']);
+		p.spawn(function (data) {
+			return ['something', 'completly', 'else'];
+		}).then(function (data) {
+			expect(data).toEqual(['something', 'completly', 'else']);
+			done();
 		});
 	});
 
-	it('should .spawn() handle errors', function () {
-	  if (isNode) return;
+	it('should .spawn() handle errors', function (done) {
+	  if (isNode) {
+	  	done();
+	  	return;
+	  }
 
 	  var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
 
-	  var done = false;
-	  var error = null;
-
-	  runs(function () {
-	    p.spawn(function (data) {
-	      throw ('Test error');
-	      return ['something', 'completly', 'else'];
-	    }).then(function () {
-
-	    }, function (e) {
-	      error = e;
-	      done = true;
-	    });
-	  });
-
-	  waitsFor(function () {
-	    return done;
-	  }, "it should finish", 2000);
-
-	  runs(function () {
-	    expect(typeof error).toEqual('object');
+    p.spawn(function (data) {
+      throw ('Test error');
+      return ['something', 'completly', 'else'];
+    }).then(function () {}, function (error) {
+      expect(typeof error).toEqual('object');
 	    expect(error.message).toMatch(/Test\serror/);
-	  });
+	    done();
+    });
 	});
 
-	it('should .map() correctly', function () {
+	it('should .map() correctly', function (done) {
 		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
 
-		var done = false;
-		var result = null;
-
-		runs(function () {
-			p.map(function (el) {
-				return el + 1;
-			}).then(function (data) {
-				result = data;
-				done = true;
-			});
-		});
-
-		waitsFor(function () {
-			return done;
-		}, "it should finish", 2000);
-
-		runs(function () {
-			expect(result).toEqual([2, 3, 4]);
+		p.map(addOne).then(function (data) {
+			expect(data).toEqual([2, 3, 4]);
+			done();
 		});
 	});
 
-	it('should queue map work correctly', function () {
+	it('should queue map work correctly', function (done) {
 		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js', maxWorkers: 2 });
 
-		var done = false;
-		var result = null;
-
-		runs(function () {
-			p.map(function (el) {
-				return el + 1;
-			}).then(function (data) {
-				result = data;
-				done = true;
-			});
-		});
-
-		waitsFor(function () {
-			return done;
-		}, "it should finish", 2000);
-
-		runs(function () {
-			expect(result).toEqual([2, 3, 4]);
+		p.map(addOne).then(function (data) {
+			expect(data).toEqual([2, 3, 4]);
+			done();
 		});
 	});
 
-	it('should map handle error correctly', function () {
-		if(isNode) return;
+	it('should map handle error correctly', function (done) {
+		if (isNode) {
+			done();
+			return;
+		}
 
 		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js', maxWorkers: 2 });
 
-		var done = false;
-		var fail = false;
-		var error = null;
-		var result = null;
-
-		runs(function () {
-			p.map(function (el) {
-				if(el === 2) throw('Test error');
-				return el + 1;
-			}).then(function (data) {
-				result = data;
-				done = true;
-			}, function(e){
-				error = e;
-				fail = true;
-			});
-		});
-
-		waitsFor(function () {
-			return fail;
-		}, "it should finish", 2000);
-
-		runs(function () {
-			expect(result).toEqual(null);
+		p.map(function (el) {
+			if (el === 2) throw('Test error');
+			return el + 1;
+		}).then(function () {}, function (error) {
 			expect(typeof error).toEqual('object');
 			expect(error.message).toMatch(/Test\serror/);
+			done();
 		});
 	});
 
-	it('should only fire promise once for errors + successful calls', function () {
-	  if (isNode) return;
+	it('should only fire promise once for errors + successful calls', function (done) {
+	  if (isNode) {
+	  	done();
+	  	return;
+	  }
 
 	  var p = new Parallel([1, 2, 3], { evalPath: 'lib/eval.js' });
-
-	  var done = false;
 	  var fires = 0;
 
-	  runs(function () {
-	    p.map(function (el) {
-	      if (el === 1) throw new Error('a');
-	      return el;
-	    }).then(function (data) {
-	      fires++;
-	    }, function () {
-	      fires++;
-	    });
-	  });
-
-	  setTimeout(function () {
-	  	done = true;
-	  }, 2000);
-
-	  waitsFor(function () {
-	    return done;
-	  }, "it should finish", 3000);
-
-	  runs(function () {
-	    expect(fires).toEqual(1);
-	  });
+    p.map(function (el) {
+      if (el === 1) throw new Error('a');
+      return el;
+    }).then(function (data) {
+      fires++;
+      expect(fires).toEqual(1);
+      done();
+    }, function () {
+      fires++;
+    });
 	});
 
-	it('should chain .map() correctly', function () {
+	it('should chain .map() correctly', function (done) {
 		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
 
-		var done = false;
-		var result = null;
-
-		runs(function () {
-			p.map(function (el) {
-				return el + 1;
-			}).map(function (el) {
-				return el - 1;
-			}).then(function (data) {
-				result = data;
-				done = true;
-			});
-		});
-
-		waitsFor(function () {
-			return done;
-		}, "it should finish", 2000);
-
-		runs(function () {
-			expect(result).toEqual([1, 2, 3]);
+		p.map(addOne).map(function (el) {
+			return el - 1;
+		}).then(function (data) {
+			expect(data).toEqual([1, 2, 3]);
+			done();
 		});
 	});
 
-	it('should mix .spawn and .map() correctly', function () {
+	it('should mix .spawn and .map() correctly', function (done) {
 		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
 
-		var done = false;
-		var result = null;
-
-		runs(function () {
-			p.map(function (el) {
-				return el + 1;
-			}).spawn(function (data) {
-				var sum = 0;
-				for (var i = 0; i < data.length; ++i) {
-					sum += data[i];
-				}
-				return sum;
-			}).then(function (data) {
-				result = data;
-				done = true;
+		p.map(addOne).spawn(function (data) {
+			return data.reduce(function (a, b) {
+				return a + b;
 			});
-		});
-
-		waitsFor(function () {
-			return done;
-		}, "it should finish", 2000);
-
-		runs(function () {
-			expect(result).toEqual(9);
+		}).then(function (data) {
+			expect(data).toEqual(9);
+			done();
 		});
 	});
 
-	it('should execute .reduce() correctly', function () {
+	it('should execute .reduce() correctly', function (done) {
 		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
-		var done = false;
-		var result = null;
 
-		runs(function () {
-			p.reduce(function (data) {
-				return data[0] + data[1];
-			}).then(function (data) {
-				result = data;
-				done = true;
-			});
-		});
-
-		waitsFor(function () {
-			return done;
-		}, "it should finish", 2000);
-
-		runs(function () {
-			expect(result).toEqual(6);
+		p.reduce(function (data) {
+			return data[0] + data[1];
+		}).then(function (data) {
+			expect(data).toEqual(6);
+			done();
 		});
 	});
 
-	it('should reduce handle error correctly', function () {
-		if(isNode) return;
+	it('should reduce handle error correctly', function (done) {
+		if(isNode) {
+			done();
+			return;
+		}
+
 		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js', maxWorkers: 2 });
 
-		var done = false;
-		var fail = false;
-		var error = null;
-		var result = null;
-
-		runs(function () {
-			p.reduce(function (n) {
-				if(n[1] === 2) throw('Test error');
-				return n[0] + n[1];
-			}).then(function (data) {
-				result = data;
-				done = true;
-			}, function(e){
-				error = e;
-				fail = true;
-			});
-		});
-
-		waitsFor(function () {
-			return fail;
-		}, "it should finish", 2000);
-
-		runs(function () {
-			expect(result).toEqual(null);
+		p.reduce(function (n) {
+			if(n[1] === 2) throw('Test error');
+			return n[0] + n[1];
+		}).then(function () {}, function(error){
 			expect(typeof error).toEqual('object');
 			expect(error.message).toMatch(/Test\serror/);
+			done();
 		});
 	});
 
-	it('should process data returned from .then()', function () {
+	it('should process data returned from .then()', function (done) {
 		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
 
-		var done = false;
-		var result = null;
-
-		runs(function () {
-			p.map(function (el) {
-				return el + 1;
-			}).then(function (data) {
-				var sum = 0;
-				for (var i = 0; i < data.length; ++i) {
-					sum += data[i];
-				}
-				return sum;
-			}).then(function (data) {
-				result = data;
-				done = true;
-			});
-		});
-
-		waitsFor(function () {
-			return done;
-		}, "it should finish", 2000);
-
-		runs(function () {
-			expect(result).toEqual(9);
+		p.map(addOne).then(function (data) {
+			return data.reduce(sum);
+		}).then(function (data) {
+			expect(data).toEqual(9);
+			done();
 		});
 	});
 
-	it('should process data returned from .then() when errCb occurs', function () {
-		if(isNode) return;
+	it('should process data returned from .then() when errCb occurs', function (done) {
+		if (isNode) {
+			done();
+			return;
+		}
 		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
 
-		var done = false;
-		var result = null;
-
-		runs(function () {
-			p.map(function (el) {
-				if(el === 2) throw('Test error');
-				return el + 1;
-			}).then(function (data) {
-				// some stuff
-			}, function(e){
-				return 5;
-			}).then(function (data) {
-				result = data;
-				done = true;
-			});
-		});
-
-		waitsFor(function () {
-			return done;
-		}, "it should finish", 2000);
-
-		runs(function () {
-			expect(result).toEqual(5);
+		p.map(function (el) {
+			if (el === 2) throw('Test error');
+			return el + 1;
+		}).then(function (data) {}, function (error) {
+			return 5;
+		}).then(function (data) {
+			expect(data).toEqual(5);
+			done();
 		});
 	});
 
-	it('should process data returned from .then() when error occurs into then', function () {
-		if(isNode) return;
+	it('should process data returned from .then() when error occurs into then', function (done) {
+		if (isNode) {
+			done();
+			return;
+		}
+
 		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
 
-		var done = false;
-		var result = null;
-		var fail = false;
-		var error = null;
-
-		runs(function () {
-			p.map(function (el) {
-				return el + 1;
-			}).then(function (data) {
-				throw('Test error');
-			}, function(e){
-				error = e;
-				fail = true;
-				return 5;
-			}).then(function (data) {
-				result = data;
-				done = true;
-			}, function(){
-				//some stuff
-			});
-		});
-
-		waitsFor(function () {
-			return done;
-		}, "it should finish", 2000);
-
-		waitsFor(function () {
-			return fail;
-		}, "it should finish", 2000);
-
-		runs(function () {
-			expect(result).toEqual(5);
+		p.map(function (el) {
+			return el + 1;
+		}).then(function (data) {
+			throw('Test error');
+		}, function(error){
 			expect(error).toMatch(/Test\serror/);
+			return 5;
+		}).then(function (data) {
+			expect(data).toEqual(5);
+			done();
+		}, function(){
+			//some stuff
 		});
 	});
 
 	if (!isNode) {
-		it('should work with require()d scripts (web-exclusive)', function () {
+		it('should work with require()d scripts (web-exclusive)', function (done) {
 			var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
 			p.require('../test/test.js'); // relative to eval.js
 
-			var done = false;
-			var result = null;
-
-			runs(function () {
-				p.map(function (el) {
-					return myCalc(el, 25);
-				}).then(function (data) {
-					result = data;
-					done = true;
-				});
-			});
-
-			waitsFor(function () {
-				return done;
-			}, "it should finish", 2000);
-
-			runs(function () {
-				expect(result).toEqual([26, 27, 28]);
+			p.map(function (el) {
+				return myCalc(el, 25);
+			}).then(function (data) {
+				expect(data).toEqual([26, 27, 28]);
+				done();
 			});
 		});
 	}
@@ -450,62 +251,32 @@
 		expect(ret).toEqual(jasmine.any(Parallel));
 	});
 
-	it('should work with require()d anonymous functions', function () {
+	it('should work with require()d anonymous functions', function (done) {
 		var fn = function (el, amount) {
 			return el + amount;
 		};
 		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
 		p.require({ name: 'fn', fn: fn });
 
-		var done = false;
-		var result = null;
-
-		runs(function () {
-			p.map(function (el) {
-				return fn(el, 25);
-			}).then(function (data) {
-				result = data;
-				done = true;
-			});
-		});
-
-		waitsFor(function () {
-			return done;
-		}, "it should finish", 2000);
-
-		runs(function () {
-			expect(result).toEqual([26, 27, 28]);
+		p.map(function (el) {
+			return fn(el, 25);
+		}).then(function (data) {
+			expect(data).toEqual([26, 27, 28]);
+			done();
 		});
 	});
 
-	it('should accept more than one requirement', function () {
-		var fn = function (el, amount) {
-			return el + amount;
-		};
-
+	it('should accept more than one requirement', function (done) {
 		function factorial(n) { return n < 2 ? 1 : n * factorial(n - 1); }
 
 		var p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
-		p.require({ name: 'fn', fn: fn }, factorial);
+		p.require({ name: 'sum', fn: sum }, factorial);
 
-		var done = false;
-		var result = null;
-
-		runs(function () {
-			p.map(function (el) {
-				return fn(factorial(el), 25);
-			}).then(function (data) {
-				result = data;
-				done = true;
-			});
-		});
-
-		waitsFor(function () {
-			return done;
-		}, "it should finish", 2000);
-
-		runs(function () {
-			expect(result).toEqual([26, 27, 31]);
+		p.map(function (el) {
+			return sum(factorial(el), 25);
+		}).then(function (data) {
+			expect(data).toEqual([26, 27, 31]);
+			done();
 		});
 	});
 
@@ -627,31 +398,18 @@
 		});
 	});
 
-	it('should allow configuring global namespace', function () {
+	it('should allow configuring global namespace', function (done) {
 		var p = new Parallel([1, 2, 3], {
 			evalPath: isNode ? undefined : 'lib/eval.js',
 			env: { a: 1 },
 			envNamespace: 'other'
 		});
 
-		var done = false;
-		var result = null;
-
-		runs(function () {
-			p.spawn(function (data) {
-				return global.other.a * 2;
-			}).then(function (data) {
-				result = data;
-				done = true;
-			});
-		});
-
-		waitsFor(function () {
-			return done;
-		}, "it should finish", 2000);
-
-		runs(function () {
-			expect(result).toEqual(2);
+		p.spawn(function (data) {
+			return global.other.a * 2;
+		}).then(function (data) {
+			expect(data).toEqual(2);
+			done();
 		});
 	});
 });
