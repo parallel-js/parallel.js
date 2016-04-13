@@ -138,7 +138,7 @@ The functions given to `then` are called after the last requested operation has 
 `success` receives the resulting data object, while `fail` will receive an error object.
 
 *Arguments*
-- `success`: A function that gets called upon succesful completion. Receives the wrapped data as an argument.
+- `success`: A function that gets called upon successful completion. Receives the wrapped data as an argument.
 - `failure` (optional): A function that gets called if the job fails. The function is passed an error object.
 
 *Example*
