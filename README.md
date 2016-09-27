@@ -2,6 +2,11 @@ Parallel.js
 ===========
 
 ### Parallel Computing with Javascript
+
+_Please note that version 2.1 is 2 years old_
+
+**Update september 2016**: New forces are put in place to drive the code forward.
+
 *******
 
 
