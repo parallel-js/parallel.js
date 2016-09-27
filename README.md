@@ -1,17 +1,16 @@
+Parallel.js
+===========
 [![Build Status](https://travis-ci.org/parallel-js/parallel.js.svg?branch=master)](https://travis-ci.org/parallel-js/parallel.js)
 [![NPM version](https://badge.fury.io/js/paralleljs.svg)](http://badge.fury.io/js/paralleljs)
 [![Dependency Status](https://img.shields.io/david/parallel-js/parallel.js.svg)](https://david-dm.org/parallel-js/parallel.js)
 [![npm](https://img.shields.io/npm/dm/paralleljs.svg?maxAge=2592000)]()
-
-Parallel.js
-===========
 
 
 _Easy Parallel Computing with Javascript_ 
 
 > Please note that version 2.1 is 2 years old
 
-> **Update september 2016**: New forces are put in place to drive the code forward.
+> **Update: September 2016**: New forces are put in place to drive the code forward.
 
 
 
