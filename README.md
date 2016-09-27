@@ -1,16 +1,17 @@
+[![Build Status](https://travis-ci.org/parallel-js/parallel.js.svg?branch=amilajack-patch-2)](https://travis-ci.org/parallel-js/parallel.js)
+
 Parallel.js
 ===========
 
-### Parallel Computing with Javascript
+_Easy Parallel Computing with Javascript_ 
 
-_Please note that version 2.1 is 2 years old_
+> Please note that version 2.1 is 2 years old
 
-**Update september 2016**: New forces are put in place to drive the code forward.
-
-*******
+> **Update september 2016**: New forces are put in place to drive the code forward.
 
 
-Parallel.js is a simple library for parallel computing in Javascript, either in Node.js or in the Web Browser.
+
+Parallel.js is a library for to make parallel computing in Javascript simple. It works in Node.js and in the Web Browser.
 Parallel takes advantage of Web Workers for the web, and child processes for Node.
 
 # Installation
