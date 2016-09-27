@@ -32,6 +32,9 @@
 	"scripts": {
 		"test": "jasmine-node --verbose test/specs"
 	},
+	"browser": {
+		"child_process": false
+	},
 	"engines": {
 		"node": ">=0.9.10"
 	},
