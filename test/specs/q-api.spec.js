@@ -1,56 +1,36 @@
 ﻿describe('Q-API', function () {
 	var isNode = typeof module !== 'undefined' && module.exports;
 
+	function addOne(el) {
+		return el + 1;
+	}
+
+	function sum(a, b) {
+		return a + b;
+	}
+
 	if (isNode) {
 		var Q = require('q');
 
-		it('should execute .spawn() correctly', function () {
+		it('should execute .spawn() correctly', function (done) {
 			var Parallel = require('../../lib/parallel.js');
 			var p = new Parallel([1, 2, 3]);
 
-			var done = false;
-			var result = null;
-
-			runs(function () {
-				Q.when(p.spawn(function (data) {
-					return ['something', 'completly', 'else'];
-				})).then(function (data) {
-					result = data;
-					done = true;
-				});
-			});
-
-			waitsFor(function () {
-				return done;
-			}, "it should finish", 2000);
-
-			runs(function () {
-				expect(result).toEqual(['something', 'completly', 'else']);
+			Q.when(p.spawn(function (data) {
+				return ['something', 'completely', 'else'];
+			})).then(function (data) {
+				expect(data).toEqual(['something', 'completely', 'else']);
+				done();
 			});
 		});
 
-		it('should .map() correctly', function () {
+		it('should .map() correctly', function (done) {
 			var Parallel = require('../../lib/parallel.js');
 			var p = new Parallel([1, 2, 3]);
 
-			var done = false;
-			var result = null;
-
-			runs(function () {
-				Q.when(p.map(function (el) {
-					return el + 1;
-				})).then(function (data) {
-					result = data;
-					done = true;
-				});
-			});
-
-			waitsFor(function () {
-				return done;
-			}, "it should finish", 2000);
-
-			runs(function () {
-				expect(result).toEqual([2, 3, 4]);
+			Q.when(p.map(addOne)).then(function (data) {
+				expect(data).toEqual([2, 3, 4]);
+				done();
 			});
 		});
 
@@ -58,53 +38,22 @@
 			var Parallel = require('../../lib/parallel.js');
 			var p = new Parallel([1, 2, 3], { maxWorkers: 2 });
 
-			var done = false;
-			var result = null;
-
-			runs(function () {
-				Q.when(p.map(function (el) {
-					return el + 1;
-				})).then(function (data) {
-					result = data;
-					done = true;
-				});
-			});
-
-			waitsFor(function () {
-				return done;
-			}, "it should finish", 2000);
-
-			runs(function () {
-				expect(result).toEqual([2, 3, 4]);
+			Q.when(p.map(addOne)).then(function (data) {
+				expect(data).toEqual([2, 3, 4]);
 			});
 		});
 
-		it('should chain .map() correctly', function () {
+		it('should chain .map() correctly', function (done) {
 			var Parallel = require('../../lib/parallel.js');
 			var p = new Parallel([1, 2, 3]);
 
-			var done = false;
-			var result = null;
-
-			runs(function () {
-				Q.when(p.map(function (el) {
-					return el + 1;
-				})).then(function () {
-					return p.map(function (el) {
-						return el - 1;
-					});
-				}).then(function (data) {
-					result = data;
-					done = true;
+			Q.when(p.map(addOne)).then(function () {
+				return p.map(function (el) {
+					return el - 1;
 				});
-			});
-
-			waitsFor(function () {
-				return done;
-			}, "it should finish", 2000);
-
-			runs(function () {
-				expect(result).toEqual([1, 2, 3]);
+			}).then(function (data) {
+				expect(data).toEqual([1, 2, 3]);
+				done();
 			});
 		});
 
@@ -112,89 +61,39 @@
 			var Parallel = require('../../lib/parallel.js');
 			var p = new Parallel([1, 2, 3]);
 
-			var done = false;
-			var result = null;
-
-			runs(function () {
-				Q.when(p.map(function (el) {
-					return el + 1;
-				})).then(function () {
-					return p.spawn(function (data) {
-						var sum = 0;
-						for (var i = 0; i < data.length; ++i) {
-							sum += data[i];
-						}
-						return sum;
-					});
-				}).then(function (data) {
-					result = data;
-					done = true;
+			Q.when(p.map(addOne))
+			.then(function () {
+				return p.spawn(function (data) {
+					return data.reduce(sum);
 				});
-			});
-
-			waitsFor(function () {
-				return done;
-			}, "it should finish", 2000);
-
-			runs(function () {
+			}).then(function (data) {
 				expect(result).toEqual(9);
 			});
 		});
 
-		it('should execute .reduce() correctly', function () {
+		it('should execute .reduce() correctly', function (done) {
 			var Parallel = require('../../lib/parallel.js');
 			var p = new Parallel([1, 2, 3]);
-			var done = false;
-			var result = null;
 
-			runs(function () {
-				Q.when(p.reduce(function (data) {
-					return data[0] + data[1];
-				})).then(function (data) {
-					result = data;
-					done = true;
-				});
-			});
-
-			waitsFor(function () {
-				return done;
-			}, "it should finish", 2000);
-
-			runs(function () {
-				expect(result).toEqual(6);
+			Q.when(p.reduce(function (data) {
+				return data[0] + data[1];
+			})).then(function (data) {
+				expect(data).toEqual(6);
+				done();
 			});
 		});
 
-		it('should process data returned from .then()', function () {
+		it('should process data returned from .then()', function (done) {
 			var Parallel = require('../../lib/parallel.js');
 			var p = new Parallel([1, 2, 3]);
 
-			var done = false;
-			var result = null;
-
-			runs(function () {
-				Q.when(p.map(function (el) {
-					return el + 1;
-				})).then(function () {
-					return p.then(function (data) {
-						var sum = 0;
-						for (var i = 0; i < data.length; ++i) {
-							sum += data[i];
-						}
-						return sum;
-					});
-				}).then(function (data) {
-					result = data;
-					done = true;
+			Q.when(p.map(addOne)).then(function (qe) {
+				return p.then(function (data) {
+					return data.reduce(sum);
 				});
-			});
-
-			waitsFor(function () {
-				return done;
-			}, "it should finish", 2000);
-
-			runs(function () {
-				expect(result).toEqual(9);
+			}).then(function (data) {
+				expect(data).toEqual(9);
+				done();
 			});
 		});
 	}
