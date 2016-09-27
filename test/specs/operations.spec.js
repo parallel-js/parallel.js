@@ -1,4 +1,4 @@
-﻿// xdescribe('Operations', function () {
+// xdescribe('Operations', function () {
 //     var isNode = typeof module !== 'undefined' && module.exports;
 //     var Parallel = isNode ? require('../../lib/parallel.js') : self.Parallel;
 

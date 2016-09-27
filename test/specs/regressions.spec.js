@@ -1,27 +1,26 @@
-describe('Regression tests', function () {
-	var isNode = typeof module !== 'undefined' && module.exports;
-	var Worker = isNode ? require(__dirname + '/../../lib/Worker.js') : self.Worker;
+describe('Regression tests', () => {
+  const isNode = typeof module !== 'undefined' && module.exports;
+  const Worker = isNode ? require(`${__dirname}/../../lib/Worker.js`) : self.Worker;
 
-	if (!isNode) {
-		it('should be possible to use XmlHttpRequest', function () {
-			var done = false;
-			var p = new Parallel(['http://' + window.location.host + window.location.pathname], { evalPath: isNode ? undefined : 'lib/eval.js' });
+  if (!isNode) {
+    it('should be possible to use XmlHttpRequest', () => {
+      let done = false;
+      const p = new Parallel([`http://${window.location.host}${window.location.pathname}`], { evalPath: isNode ? undefined : 'lib/eval.js' });
 
-			runs(function () {
+      runs(() => {
+        p.map((url) => {
+          const xhr = new XMLHttpRequest();
+          xhr.open('GET', url, false);
+          xhr.send(null);
+        }).then(() => {
+          done = true;
+        });
+      });
 
-				p.map(function (url) {
-					var xhr = new XMLHttpRequest();
-					xhr.open('GET', url, false);
-					xhr.send(null);
-				}).then(function () {
-					done = true;
-				});
-			});
 
-
-			waitsFor(function () {
-				return done;
-			}, "The request should succeed", 750);
-		});
-	}
+      waitsFor(() => {
+        return done;
+      }, 'The request should succeed', 750);
+    });
+  }
 });
