@@ -24,6 +24,9 @@
 		"workers",
 		"webworkers"
 	],
+	"optionalDependencies": {
+		"webworker-threads": "^0.4.7"
+	},
 	"devDependencies": {
 		"jasmine-node": "x",
 		"q": "x"
