@@ -26,7 +26,7 @@ Just include it via a script tag in your HTML page
 Parallel.js is also available as a node module:
 
 ```bash
-npm install paralleljs
+npm install paralleljs --save
 ```
 
 # Usage
@@ -47,8 +47,8 @@ operations on the provided data.
   * `synchronous` (optional): If webworkers are not available, whether or not to fall back to synchronous processing using `setTimeout`. Defaults to `true`.
 
 *Example*
-```javascript
-var p = new Parallel([1, 2, 3, 4, 5]);
+```js
+const p = new Parallel([1, 2, 3, 4, 5]);
 
 console.log(p.data); // prints [1, 2, 3, 4, 5]
 ```
@@ -64,17 +64,18 @@ update the current data.
 * `fn`: A function to execute on a worker thread. Receives the wrapped data as an argument. The value returned will be assigned to the wrapped data.
 
 *Example*
-```javascript
-var p = new Parallel('forwards');
+```js
+const p = new Parallel('forwards');
 
 // Spawn a remote job (we'll see more on how to use then later)
-p.spawn(function (data) {
+p.spawn(data => {
   data = data.reverse();
   
   console.log(data); // logs sdrawrof
   
   return data;
-}).then(function (data) {
+})
+.then(data => {
   console.log(data) // logs sdrawrof
 });
 ```
@@ -90,9 +91,9 @@ further processing.
 * `fn`: A function to apply. Receives the wrapped data as an argument. The value returned will be assigned to the wrapped data.
 
 *Example*
-```javascript
-var p = new Parallel([0, 1, 2, 3, 4, 5, 6]),
-    log = function () { console.log(arguments); };
+```js
+const p = new Parallel([0, 1, 2, 3, 4, 5, 6]);
+const log = function () { console.log(arguments); };
 
 // One gotcha: anonymous functions cannot be serialzed
 // If you want to do recursion, make sure the function
@@ -117,8 +118,8 @@ which gets an argument, `data`, an array of the stored value, and the current el
 * `fn`: A function to apply. Receives the stored value and current element as argument. The value returned will be stored as the current value for the next iteration. Finally, the current value will be assigned to current data.
 
 *Example*
-```javascript
-var p = new Parallel([0, 1, 2, 3, 4, 5, 6, 7, 8]);
+```js
+const p = new Parallel([0, 1, 2, 3, 4, 5, 6, 7, 8]);
 
 function add(d) { return d[0] + d[1]; }
 function factorial(n) { return n < 2 ? 1 : n * factorial(n - 1); }
@@ -127,7 +128,7 @@ function log() { console.log(arguments); }
 p.require(factorial)
 
 // Approximate e^10
-p.map(function (n) { return Math.pow(10, n); }).reduce(add).then(log);
+p.map((n => Math.pow(10, n)).reduce(add).then(log);
 ```
 
 *******
@@ -141,17 +142,24 @@ The functions given to `then` are called after the last requested operation has 
 - `failure` (optional): A function that gets called if the job fails. The function is passed an error object.
 
 *Example*
-```javascript
-var p = new Parallel([1, 2, 3]);
+```js
+const p = new Parallel([1, 2, 3]);
 
 function dbl(n) { return n * 2; }
 
-p.map(dbl).map(dbl).map(dbl).then(function (data) {
-  console.log(data); // logs [8, 16, 24]
-});
+p
+  .map(dbl)
+  .map(dbl)
+  .map(dbl)
+  .then(data => {
+    console.log(data); // logs [8, 16, 24]
+  });
 
 // Approximate e^10
-p.map(function (n) { return Math.pow(10, n) / factorial(n); }).reduce(add).then(log);
+p
+  .map(n => Math.pow(10, n) / factorial(n))
+  .reduce(add)
+  .then(log);
 ```
 
 *******
@@ -163,10 +171,10 @@ use ```require``` with a file name as an argument, you have to provide the evalP
 object.
 
 *Example*
-```javascript
-var p = new Parallel([1, 2, 3], { evalPath: 'https://raw.github.com/adambom/parallel.js/master/lib/eval.js' });
+```js
+let p = new Parallel([1, 2, 3], { evalPath: 'https://raw.github.com/adambom/parallel.js/master/lib/eval.js' });
 
-function cubeRoot(n) { return Math.pow(n, 1 / 3); }
+const cubeRoot = n => Math.pow(n, 1 / 3);
 
 // Require a function
 p.require(cubeRoot);
@@ -174,9 +182,7 @@ p.require(cubeRoot);
 // Require a file
 p.require('blargh.js');
 
-p.map(function (d) {
-  return blargh(20 * cubeRoot(d));
-});
+p.map(d => blargh(20 * cubeRoot(d)));
 ```
 #### Passing environement to functions
 You can pass data to threads that will be global to that worker. This data will be global in each called function.
@@ -187,17 +193,15 @@ to the parallel constructor.
 Important: Globals can not be mutated between threads.
 
 *Example*
-```javascript
-var p = new Parallel([1, 2, 3], {
+```js
+let p = new Parallel([1, 2, 3], {
   env: {
     a: 10
   }
 });
 
 // returns 10, 20, 30
-p.map(function (d) {
-  return d * global.env.a;
-});
+p.map(d => d * global.env.a);
 
 // Configure the namespace
 p = new Parallel([1, 2, 3], {
@@ -207,11 +211,7 @@ p = new Parallel([1, 2, 3], {
   envNamespace: 'parallel'
 });
 
-p.map(function (d) {
-  return d * global.parallel.a;
-});
-
-
+p.map(d => d * global.parallel.a);
 ```
 
 # Compatibility
