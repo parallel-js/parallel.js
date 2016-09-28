@@ -6,7 +6,7 @@ Parallel.js
 [![npm](https://img.shields.io/npm/dm/paralleljs.svg?maxAge=2592000)]()
 
 
-_Easy Parallel Computing with Javascript_ 
+_Easy multi-core processing with javascript._ 
 
 > Please note that version 2.1 is 2 years old
 
