@@ -10,7 +10,7 @@
   "license": "BSD",
   "scripts": {
     "lint": "eslint test lib *.js",
-    "test": "npm run lint && jasmine-node --verbose test/specs"
+    "test": "jasmine-node --verbose test/specs"
   },
   "main": "lib/parallel.js",
   "repository": {
