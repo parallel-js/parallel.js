@@ -2,7 +2,7 @@
 	var isNode = typeof module !== 'undefined' && module.exports;
 	var Parallel = isNode ? require('../../lib/parallel.js') : self.Parallel;
 
-	xit.('.map() should be using multi-threading (could fail on single-core)', function () {
+	it('.map() should be using multi-threading (could fail on single-core)', function () {
 		var slowSquare = function (n) {
 			var i = 0;
 			while (++i < n * n) { }
