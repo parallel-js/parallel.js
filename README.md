@@ -28,6 +28,12 @@ Parallel.js is also available as a node module:
 npm install paralleljs --save
 ```
 
+# Compatibility
+Tested on node 4 - 6
+
+[![browser support](https://ci.testling.com/adambom/parallel.js.png)](https://ci.testling.com/adambom/parallel.js)
+
+
 # Usage
 
 #### `Parallel(data, opts)`
@@ -213,5 +219,6 @@ p = new Parallel([1, 2, 3], {
 p.map(d => d * global.parallel.a);
 ```
 
-# Compatibility
-[![browser support](https://ci.testling.com/adambom/parallel.js.png)](https://ci.testling.com/adambom/parallel.js)
+----
+
+[![Throughput Graph](https://graphs.waffle.io/parallel-js/parallel.js/throughput.svg)](https://waffle.io/parallel-js/parallel.js/metrics/throughput)
