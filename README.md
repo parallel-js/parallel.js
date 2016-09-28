@@ -12,24 +12,26 @@ _Easy multi-core processing with javascript._
 
 > **Update: September 2016**: New forces are put in place to drive the code forward.
 
-
-
 Parallel.js is a library for to make parallel computing in Javascript simple. It works in Node.js and in the Web Browser.
 Parallel takes advantage of Web Workers for the web, and child processes for Node.
 
 # Installation
-You can download the raw javascript file [here](https://raw.github.com/adambom/parallel.js/master/lib/parallel.js)
-
-Just include it via a script tag in your HTML page
-
-Parallel.js is also available as a node module:
+For node:
 
 ```bash
 npm install paralleljs --save
 ```
 
+Download the last javascript file [here](https://raw.github.com/parallel-js/parallel.js/master/lib/parallel.js) and include it via a script tag in your HTML page
+
+```html
+<script src="parallel.js"></script>
+```
+
+
+
 # Compatibility
-Tested on node 4 - 6
+Tested on Node.js 6 and 4
 
 [![browser support](https://ci.testling.com/adambom/parallel.js.png)](https://ci.testling.com/adambom/parallel.js)
 
