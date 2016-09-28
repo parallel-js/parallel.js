@@ -12,8 +12,8 @@ _Easy Parallel Computing with Javascript_
 
 > **Update: September 2016**: New forces are put in place to drive the code forward.
 
-Parallel.js is a library making JavScript parallel computing simple.
-Parallel.js works in Node.js and in the web browser for client side, server side or a mixture of client and server side compute.
+Parallel.js is a library making JavScript parallel computing simple.  
+Parallel.js works in Node.js and in the web browser for client side, server side or a mixture of client and server side compute.  
 Parallel.js takes advantage of Web Workers for the web, and child processes for Node.
 
 # Installation
