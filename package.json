@@ -9,7 +9,7 @@
   "description": "parallel.js enables easy multi-thread processing in javascript",
   "license": "BSD",
   "scripts": {
-    "lint": "eslint test/*.js lib/*.js",
+    "lint": "eslint lib/*.js",
     "test": "npm run lint && jasmine-node --verbose test/specs"
   },
   "main": "lib/parallel.js",
