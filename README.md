@@ -12,12 +12,12 @@ _Easy Parallel Computing with Javascript_
 
 > **Update: September 2016**: New forces are put in place to drive the code forward.
 
-
-
-Parallel.js is a library for to make parallel computing in Javascript simple. It works in Node.js and in the Web Browser.
-Parallel takes advantage of Web Workers for the web, and child processes for Node.
+Parallel.js is a library making JavScript parallel computing simple.
+Parallel.js works in Node.js and in the web browser for client side, server side or a mixture of client and server side compute.
+Parallel.js takes advantage of Web Workers for the web, and child processes for Node.
 
 # Installation
+
 You can download the raw javascript file [here](https://raw.github.com/adambom/parallel.js/master/lib/parallel.js)
 
 Just include it via a script tag in your HTML page
@@ -31,6 +31,7 @@ npm install paralleljs --save
 # Usage
 
 #### `Parallel(data, opts)`
+
 This is the constructor. Use it to new up any parallel jobs. The constructor takes an array of data you want to
 operate on. This data will be held in memory until you finish your job, and can be accessed via the `.data` attribute
 of your job.
@@ -46,6 +47,7 @@ operations on the provided data.
   * `synchronous` (optional): If webworkers are not available, whether or not to fall back to synchronous processing using `setTimeout`. Defaults to `true`.
 
 *Example*
+
 ```js
 const p = new Parallel([1, 2, 3, 4, 5]);
 
