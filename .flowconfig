@@ -4,8 +4,6 @@
 .*/git/.*
 
 [include]
-./app/*.js
-./node_modules/
 
 [libs]
 

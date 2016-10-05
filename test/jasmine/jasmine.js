@@ -1784,9 +1784,9 @@ jasmine.MultiReporter.prototype.addReporter = function (reporter) {
           }
         }
       };
-    })(functionName);
+    }(functionName));
   }
-})();
+}());
 /**
  * Holds results for a set of Jasmine spec. Allows for the results array to hold another jasmine.NestedResults
  *

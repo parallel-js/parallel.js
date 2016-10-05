@@ -93,4 +93,4 @@
 
 	// export public
   jasmine.TapReporter = TapReporter;
-})();
+}());

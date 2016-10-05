@@ -140,7 +140,7 @@ jasmine.HtmlReporter = function (_doc) {
       }
 
       specName = paramMap.spec;
-    })();
+    }());
 
     return specName;
   }
