@@ -4,6 +4,7 @@ Parallel.js
 [![NPM version](https://badge.fury.io/js/paralleljs.svg)](http://badge.fury.io/js/paralleljs)
 [![Dependency Status](https://img.shields.io/david/parallel-js/parallel.js.svg)](https://david-dm.org/parallel-js/parallel.js)
 [![npm](https://img.shields.io/npm/dm/paralleljs.svg?maxAge=2592000)]()
+[![first-timers-only](http://img.shields.io/badge/first--timers--only-friendly-blue.svg?style=flat-square)](http://www.firsttimersonly.com/)
 
 
 _Easy Parallel Computing with Javascript_ 
