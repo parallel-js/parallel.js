@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <!--[if lt IE 7]>
-<html class="no-js lt-ie9 lt-ie8 lt-ie7">
+	<html class="no-js lt-ie9 lt-ie8 lt-ie7">
 <![endif]-->
 <!--[if IE 7]>
-<html class="no-js lt-ie9 lt-ie8">
+	<html class="no-js lt-ie9 lt-ie8">
 <![endif]-->
 <!--[if IE 8]>
-<html class="no-js lt-ie9">
+	<html class="no-js lt-ie9">
 <![endif]-->
 <!--[if gt IE 8]>
-<html class="no-js">
+	<html class="no-js">
 <![endif]-->
 <html class="no-js">
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>Parallel.js - Parallel Computing with Javascript</title>
+		<title>Parallel.js: Parallel computing with Javascript</title>
 		<meta name="description" content="Parallel.js is a library for performing parallel computing in Javascript using web workers.">
 		<meta name="viewport" content="width=device-width">
 		<link rel="stylesheet" href="css/examples.css">
@@ -28,124 +28,313 @@
 		</style>
 		<script src="js/vendor/modernizr.custom.js"></script>
 	</head>
-	<body>
+	<body class="container">
 		<!--[if lt IE 7]>
 		<p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
 		<![endif]-->
 		<a href="https://github.com/parallel-js/parallel.js" class="github-corner" aria-label="View source on Github"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#FD6C6C; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
-		<div class="container">
-		<h1>Parallel.js</h1>
-		<p class="lead">Easy multi-core processing with javascript</p>
-		<p>Parallel.js is a tiny library for multi-core processing in Javascript. It was created to take full advantage of the ever-maturing web-workers API. Javascript is fast, no doubt, but lacks the parallel computing capabilites of its peer languages due to its single-threaded computing model. In a world where the numbers of cores on a CPU are increasing faster than the speed of the cores themselves, isn't it a shame that we can't take advantage of this raw parallelism?</p>
-		<p>Parallel.js solves that problem by giving you high level access to multi-core processing using web workers. It runs on node and in your browser.</p>
-		<h2 class="page-header">Download</h2>
-		<p>Unminified: <a href="https://raw.github.com/adambom/parallel.js/master/lib/parallel.js">parallel.js</a></p>
-		<p>Minified (1490 Bytes gzipped): <a href="https://raw.github.com/adambom/parallel.js/master/lib/parallel.min.js">parallel.min.js</a></p>
-		<p>Source: <a href="https://github.com/adambom/parallel.js">github</a></p>
-		<h2 class="page-header">Installation</h2>
-		<p>Include parallel.js in your web projects like so:</p>
-		<pre class="prettyprint">&lt;script src="parallel.js"&gt;&lt;/script&gt;</pre>
-		<p>This will give you access to the global variable, <code>Parallel</code>.</p>
-		<p>Parallel can also be included in node:</p>
-		<pre class="prettyprint">$ npm install paralleljs</pre>
-		<pre class="prettyprint">var Parallel = require('paralleljs');</pre>
-        <h2 class="page-header">Usage</h2>
-		<h3 id="constructor">Parallel(data, opts)</h3>
-        <p>This is the constructor. Use it to new up any parallel jobs. The constructor takes an array of data you want to operate on. This data will be held in memory until you finish your job, and can be accessed via the .data attribute of your job.</p>
-		<p>The object returned by the <code>Parallel</code> constructor is meant to be chained, so you can produce a chain of operations on the provided data.</p>
-		<h4>Arguments</h4>
-		<dl>
-		<dt>data</dt>
-		<dd>This is the data you wish to operate on. Will often be an array, but the only restrictions are that your values are serializable as JSON.</dd>
-		<dt>options (optional): Some options for your job</dt>
-		<dd>
-		<ul>
-		<li>evalPath (optional): This is the path to the file eval.js. This is required when running in node, and required when requiring files in browser environments (to work around cross-domain restrictions for web workers in IE 10). Defaults to the same location as parallel.js in node environments, and <code>null</code> in the browser</li>
-		<li>maxWorkers (optional): The maximum number of permitted worker threads. This will default to 4, or the number of cpus on your computer if you're running node</li>
-		<li>synchronous (optional): If webworkers are not available, whether or not to fall back to synchronous processing using <code>setTimeout</code>. Defaults to <code>true</code>.</li>
-		</ul>
-		</dd>
-		</dl>
-		<h4>Examples</h4>
-		<div class="example">
-		<p>Let's construct an new Parallel.js job:</p>
-		<pre class="prettyprint linenums">
-		var p = new Parallel([1, 2, 3, 4, 5]);
+		<header>
+    		<h1>Parallel.js</h1>
+        </header>
+        <article>
+    		<p class="lead">Easy multi-core processing with javascript</p>
+	    	<p>Parallel.js is a tiny library for multi-core processing in Javascript. It was created to take full advantage of the ever-maturing web-workers API. Javascript is fast, no doubt, but lacks the parallel computing capabilites of its peer languages due to its single-threaded computing model. In a world where the numbers of cores on a CPU are increasing faster than the speed of the cores themselves, isn't it a shame that we can't take advantage of this raw parallelism?</p>
+    		<p>Parallel.js solves that problem by giving you high level access to multi-core processing using web workers. It runs on node and in your browser.</p>
+            <header>
+    	    	<h2 class="page-header">Download</h2>
+            </header>
+    		<p>Unminified: <a href="https://raw.github.com/adambom/parallel.js/master/lib/parallel.js">parallel.js</a></p>
+	    	<p>Minified (1490 Bytes gzipped): <a href="https://raw.github.com/adambom/parallel.js/master/lib/parallel.min.js">parallel.min.js</a></p>
+		    <p>Source: <a href="https://github.com/adambom/parallel.js">github</a></p>
+            <header>
+                <h2 class="page-header">Installation</h2>
+            </header>
+            <article>
+        		<p>Include parallel.js in your web projects like so:</p>
+	        	<pre class="prettyprint">
+            		&lt;script src="parallel.js"&gt;&lt;/script&gt;
+        		</pre>
+        		<p>This will give you access to the global variable, <code>Parallel</code>.</p>
+        		<p>Parallel can also be included in node:</p>
+        		<pre class="prettyprint">
+            		$ npm install paralleljs
+        		</pre>
+        		<pre class="prettyprint">
+            		var Parallel = require('paralleljs');
+        		</pre>
+            </article>
+            <header>
+                <h2 class="page-header">Usage</h2>
+            </header>
+            <header>
+                <h3 id="constructor">Parallel(data, opts)</h3>
+            </header>
+            <article>
+                <p>This is the constructor. Use it to new up any parallel jobs. The constructor takes an array of data you want to operate on. This data will be held in memory until you finish your job, and can be accessed via the .data attribute of your job.</p>
+    	    	<p>The object returned by the <code>Parallel</code> constructor is meant to be chained, so you can produce a chain of operations on the provided data.</p>
+            </article>
+            <header>
+                <h4>Arguments</h4>
+            </header>
+            <article>
+                <dl>
+                    <dt>data</dt>
+                    <dd>This is the data you wish to operate on. Will often be an array, but the only restrictions are that your values are serializable as JSON.</dd>
+                    <dt>options (optional): Some options for your job</dt>
+                    <dd>
+                        <ul>
+                            <li>evalPath (optional): This is the path to the file eval.js. This is required when running in node, and required when requiring files in browser environments (to work around cross-domain restrictions for web workers in IE 10). Defaults to the same location as parallel.js in node environments, and <code>null</code> in the browser</li>
+                            <li>maxWorkers (optional): The maximum number of permitted worker threads. This will default to 4, or the number of cpus on your computer if you're running node</li>
+                            <li>synchronous (optional): If webworkers are not available, whether or not to fall back to synchronous processing using <code>setTimeout</code>. Defaults to <code>true</code>.</li>
+                        </ul>
+                    </dd>
+                </dl>
+            </article>
+            <header>
+        		<h4>Examples</h4>
+            </header>
+		    <article>
+        	    <p>Let's construct an new Parallel.js job:</p>
+                <section class="example">
+            		<pre class="prettyprint linenums">
+                		var p = new Parallel([1, 2, 3, 4, 5]);
 
-		console.log(p.data); // prints [1, 2, 3, 4, 5]
-		</pre>
-		</div>
-		<h3 id="spawn">spawn</h3>
-		<p>This function will spawn a new process on a worker thread. Pass it the function you want to call. Your function will receive one argument, which is the current data. The value returned from your spawned function will update the current data.</p>
-		<h4>Arguments</h4>
-		<dl>
-		<dt>fn</dt>
-		<dd>A function to execute on a worker thread. Receives the wrapped data as an argument. The value returned will be assigned to the wrapped data.</dd>
-		</dl>
-		<h4>Examples</h4>
-		<div class="example">
-		<p>Let's start with something simple, reversing the letters of a string:</p>
-		<pre class="prettyprint linenums">
-		var p = new Parallel('forwards');
+                		console.log(p.data); // prints [1, 2, 3, 4, 5]
+            		</pre>
+        		</section>
+            </article
+		    <header>
+                <h3 id="spawn">spawn</h3>
+            </header>
+            <article>
+         		<p>This function will spawn a new process on a worker thread. Pass it the function you want to call. Your function will receive one argument, which is the current data. The value returned from your spawned function will update the current data.</p>
+                <header>
+        	    	<h4>Arguments</h4>
+                </header>
+                <article>
+                    <dl>
+                        <dt>fn</dt>
+                        <dd>A function to execute on a worker thread. Receives the wrapped data as an argument. The value returned will be assigned to the wrapped data.</dd>
+                    </dl>
+                    <header>
+                        <h4>Examples</h4>
+                    </header>
+                    <article>
+                        <p>Let's start with something simple, reversing the letters of a string:</p>
+                        <section class="example">
+                            <pre class="prettyprint linenums">
+                                var p = new Parallel('forwards');
+                                // Spawn a remote job (we'll see more on how to use then later)
+                                p.spawn(function (data) {
+                                    data = data.split('').reverse().join('');
+                                    return data;
+                                }).then(function (data) {
+                                    console.log(data) // logs sdrawrof
+                                });
+                            </pre>
+                            <p>This example reverses the letters in the string forwards. First, we construct a new Parallel job, passing in the argument, `'forwards'`. We then spawn a job, passing in an anonymous function. This function receives whatever the currently stored data is, and returns what we want it to be. Finally, we call `then` to log out the result when we're finished.</p>
+                        </section>
+                        <p>What might it look like if we spawn a longer running job?</p>
+                        <section class="example" id="example-2">
+                            <pre class="prettyprint linenums">
+                                var slowSquare = function (n) { 
+                                    var i = 0; 
+                                    while (++i < n * n) {}
+                                    return i;
+                                };
+                                // Create a job
+                                var p = new Parallel(100000);
+                                // Spawn our slow function
+                                p.spawn(slowSquare).then(yourCallback);
+                            </pre>
+                            <button class="btn btn-primary">Try it</button>
+                            <span class="result"></span>
+                        </section>
+                    </article>
+                    <header>
+                        <h3 id="map">map</h3>
+                    </header>
+                    <p><code>map</code> will apply the supplied function to every element in the wrapped data. Parallel will spawn one worker for each array element in the data, or the supplied maxWorkers argument. The values returned will be stored for further processing.</p>
+                    <p><code>map</code> takes one required argument.</p>
+                    <header>
+                        <h4>Arguments</h4>
+                    </header>
+                    <article>
+                        <dl>
+                            <dt>fn</dt>
+                            <dd>A function to apply. Receives the wrapped data as an argument. The value returned will be assigned to the wrapped data.</dd>
+                        </dl>
+                        <header>
+                            <h4>Examples</h4>
+                        </header>
+                        <article>
+                            <p>Let's start by computing numbers in the Fibonacci sequence:</p>
+                            <section class="example" id="example-3">
+                                <pre class="prettyprint linenums">
+                                    var p = new Parallel([0, 1, 2, 3, 4, 5, 6]),
+                                    log = function () { console.log(arguments); };
+                                    // One gotcha: anonymous functions cannot be serialzed
+                                    // If you want to do recursion, make sure the function
+                                    // is named appropriately
+                                    function fib(n) {
+                                        return n < 2 ? 1 : fib(n - 1) + fib(n - 2);
+                                    };
+                                    p.map(fib).then(log)
+                                    // Logs the first 7 Fibonnaci numbers, woot!
+                                </pre>
+                            </section>
+                            <p>We start by creating a new Parallel job, this time passing in a sequence of numbers. We then define the Fibonacci function. Make sure that your function is named, so that it can be serialized properly. This is only an issue if you reference that function, which we do, since it's recursive. Alternatively, we can share this function with the workers using <code>require</code>.</p>
+                            <p>We then call <code>map</code>, which automagically spawns one worker for item in our list, unless we've specified a max number of workers. When our job is complete, we'll log out the first 7 Fibonacci numbers.</p>
+                            <p>
+                                <button class="btn btn-primary">Try It</button>
+                                <span class="result"></span>
+                            </p>
+                            <p>Now let's try a longer running job:</p>
+                            <section class="example" id="example-4">
+                                <pre class="prettyprint linenums">
+                                    var p = new Parallel([40, 41, 42]),
+                                    log = function () { console.log(arguments); };
+                                    // One gotcha: anonymous functions cannot be serialzed
+                                    // If you want to do recursion, make sure the function
+                                    // is named appropriately
+                                    function fib(n) {
+                                        return n < 2 ? 1 : fib(n - 1) + fib(n - 2);
+                                    };
+                                    p.map(fib).then(log);
+                                </pre>
+                                <p>
+                                    <button class="btn btn-primary">Try It</button>
+                                    <span class="result"></span>
+                                </p>
+                            </section>
+                        </article>
+                        <header>
+                            <h3 id="map">reduce</h3>
+                        </header>
+                        <article>
+                            <p><code>reduce</code> applies an operation to every member of the wrapped data, and returns a scalar value produced by the operation. Use it for combining the results of a map operation, by summing numbers for example. This takes a reducing function, which gets an argument, data, an array of the stored value, and the current element.</p>
+                            <p><code>reduce</code> takes one required argument.</p>
+                            <header>
+                                <h4>Arguments</h4>
+                            </header>
+                            <article>
+                                <dl>
+                                    <dt>fn</dt>
+                                    <dd>A function to apply. Receives the stored value and current element as argument. The value returned will be stored as the current value for the next iteration. Finally, the current value will be assigned to current data.</dd>
+                                </dl>
+                            </article>
+                            <header>
+                                <h4>Examples</h4>
+                            </header>
+                            <article>
+                                <p>Let's compute e^10 from its series definition:</p>
+                                <section class="example" id="example-5">
+                                    <pre class="prettyprint linenums">
+                                        // Use underscore's range function to generate the series 0..49
+                                        var p = new Parallel(_.range(50));
+                                        function add(d) { return d[0] + d[1]; }
+                                        function factorial(n) { return n < 2 ? 1 : n * factorial(n - 1); }
+                                        function log() { console.log(arguments); }
+                                        p.require(factorial)
+                                        // Approximate e^10
+                                        p.map(function (n) { return Math.pow(10, n) / factorial(n); }).reduce(add).then(log);
+                                    </pre>
+                                    <p>We start by creating a new Parallel job, again, passing in a sequence of numbers. We then define the <code>add</code> function, which will be used to reduce our values. Then we define the factorial function, and use the <code>require</code> method to share it with all workers.</p>
+                                    <p>Finally, we construct a job pipeline, consisting of a map operation, where we compute the series value for each index. Finally, the data is passed to our reduce operation, where we sum the values in the list. This sum of this series will tend to approximate e^10 as its length approaches infinity.</p>
+                                    <p>
+                                        <button class="btn btn-primary">Try It</button>
+                                        <span class="result"></span>
+                                    </p>
+                                </section>
+                            </article>
+                            <header>
+                                <h3 id="require">require</h3>
+                            </header>
+                            <article>
+                                <p><code>require</code> is used to share state between your workers. Require can be used to import libraries and functions into your worker threads.</p>
+                                <p><code>require</code> takes any number of arguments, either functions or strings. If the argument is a function it will be converted into a string and included in your worker.</p>
+                                <p><span class="badge badge-important">Important:</span> If you pass functions into <code>require</code> they <strong>must be named functions</strong>. Anonymous functions will not work. If you wish to pass anonymous functions, you may do so by declaring them with an object literal of the form, <code>{ fn: myAnonFn, name: 'myAnonFn' }</code>.</p>
+                                <header>
+                                    <h4>Example:</h4>
+                                </header>
+                                <article class="example" id="example-5">
+                                    <pre class="prettyprint linenums">
+                                        var wontWork = function (n) { return n * n; };
+                                        function worksGreat(n) { return n * n };
+                                        var r = new Parallel(3).require(wontWork).spawn(function (a) { return 2 * wontWork(a); }, 3);  // throws an error
+                                        var r = new Parallel(3).require(worksGreat).spawn(function (a) { return 2 * worksGreat(a); }, 3); // returns 18
+                                        var r = new Parallel(3).require({ fn: wontWork, name: 'wontWork' }).spawn(function (a) { return 2 * wontWork(a); }, 3); // returns 18
+                                    </pre>
+                                </article>
+                                <header>
+                                    <h4>Passing files as arguments to require</h4>
+                                </header>
+                                <article>
+                                    <p>`require` also accepts files as requirements. These should be passed as strings. The string may either be a url of the file you want to include or an <strong>absolute</strong> path.</p>
+                                    <p><span class="badge badge-important">Important:</span> When requring files in the browser or node, you will need to be sure to include eval.js, and provide a path via the evalPath option in the constructor.</p>
+                                    <header>
+                                        <h4>Examples</h4>
+                                    </header>
+                                    <article>
+                                        <dl>
+                                            <dt>Include path to eval.js</dt>
+                                            <dd><code>p = new Parallel([2, 3, 3], { evalPath: 'js/eval.js' });</code></dd>
+                                            <dt>Absolute url:</dt>
+                                            <dd><code>p.require('http://mydomain.com/js/script.js')</code></dd>
+                                            <dt>Absolute path (assuming my document lives in http://mydomain.com/index.html)</dt>
+                                            <dd><code>p.require('js/script.js')</code></dd>
+                                            <dt>Does not work (yet)</dt>
+                                            <dd><code>p.require('../js/script.js')</code></dd>
+                                        </dl>
+                                        <p><span class="badge badge-important">Important:</span> browser security restrictions prevent loading files over the file protocol, so you will need to run an http server in order to load local files.</p>
+                                        <p>Personally, I like the npm package, <a href="https://github.com/nodeapps/http-server">http-server</a>. This can be installed and run pretty easily:</p>
+                                        <pre class="prettyprint linenums">
+                                            $ npm install http-server -g
+                                            $ cd myproject
+                                            $ http-server .
+                                        </pre>
+                                        <header>
+                                            <h3 id="gloabls">Passing environment to functions</h3>
+                                        </header>
+                                        <article>
+                                            <p>You can pass data to threads that will be global to that worker. This data will be global in each called function. The data will be available under the <code>global.env</code> namespace. The namespace can be configured by passing the <code>envNamespace</code> option to the <code>Parallel</code> constructor. The data you wish to pass should be provided as the <code>env</code> optionn to the parallel constructor.</p>
+                                            <p><span class="badge badge-important">Important:</span> Globals can not be mutated between threads.</p>
+                                            <header>
+                                                <h4>Examples</h4>
+                                            </header>
+                                            <article>
+                                                <pre class="prettyprint linenums">
+                    var p = new Parallel([1, 2, 3], {
+                    env: {
+                    a: 10
+                    }
+                    });
 
-		// Spawn a remote job (we'll see more on how to use then later)
-		p.spawn(function (data) {
-		data = data.split('').reverse().join('');
+                    // returns 10, 20, 30
+                    p.map(function (d) {
+                    return d * global.env.a;
+                    });
 
-            <h4>Examples</h4>
-            <dl>
-                <dt>Include path to eval.js</dt>
-                <dd><code>p = new Parallel([2, 3, 3], { evalPath: 'js/eval.js' });</code></dd>
-                <dt>Absolute url:</dt>
-                <dd><code>p.require('http://mydomain.com/js/script.js')</code></dd>
-                <dt>Absolute path (assuming my document lives in http://mydomain.com/index.html)</dt>
-                <dd><code>p.require('js/script.js')</code></dd>
-                <dt>Does not work (yet)</dt>
-                <dd><code>p.require('../js/script.js')</code></dd>
-            </dl>
-            <p><span class="badge badge-important">Important:</span> browser security restrictions prevent loading files over the file protocol, so you will need to run an http server in order to load local files.</p>
-            <p>Personally, I like the npm package, <a href="https://github.com/nodeapps/http-server">http-server</a>. This can be installed and run pretty easily:</p>
-            <pre class="prettyprint linenums">
-                $ npm install http-server -g
-                $ cd myproject
-                $ http-server .
-	    	</pre>
-    		<h3 id="gloabls">Passing environment to functions</h3>
-		    <p>You can pass data to threads that will be global to that worker. This data will be global in each called function. The data will be available under the <code>global.env</code> namespace. The namespace can be configured by passing the <code>envNamespace</code> option to the <code>Parallel</code> constructor. The data you wish to pass should be provided as the <code>env</code> optionn to the parallel constructor.</p>
-	    	<p><span class="badge badge-important">Important:</span> Globals can not be mutated between threads.</p>
-    		<h4>Examples</h4>
-            <pre class="prettyprint linenums">
-            var p = new Parallel([1, 2, 3], {
-            env: {
-            a: 10
-            }
-            });
+                    // Configure the namespace
+                    p = new Parallel([1, 2, 3], {
+                    env: {
+                    a: 10
+                    },
+                    envNamespace: 'parallel'
+                    });
 
-            // returns 10, 20, 30
-            p.map(function (d) {
-            return d * global.env.a;
-            });
-
-            // Configure the namespace
-            p = new Parallel([1, 2, 3], {
-            env: {
-            a: 10
-            },
-            envNamespace: 'parallel'
-            });
-
-            p.map(function (d) {
-            return d * global.parallel.a;
-            });
-            </pre>
-		    <hr>
-		    <footer id="footer">
-        		<p class="pull-right"><a href="#top">Back to top</a></p>
-		        Developers: <a target="_blank" href="http://adambom.github.com">Adam Savitzky</a> (<a href="mailto:adam.savitzky@gmail.com">adam.savitzky@gmail.com</a>), <a target="_blank" href="https://github.com/Sebmaster">Sebastian Mayr</a>.<br>
-        		Code licensed under the BSD License.<br>
-		        Based on <a target="_blank" href="http://twitter.github.com/bootstrap/">Bootstrap</a>. Hosted on <a target="_blank" href="http://pages.github.com/">GitHub</a>.<p></p>
-		    </footer>
-		</div>
+                    p.map(function (d) {
+                    return d * global.parallel.a;
+                    });
+                </pre>
+            </div>
+            <hr>
+    		<footer id="footer">
+	        	<p class="pull-right"><a href="#top">Back to top</a></p>
+                <p>Developers: <a target="_blank" href="http://adambom.github.com">Adam Savitzky</a> (<a href="mailto:adam.savitzky@gmail.com">adam.savitzky@gmail.com</a>), <a target="_blank" href="https://github.com/Sebmaster">Sebastian Mayr</a>.</p>
+                <p>Code licensed under the BSD License.</p>
+                <p>Based on <a target="_blank" href="http://twitter.github.com/bootstrap/">Bootstrap</a>. Hosted on <a target="_blank" href="http://pages.github.com/">GitHub</a>.</p>
+    		</footer>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 		<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
 		<script src="js/vendor/underscore.min.js"></script>
