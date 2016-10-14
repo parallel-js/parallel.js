@@ -241,6 +241,8 @@ p = new Parallel([1, 2, 3], {
 p.map(d => d * global.parallel.a);
 ```
 
+---
+
 ## Compatibility
 
 [![browser support](https://ci.testling.com/adambom/parallel.js.png)](https://ci.testling.com/adambom/parallel.js)
