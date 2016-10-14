@@ -248,3 +248,18 @@ p.map(d => d * global.parallel.a);
 [![browser support](https://ci.testling.com/adambom/parallel.js.png)](https://ci.testling.com/adambom/parallel.js)
 
 ---
+
+## Contributors
+
+Parallel.js is made up of four contributors:
+
+[Adam Savitzky (Adam)](https://github.com/adambom)
+[Mathias Rangel Wulff (Mathias)](https://github.com/mathiasrw)
+[Amila Welihinda (amilajack)](https://github.com/amilajack)
+[MaXwell Falstein (MaX)](https://github.com/MaXwellFalstein)
+
+---
+
+## License
+
+[Please find the license in the GitHub repository](https://github.com/parallel-js/parallel.js/blob/master/LICENSE).
