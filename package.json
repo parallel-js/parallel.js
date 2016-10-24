@@ -9,8 +9,9 @@
   "description": "parallel.js enables easy multi-thread processing in javascript",
   "license": "BSD",
   "scripts": {
-    "lint": "eslint test lib *.js",
-    "fix": "eslint test lib *.js --fix",
+    "flow-typed": "flow-typed install",
+    "lint": "eslint --cache --ignore-path .gitignore --format=node_modules/eslint-formatter-pretty test lib *.js",
+    "lint-fix": "eslint --cache --ignore-path .gitignore --format=node_modules/eslint-formatter-pretty test lib *.js --fix",
     "test": "npm run lint && jasmine-node --verbose test/specs"
   },
   "main": "lib/parallel.js",
@@ -51,14 +52,16 @@
     "eslint-formatter-pretty": "^1.1.0",
     "eslint-import-resolver-webpack": "^0.6.0",
     "eslint-nibble-ignore": "^3.0.0",
-    "eslint-plugin-flowtype": "^2.20.0",
-    "eslint-plugin-flowtype-errors": "^1.4.1",
+    "eslint-plugin-flowtype": "^2.21.0",
+    "eslint-plugin-flowtype-errors": "^1.5.0-alpha.1",
     "eslint-plugin-fp": "^2.2.0",
     "eslint-plugin-import": "^2.0.1",
     "eslint-plugin-jsx-a11y": "^2.2.3",
     "eslint-plugin-mocha": "^4.7.0",
     "eslint-plugin-promise": "^3.3.0",
     "eslint-plugin-react": "^6.4.1",
+    "flow-bin": "^0.33.0",
+    "flow-typed": "^2.0.0",
     "jasmine-node": "x",
     "q": "x"
   },
@@ -66,7 +69,7 @@
     "child_process": false
   },
   "engines": {
-    "node": ">=0.9.10"
+    "node": ">=4"
   },
   "testling": {
     "scripts": [

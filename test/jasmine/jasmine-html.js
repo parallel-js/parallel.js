@@ -8,10 +8,8 @@ jasmine.HtmlReporterHelpers.createDom = function (type, attrs, childrenVarArgs) 
 
     if (typeof child === 'string') {
       el.appendChild(document.createTextNode(child));
-    } else {
-      if (child) {
-        el.appendChild(child);
-      }
+    } else if (child) {
+      el.appendChild(child);
     }
   }
 
@@ -106,7 +104,7 @@ jasmine.HtmlReporter = function (_doc) {
     const console = jasmine.getGlobal().console;
     if (console && console.log) {
       if (console.log.apply) {
-        console.log.apply(console, arguments);
+        console.log(...arguments);
       } else {
         console.log(arguments); // ie fix: console.log.apply doesn't exist on ie
       }
@@ -501,9 +499,7 @@ jasmine.TrivialReporter.prototype.createDom = function (type, attrs, childrenVar
 
     if (typeof child === 'string') {
       el.appendChild(document.createTextNode(child));
-    } else {
-      if (child) { el.appendChild(child); }
-    }
+    } else if (child) { el.appendChild(child); }
   }
 
   for (const attr in attrs) {
@@ -518,7 +514,8 @@ jasmine.TrivialReporter.prototype.createDom = function (type, attrs, childrenVar
 };
 
 jasmine.TrivialReporter.prototype.reportRunnerStarting = function (runner) {
-  let showPassed, showSkipped;
+  let showPassed,
+    showSkipped;
 
   this.outerDiv = this.createDom('div', { id: 'TrivialReporter', className: 'jasmine_reporter' },
       this.createDom('div', { className: 'banner' },
@@ -653,7 +650,7 @@ jasmine.TrivialReporter.prototype.log = function () {
   const console = jasmine.getGlobal().console;
   if (console && console.log) {
     if (console.log.apply) {
-      console.log.apply(console, arguments);
+      console.log(...arguments);
     } else {
       console.log(arguments); // ie fix: console.log.apply doesn't exist on ie
     }

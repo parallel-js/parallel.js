@@ -56,7 +56,8 @@
       } else {
         const items = results.getItems();
         let i = 0;
-        let expectationResult, stackMessage;
+        let expectationResult,
+          stackMessage;
         while (expectationResult = items[i++]) {
           if (expectationResult.trace) {
             stackMessage = expectationResult.trace.stack ? expectationResult.trace.stack : expectationResult.message;

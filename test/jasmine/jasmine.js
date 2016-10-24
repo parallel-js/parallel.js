@@ -458,7 +458,7 @@ jasmine.createSpyObj = function (baseName, methodNames) {
  */
 jasmine.log = function () {
   const spec = jasmine.getEnv().currentSpec;
-  spec.log.apply(spec, arguments);
+  spec.log(...arguments);
 };
 
 /**
@@ -880,19 +880,19 @@ jasmine.Env.prototype.xit = function (desc, func) {
 
 jasmine.Env.prototype.compareRegExps_ = function (a, b, mismatchKeys, mismatchValues) {
   if (a.source != b.source)
-    mismatchValues.push(`expected pattern /${b.source}/ is not equal to the pattern /${a.source}/`);
+    { mismatchValues.push(`expected pattern /${b.source}/ is not equal to the pattern /${a.source}/`); }
 
   if (a.ignoreCase != b.ignoreCase)
-    mismatchValues.push(`expected modifier i was${b.ignoreCase ? ' ' : ' not '}set and does not equal the origin modifier`);
+    { mismatchValues.push(`expected modifier i was${b.ignoreCase ? ' ' : ' not '}set and does not equal the origin modifier`); }
 
   if (a.global != b.global)
-    mismatchValues.push(`expected modifier g was${b.global ? ' ' : ' not '}set and does not equal the origin modifier`);
+    { mismatchValues.push(`expected modifier g was${b.global ? ' ' : ' not '}set and does not equal the origin modifier`); }
 
   if (a.multiline != b.multiline)
-    mismatchValues.push(`expected modifier m was${b.multiline ? ' ' : ' not '}set and does not equal the origin modifier`);
+    { mismatchValues.push(`expected modifier m was${b.multiline ? ' ' : ' not '}set and does not equal the origin modifier`); }
 
   if (a.sticky != b.sticky)
-    mismatchValues.push(`expected modifier y was${b.sticky ? ' ' : ' not '}set and does not equal the origin modifier`);
+    { mismatchValues.push(`expected modifier y was${b.sticky ? ' ' : ' not '}set and does not equal the origin modifier`); }
 
   return (mismatchValues.length === 0);
 };
@@ -1780,7 +1780,7 @@ jasmine.MultiReporter.prototype.addReporter = function (reporter) {
         for (let j = 0; j < this.subReporters_.length; j++) {
           const subReporter = this.subReporters_[j];
           if (subReporter[functionName]) {
-            subReporter[functionName].apply(subReporter, arguments);
+            subReporter[functionName](...arguments);
           }
         }
       };
@@ -2080,12 +2080,10 @@ jasmine.Queue.prototype.next_ = function () {
           self.env.setTimeout(() => {
             self.next_();
           }, 0);
+        } else if (jasmine.Queue.LOOP_DONT_RECURSE && completedSynchronously) {
+          goAgain = true;
         } else {
-          if (jasmine.Queue.LOOP_DONT_RECURSE && completedSynchronously) {
-            goAgain = true;
-          } else {
-            self.next_();
-          }
+          self.next_();
         }
       };
       self.blocks[self.index].execute(onComplete);
