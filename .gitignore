@@ -47,6 +47,7 @@ app/dist
 app/main.js
 app/main.js.map
 release
+.eslintcache
 
 # Env configuration
 .env

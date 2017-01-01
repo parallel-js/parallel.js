@@ -11,7 +11,7 @@
   "scripts": {
     "flow-typed": "flow-typed install",
     "lint": "eslint --cache --ignore-path .gitignore --format=node_modules/eslint-formatter-pretty test lib *.js",
-    "lint-fix": "eslint --cache --ignore-path .gitignore --format=node_modules/eslint-formatter-pretty test lib *.js --fix",
+    "lint-fix": "npm run lint -- --fix",
     "test": "npm run lint && jasmine-node --verbose test/specs"
   },
   "main": "lib/parallel.js",
