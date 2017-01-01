@@ -1,36 +1,42 @@
-Parallel.js
-===========
+# Parallel.js
+
 [![Build Status](https://travis-ci.org/parallel-js/parallel.js.svg?branch=master)](https://travis-ci.org/parallel-js/parallel.js)
 [![NPM version](https://badge.fury.io/js/paralleljs.svg)](http://badge.fury.io/js/paralleljs)
 [![Dependency Status](https://img.shields.io/david/parallel-js/parallel.js.svg)](https://david-dm.org/parallel-js/parallel.js)
 [![npm](https://img.shields.io/npm/dm/paralleljs.svg?maxAge=2592000)]()
+[![first-timers-only](http://img.shields.io/badge/first--timers--only-friendly-blue.svg?style=flat-square)](http://www.firsttimersonly.com/)
 
-
-_Easy Parallel Computing with Javascript_ 
+**Easy Parallel Computing with Javascript**
 
 > Please note that version 0.2.1 is 2 years old
 
-> **Update: September 2016**: New forces are put in place to drive the code forward.
+**Update: September 2016**
 
-Parallel.js is a library making JavScript parallel computing simple.  
-Parallel.js works in Node.js and in the web browser for client side, server side or a mixture of client and server side compute.  
-Parallel.js takes advantage of Web Workers for the web, and child processes for Node.
+> New forces are put in place to drive the code forward.
 
-# Installation
+---
+
+Parallel.js is a library for to make parallel computing in Javascript simple. It works in Node.js and in the Web Browser.
+
+Parallel takes advantage of Web Workers for the web, and child processes for Node.
+
+---
+
+## Installation
 
 You can download the raw javascript file [here](https://raw.github.com/adambom/parallel.js/master/lib/parallel.js)
 
 Just include it via a script tag in your HTML page
 
-Parallel.js is also available as a node module:
+**Parallel.js is also available as a node module**
 
 ```bash
 npm install paralleljs --save
 ```
 
-# Usage
+## Usage
 
-#### `Parallel(data, opts)`
+### `Parallel(data, opts)`
 
 This is the constructor. Use it to new up any parallel jobs. The constructor takes an array of data you want to
 operate on. This data will be held in memory until you finish your job, and can be accessed via the `.data` attribute
@@ -39,14 +45,15 @@ of your job.
 The object returned by the `Parallel` constructor is meant to be chained, so you can produce a chain of 
 operations on the provided data.
 
-*Arguments*
+**Arguments**
+
 * `data`: This is the data you wish to operate on. Will often be an array, but the only restrictions are that your values are serializable as JSON.
 * `options` (optional): Some options for your job
-  * `evalPath` (optional): This is the path to the file eval.js. This is required when running in node, and required for some browsers (IE 10) in order to work around cross-domain restrictions for web workers. Defaults to the same location as parallel.js in node environments, and `null` in the browser.
-  * `maxWorkers` (optional): The maximum number of permitted worker threads. This will default to 4, or the number of cpus on your computer if you're running node
-  * `synchronous` (optional): If webworkers are not available, whether or not to fall back to synchronous processing using `setTimeout`. Defaults to `true`.
+* `evalPath` (optional): This is the path to the file eval.js. This is required when running in node, and required for some browsers (IE 10) in order to work around cross-domain restrictions for web workers. Defaults to the same location as parallel.js in node environments, and `null` in the browser.
+* `maxWorkers` (optional): The maximum number of permitted worker threads. This will default to 4, or the number of cpus on your computer if you're running node
+* `synchronous` (optional): If webworkers are not available, whether or not to fall back to synchronous processing using `setTimeout`. Defaults to `true`.
 
-*Example*
+**Example**
 
 ```js
 const p = new Parallel([1, 2, 3, 4, 5]);
@@ -54,17 +61,20 @@ const p = new Parallel([1, 2, 3, 4, 5]);
 console.log(p.data); // prints [1, 2, 3, 4, 5]
 ```
 
-*******
+---
 
-#### `spawn(fn)`
+### `spawn(fn)`
+
 This function will spawn a new process on a worker thread. Pass it the function you want to call. Your
 function will receive one argument, which is the current data. The value returned from your spawned function will
 update the current data.
 
-*Arguments*
+**Arguments**
+
 * `fn`: A function to execute on a worker thread. Receives the wrapped data as an argument. The value returned will be assigned to the wrapped data.
 
-*Example*
+**Example**
+
 ```js
 const p = new Parallel('forwards');
 
@@ -81,17 +91,20 @@ p.spawn(data => {
 });
 ```
 
-*******
+---
 
-#### `map(fn)`
+### `map(fn)`
+
 Map will apply the supplied function to every element in the wrapped data. Parallel will spawn one worker for
 each array element in the data, or the supplied maxWorkers argument. The values returned will be stored for 
 further processing.
 
-*Arguments*
+**Arguments**
+
 * `fn`: A function to apply. Receives the wrapped data as an argument. The value returned will be assigned to the wrapped data.
 
-*Example*
+**Example**
+
 ```js
 const p = new Parallel([0, 1, 2, 3, 4, 5, 6]);
 const log = function () { console.log(arguments); };
@@ -108,17 +121,20 @@ p.map(fib).then(log)
 // Logs the first 7 Fibonnaci numbers, woot!
 ```
 
-*******
+---
 
-#### `reduce(fn)`
+### `reduce(fn)`
+
 Reduce applies an operation to every member of the wrapped data, and returns a scalar value produced by the operation.
 Use it for combining the results of a map operation, by summing numbers for example. This takes a reducing function,
 which gets an argument, `data`, an array of the stored value, and the current element.
 
-*Arguments*
+**Arguments**
+
 * `fn`: A function to apply. Receives the stored value and current element as argument. The value returned will be stored as the current value for the next iteration. Finally, the current value will be assigned to current data.
 
-*Example*
+**Example**
+
 ```js
 const p = new Parallel([0, 1, 2, 3, 4, 5, 6, 7, 8]);
 
@@ -132,17 +148,20 @@ p.require(factorial)
 p.map((n => Math.pow(10, n)).reduce(add).then(log);
 ```
 
-*******
+---
 
-#### `then(success, fail)`
+### `then(success, fail)`
+
 The functions given to `then` are called after the last requested operation has finished.
 `success` receives the resulting data object, while `fail` will receive an error object.
 
-*Arguments*
+**Arguments**
+
 - `success`: A function that gets called upon successful completion. Receives the wrapped data as an argument.
 - `failure` (optional): A function that gets called if the job fails. The function is passed an error object.
 
-*Example*
+**Example**
+
 ```js
 const p = new Parallel([1, 2, 3]);
 
@@ -163,15 +182,17 @@ p
   .then(log);
 ```
 
-*******
+---
 
-#### `require(state)`
+### `require(state)`
+
 If you have state that you want to share between your main thread and the worker threads, this is how. Require
 takes either a string or a function. A string should point to a file name. Note that in order to
 use ```require``` with a file name as an argument, you have to provide the evalPath property in the options
 object.
 
-*Example*
+**Example**
+
 ```js
 let p = new Parallel([1, 2, 3], { evalPath: 'https://raw.github.com/adambom/parallel.js/master/lib/eval.js' });
 
@@ -185,7 +206,11 @@ p.require('blargh.js');
 
 p.map(d => blargh(20 * cubeRoot(d)));
 ```
-#### Passing environement to functions
+
+---
+
+## Passing environement to functions
+
 You can pass data to threads that will be global to that worker. This data will be global in each called function.
 The data will be available under the `global.env` namespace. The namespace can be configured by passing the 
 `envNamespace` option to the `Parallel` constructor. The data you wish to pass should be provided as the `env` option
@@ -193,7 +218,8 @@ to the parallel constructor.
 
 Important: Globals can not be mutated between threads.
 
-*Example*
+**Example**
+
 ```js
 let p = new Parallel([1, 2, 3], {
   env: {
@@ -215,5 +241,25 @@ p = new Parallel([1, 2, 3], {
 p.map(d => d * global.parallel.a);
 ```
 
-# Compatibility
+---
+
+## Compatibility
+
 [![browser support](https://ci.testling.com/adambom/parallel.js.png)](https://ci.testling.com/adambom/parallel.js)
+
+---
+
+## Contributors
+
+Parallel.js is made up of four contributors:
+
+[Adam Savitzky (Adam)](https://github.com/adambom)
+[Mathias Rangel Wulff (Mathias)](https://github.com/mathiasrw)
+[Amila Welihinda (amilajack)](https://github.com/amilajack)
+[MaXwell Falstein (MaX)](https://github.com/MaXwellFalstein)
+
+---
+
+## License
+
+[Please find the license in the GitHub repository](https://github.com/parallel-js/parallel.js/blob/master/LICENSE).
