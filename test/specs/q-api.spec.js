@@ -16,9 +16,7 @@ describe('Q-API', () => {
       const Parallel = require('../../lib/parallel.js');
       const p = new Parallel([1, 2, 3]);
 
-      Q.when(p.spawn((data) => {
-        return ['something', 'completely', 'else'];
-      })).then((data) => {
+      Q.when(p.spawn((data) => ['something', 'completely', 'else'])).then((data) => {
         expect(data).toEqual(['something', 'completely', 'else']);
         done();
       });
@@ -47,11 +45,7 @@ describe('Q-API', () => {
       const Parallel = require('../../lib/parallel.js');
       const p = new Parallel([1, 2, 3]);
 
-      Q.when(p.map(addOne)).then(() => {
-        return p.map((el) => {
-          return el - 1;
-        });
-      }).then((data) => {
+      Q.when(p.map(addOne)).then(() => p.map((el) => el - 1)).then((data) => {
         expect(data).toEqual([1, 2, 3]);
         done();
       });
@@ -62,11 +56,7 @@ describe('Q-API', () => {
       const p = new Parallel([1, 2, 3]);
 
       Q.when(p.map(addOne))
-			.then(() => {
-  return p.spawn((data) => {
-    return data.reduce(sum);
-  });
-}).then((data) => {
+			.then(() => p.spawn((data) => data.reduce(sum))).then((data) => {
   expect(result).toEqual(9);
 });
     });
@@ -75,9 +65,7 @@ describe('Q-API', () => {
       const Parallel = require('../../lib/parallel.js');
       const p = new Parallel([1, 2, 3]);
 
-      Q.when(p.reduce((data) => {
-        return data[0] + data[1];
-      })).then((data) => {
+      Q.when(p.reduce((data) => data[0] + data[1])).then((data) => {
         expect(data).toEqual(6);
         done();
       });
@@ -87,11 +75,7 @@ describe('Q-API', () => {
       const Parallel = require('../../lib/parallel.js');
       const p = new Parallel([1, 2, 3]);
 
-      Q.when(p.map(addOne)).then((qe) => {
-        return p.then((data) => {
-          return data.reduce(sum);
-        });
-      }).then((data) => {
+      Q.when(p.map(addOne)).then((qe) => p.then((data) => data.reduce(sum))).then((data) => {
         expect(data).toEqual(9);
         done();
       });

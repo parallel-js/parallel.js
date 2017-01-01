@@ -31,9 +31,7 @@ describe('Performance', () => {
       });
     });
 
-    waitsFor(() => {
-      return time !== null;
-    }, 'Sequential should finish', 5000);
+    waitsFor(() => time !== null, 'Sequential should finish', 5000);
 
     let start2;
     let time2 = null;
@@ -46,9 +44,7 @@ describe('Performance', () => {
       });
     });
 
-    waitsFor(() => {
-      return time2 !== null;
-    }, 'Parallel should finish', 5000);
+    waitsFor(() => time2 !== null, 'Parallel should finish', 5000);
 
     runs(() => {
       expect(time2).toBeLessThan(time * 0.8);

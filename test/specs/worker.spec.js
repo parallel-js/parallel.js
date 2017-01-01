@@ -22,9 +22,7 @@ describe('WebWorker-API', () => {
         wrk.terminate();
       });
 
-      waitsFor(() => {
-        return done;
-      }, 'terminating correctly', 500);
+      waitsFor(() => done, 'terminating correctly', 500);
     });
   }
 });

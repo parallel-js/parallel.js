@@ -16,9 +16,7 @@ describe('eval.js', () => {
       wrk.postMessage(isNode ? 'process.send(JSON.stringify("abc"))' : 'self.postMessage("abc")');
     });
 
-    waitsFor(() => {
-      return done;
-    }, 'should finish', 500);
+    waitsFor(() => done, 'should finish', 500);
 
     runs(() => {
       expect(result).toEqual('abc');

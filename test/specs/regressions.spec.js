@@ -18,9 +18,7 @@ describe('Regression tests', () => {
       });
 
 
-      waitsFor(() => {
-        return done;
-      }, 'The request should succeed', 750);
+      waitsFor(() => done, 'The request should succeed', 750);
     });
   }
 });

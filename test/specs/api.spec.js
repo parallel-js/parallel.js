@@ -42,9 +42,7 @@ describe('API', () => {
   it('should execute .spawn() correctly', (done) => {
     const p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
 
-    p.spawn((data) => {
-      return ['something', 'completly', 'else'];
-    }).then((data) => {
+    p.spawn((data) => ['something', 'completly', 'else']).then((data) => {
       expect(data).toEqual(['something', 'completly', 'else']);
       done();
     });
@@ -128,9 +126,7 @@ describe('API', () => {
   it('should chain .map() correctly', (done) => {
     const p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
 
-    p.map(addOne).map((el) => {
-      return el - 1;
-    }).then((data) => {
+    p.map(addOne).map((el) => el - 1).then((data) => {
       expect(data).toEqual([1, 2, 3]);
       done();
     });
@@ -139,11 +135,7 @@ describe('API', () => {
   it('should mix .spawn and .map() correctly', (done) => {
     const p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
 
-    p.map(addOne).spawn((data) => {
-      return data.reduce((a, b) => {
-        return a + b;
-      });
-    }).then((data) => {
+    p.map(addOne).spawn((data) => data.reduce((a, b) => a + b)).then((data) => {
       expect(data).toEqual(9);
       done();
     });
@@ -152,9 +144,7 @@ describe('API', () => {
   it('should execute .reduce() correctly', (done) => {
     const p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
 
-    p.reduce((data) => {
-      return data[0] + data[1];
-    }).then((data) => {
+    p.reduce((data) => data[0] + data[1]).then((data) => {
       expect(data).toEqual(6);
       done();
     });
@@ -181,9 +171,7 @@ describe('API', () => {
   it('should process data returned from .then()', (done) => {
     const p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
 
-    p.map(addOne).then((data) => {
-      return data.reduce(sum);
-    }).then((data) => {
+    p.map(addOne).then((data) => data.reduce(sum)).then((data) => {
       expect(data).toEqual(9);
       done();
     });
@@ -199,9 +187,7 @@ describe('API', () => {
     p.map((el) => {
       if (el === 2) throw ('Test error');
       return el + 1;
-    }).then((data) => {}, (error) => {
-      return 5;
-    }).then((data) => {
+    }).then((data) => {}, (error) => 5).then((data) => {
       expect(data).toEqual(5);
       done();
     });
@@ -215,9 +201,7 @@ describe('API', () => {
 
     const p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
 
-    p.map((el) => {
-      return el + 1;
-    }).then((data) => {
+    p.map((el) => el + 1).then((data) => {
       throw ('Test error');
     }, (error) => {
       expect(error).toMatch(/Test\serror/);
@@ -235,9 +219,7 @@ describe('API', () => {
       const p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
       p.require('../test/test.js'); // relative to eval.js
 
-      p.map((el) => {
-        return myCalc(el, 25);
-      }).then((data) => {
+      p.map((el) => myCalc(el, 25)).then((data) => {
         expect(data).toEqual([26, 27, 28]);
         done();
       });
@@ -258,9 +240,7 @@ describe('API', () => {
     const p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
     p.require({ name: 'fn', fn });
 
-    p.map((el) => {
-      return fn(el, 25);
-    }).then((data) => {
+    p.map((el) => fn(el, 25)).then((data) => {
       expect(data).toEqual([26, 27, 28]);
       done();
     });
@@ -272,9 +252,7 @@ describe('API', () => {
     const p = new Parallel([1, 2, 3], { evalPath: isNode ? undefined : 'lib/eval.js' });
     p.require({ name: 'sum', fn: sum }, factorial);
 
-    p.map((el) => {
-      return sum(factorial(el), 25);
-    }).then((data) => {
+    p.map((el) => sum(factorial(el), 25)).then((data) => {
       expect(data).toEqual([26, 27, 31]);
       done();
     });
@@ -296,9 +274,7 @@ describe('API', () => {
         env
       });
 
-      p.spawn((data) => {
-        return global.env.a * 2;
-      }).then((data) => {
+      p.spawn((data) => global.env.a * 2).then((data) => {
         resultSpawn = data;
         doneSpawn = true;
       });
@@ -308,9 +284,7 @@ describe('API', () => {
         env
       });
 
-      p.map((data) => {
-        return data * global.env.b;
-      }).then((data) => {
+      p.map((data) => data * global.env.b).then((data) => {
         resultMap = data;
         doneMap = true;
       });
@@ -320,17 +294,13 @@ describe('API', () => {
         env
       });
 
-      p.reduce((data) => {
-        return data[0] + data[1] * global.env.b;
-      }).then((data) => {
+      p.reduce((data) => data[0] + data[1] * global.env.b).then((data) => {
         resultReduce = data;
         doneReduce = true;
       });
     });
 
-    waitsFor(() => {
-      return doneSpawn && doneMap && doneReduce;
-    }, 'it should finish', 2000);
+    waitsFor(() => doneSpawn && doneMap && doneReduce, 'it should finish', 2000);
 
     runs(() => {
       expect(resultSpawn).toEqual(2);
@@ -355,9 +325,7 @@ describe('API', () => {
         env
       });
 
-      p.spawn((data) => {
-        return global.env.a * 2;
-      }, { a: 2 }).then((data) => {
+      p.spawn((data) => global.env.a * 2, { a: 2 }).then((data) => {
         resultSpawn = data;
         doneSpawn = true;
       });
@@ -367,9 +335,7 @@ describe('API', () => {
         env
       });
 
-      p.map((data) => {
-        return data * global.env.b;
-      }, { b: 3 }).then((data) => {
+      p.map((data) => data * global.env.b, { b: 3 }).then((data) => {
         resultMap = data;
         doneMap = true;
       });
@@ -379,17 +345,13 @@ describe('API', () => {
         env
       });
 
-      p.reduce((data) => {
-        return data[0] + data[1] * global.env.b;
-      }, { b: 3 }).then((data) => {
+      p.reduce((data) => data[0] + data[1] * global.env.b, { b: 3 }).then((data) => {
         resultReduce = data;
         doneReduce = true;
       });
     });
 
-    waitsFor(() => {
-      return doneSpawn && doneMap && doneReduce;
-    }, 'it should finish', 2000);
+    waitsFor(() => doneSpawn && doneMap && doneReduce, 'it should finish', 2000);
 
     runs(() => {
       expect(resultSpawn).toEqual(4);
@@ -405,9 +367,7 @@ describe('API', () => {
       envNamespace: 'other'
     });
 
-    p.spawn((data) => {
-      return global.other.a * 2;
-    }).then((data) => {
+    p.spawn((data) => global.other.a * 2).then((data) => {
       expect(data).toEqual(2);
       done();
     });

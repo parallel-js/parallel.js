@@ -36,11 +36,11 @@ jasmine.HtmlReporterHelpers.getSpecStatus = function (child) {
 
 jasmine.HtmlReporterHelpers.appendToSummary = function (child, childElement) {
   let parentDiv = this.dom.summary;
-  const parentSuite = (typeof child.parentSuite == 'undefined') ? 'suite' : 'parentSuite';
+  const parentSuite = (typeof child.parentSuite === 'undefined') ? 'suite' : 'parentSuite';
   const parent = child[parentSuite];
 
   if (parent) {
-    if (typeof this.views.suites[parent.id] == 'undefined') {
+    if (typeof this.views.suites[parent.id] === 'undefined') {
       this.views.suites[parent.id] = new jasmine.HtmlReporter.SuiteView(parent, this.dom, this.views);
     }
     parentDiv = this.views.suites[parent.id].element;

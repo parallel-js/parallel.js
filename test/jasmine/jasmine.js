@@ -1,4 +1,4 @@
-const isCommonJS = typeof window == 'undefined' && typeof exports == 'object';
+const isCommonJS = typeof window === 'undefined' && typeof exports === 'object';
 
 /**
  * Top level namespace for Jasmine, a lightweight JavaScript BDD/spec/testing framework.
@@ -616,7 +616,7 @@ if (isCommonJS) exports.xdescribe = xdescribe;
 
 
 // Provide the XMLHttpRequest class for IE 5.x-6.x:
-jasmine.XmlHttpRequest = (typeof XMLHttpRequest == 'undefined') ? function () {
+jasmine.XmlHttpRequest = (typeof XMLHttpRequest === 'undefined') ? function () {
   function tryIt(f) {
     try {
       return f();
@@ -625,18 +625,10 @@ jasmine.XmlHttpRequest = (typeof XMLHttpRequest == 'undefined') ? function () {
     return null;
   }
 
-  const xhr = tryIt(() => {
-    return new ActiveXObject('Msxml2.XMLHTTP.6.0');
-  }) ||
-    tryIt(() => {
-      return new ActiveXObject('Msxml2.XMLHTTP.3.0');
-    }) ||
-    tryIt(() => {
-      return new ActiveXObject('Msxml2.XMLHTTP');
-    }) ||
-    tryIt(() => {
-      return new ActiveXObject('Microsoft.XMLHTTP');
-    });
+  const xhr = tryIt(() => new ActiveXObject('Msxml2.XMLHTTP.6.0')) ||
+    tryIt(() => new ActiveXObject('Msxml2.XMLHTTP.3.0')) ||
+    tryIt(() => new ActiveXObject('Msxml2.XMLHTTP')) ||
+    tryIt(() => new ActiveXObject('Microsoft.XMLHTTP'));
 
   if (!xhr) throw new Error('This browser does not support XMLHttpRequest.');
 
@@ -668,8 +660,7 @@ jasmine.util.formatException = function (e) {
   let lineNumber;
   if (e.line) {
     lineNumber = e.line;
-  }
-  else if (e.lineNumber) {
+  } else if (e.lineNumber) {
     lineNumber = e.lineNumber;
   }
 
@@ -677,8 +668,7 @@ jasmine.util.formatException = function (e) {
 
   if (e.sourceURL) {
     file = e.sourceURL;
-  }
-  else if (e.fileName) {
+  } else if (e.fileName) {
     file = e.fileName;
   }
 
@@ -879,20 +869,25 @@ jasmine.Env.prototype.xit = function (desc, func) {
 };
 
 jasmine.Env.prototype.compareRegExps_ = function (a, b, mismatchKeys, mismatchValues) {
-  if (a.source != b.source)
-    { mismatchValues.push(`expected pattern /${b.source}/ is not equal to the pattern /${a.source}/`); }
+  if (a.source != b.source) {
+    mismatchValues.push(`expected pattern /${b.source}/ is not equal to the pattern /${a.source}/`);
+  }
 
-  if (a.ignoreCase != b.ignoreCase)
-    { mismatchValues.push(`expected modifier i was${b.ignoreCase ? ' ' : ' not '}set and does not equal the origin modifier`); }
+  if (a.ignoreCase != b.ignoreCase) {
+    mismatchValues.push(`expected modifier i was${b.ignoreCase ? ' ' : ' not '}set and does not equal the origin modifier`);
+  }
 
-  if (a.global != b.global)
-    { mismatchValues.push(`expected modifier g was${b.global ? ' ' : ' not '}set and does not equal the origin modifier`); }
+  if (a.global != b.global) {
+    mismatchValues.push(`expected modifier g was${b.global ? ' ' : ' not '}set and does not equal the origin modifier`);
+  }
 
-  if (a.multiline != b.multiline)
-    { mismatchValues.push(`expected modifier m was${b.multiline ? ' ' : ' not '}set and does not equal the origin modifier`); }
+  if (a.multiline != b.multiline) {
+    mismatchValues.push(`expected modifier m was${b.multiline ? ' ' : ' not '}set and does not equal the origin modifier`);
+  }
 
-  if (a.sticky != b.sticky)
-    { mismatchValues.push(`expected modifier y was${b.sticky ? ' ' : ' not '}set and does not equal the origin modifier`); }
+  if (a.sticky != b.sticky) {
+    mismatchValues.push(`expected modifier y was${b.sticky ? ' ' : ' not '}set and does not equal the origin modifier`);
+  }
 
   return (mismatchValues.length === 0);
 };
@@ -1056,8 +1051,7 @@ jasmine.Block = function (env, func, spec) {
 jasmine.Block.prototype.execute = function (onComplete) {
   if (!jasmine.CATCH_EXCEPTIONS) {
     this.func.apply(this.spec);
-  }
-  else {
+  } else {
     try {
       this.func.apply(this.spec);
     } catch (e) {
@@ -1219,7 +1213,7 @@ jasmine.Matchers.matcherFn_ = function (matcherName, matcherFunction) {
           message = message[this.isNot ? 1 : 0];
         }
       } else {
-        const englishyPredicate = matcherName.replace(/[A-Z]/g, (s) => { return ` ${s.toLowerCase()}`; });
+        const englishyPredicate = matcherName.replace(/[A-Z]/g, (s) => ` ${s.toLowerCase()}`);
         message = `Expected ${jasmine.pp(this.actual)}${this.isNot ? ' not ' : ' '}${englishyPredicate}`;
         if (matcherArgs.length > 0) {
           for (let i = 0; i < matcherArgs.length; i++) {
@@ -1488,7 +1482,7 @@ jasmine.Matchers.prototype.toBeCloseTo = function (expected, precision) {
 jasmine.Matchers.prototype.toThrow = function (expected) {
   let result = false;
   let exception;
-  if (typeof this.actual != 'function') {
+  if (typeof this.actual !== 'function') {
     throw new Error('Actual is not a function');
   }
   try {
@@ -1519,19 +1513,19 @@ jasmine.Matchers.Any = function (expectedClass) {
 
 jasmine.Matchers.Any.prototype.jasmineMatches = function (other) {
   if (this.expectedClass == String) {
-    return typeof other == 'string' || other instanceof String;
+    return typeof other === 'string' || other instanceof String;
   }
 
   if (this.expectedClass == Number) {
-    return typeof other == 'number' || other instanceof Number;
+    return typeof other === 'number' || other instanceof Number;
   }
 
   if (this.expectedClass == Function) {
-    return typeof other == 'function' || other instanceof Function;
+    return typeof other === 'function' || other instanceof Function;
   }
 
   if (this.expectedClass == Object) {
-    return typeof other == 'object';
+    return typeof other === 'object';
   }
 
   return other instanceof this.expectedClass;
@@ -1558,8 +1552,7 @@ jasmine.Matchers.ObjectContaining.prototype.jasmineMatches = function (other, mi
   for (const property in this.sample) {
     if (!hasKey(other, property) && hasKey(this.sample, property)) {
       mismatchKeys.push(`expected has key '${property}', but missing from actual.`);
-    }
-    else if (!env.equals_(this.sample[property], other[property], mismatchKeys, mismatchValues)) {
+    } else if (!env.equals_(this.sample[property], other[property], mismatchKeys, mismatchValues)) {
       mismatchValues.push(`'${property}' was '${other[property] ? jasmine.util.htmlEscape(other[property].toString()) : other[property]}' in expected, but was '${this.sample[property] ? jasmine.util.htmlEscape(this.sample[property].toString()) : this.sample[property]}' in actual.`);
     }
   }
@@ -1625,9 +1618,7 @@ jasmine.FakeTimer.prototype.runFunctionsWithinRange = function (oldMillis, nowMi
   }
 
   if (funcsToRun.length > 0) {
-    funcsToRun.sort((a, b) => {
-      return a.runAtMillis - b.runAtMillis;
-    });
+    funcsToRun.sort((a, b) => a.runAtMillis - b.runAtMillis);
     for (let i = 0; i < funcsToRun.length; ++i) {
       try {
         const funcToRun = funcsToRun[i];
@@ -1904,7 +1895,7 @@ jasmine.PrettyPrinter.prototype.format = function (value) {
       this.emitScalar(`Date(${value})`);
     } else if (value.__Jasmine_been_here_before__) {
       this.emitScalar(`<circular reference: ${jasmine.isArray_(value) ? 'Array' : 'Object'}>`);
-    } else if (jasmine.isArray_(value) || typeof value == 'object') {
+    } else if (jasmine.isArray_(value) || typeof value === 'object') {
       value.__Jasmine_been_here_before__ = true;
       if (jasmine.isArray_(value)) {
         this.emitArray(value);
@@ -2466,7 +2457,7 @@ jasmine.Suite.prototype.getFullName = function () {
 jasmine.Suite.prototype.finish = function (onComplete) {
   this.env.reporter.reportSuiteResults(this);
   this.finished = true;
-  if (typeof (onComplete) == 'function') {
+  if (typeof (onComplete) === 'function') {
     onComplete();
   }
 };
