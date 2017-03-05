@@ -6,12 +6,10 @@
 [![NPM version](https://badge.fury.io/js/paralleljs.svg)](http://badge.fury.io/js/paralleljs)
 [![Dependency Status](https://img.shields.io/david/parallel-js/parallel.js.svg)](https://david-dm.org/parallel-js/parallel.js)
 [![npm](https://img.shields.io/npm/dm/paralleljs.svg?maxAge=2592000)](https://www.npmjs.com/package/paralleljs)
-[![Known Vulnerabilities](https://snyk.io/test/github/parallel-js/paralle.js/badge.svg)](https://snyk.io/test/github/parallel-js/paralle.js)
+<!-- [![Known Vulnerabilities](https://snyk.io/test/github/parallel-js/paralle.js/badge.svg)](https://snyk.io/test/github/parallel-js/paralle.js) -->
 [![Pull Requests Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](http://makeapullrequest.com)
 [![first-timers-only Friendly](https://img.shields.io/badge/first--timers--only-friendly-blue.svg)](http://www.firsttimersonly.com/)
-[![Join the chat at on Gitter.im](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/parallel-js/parallel.js)
-
-[![first-timers-only](http://img.shields.io/badge/first--timers--only-friendly-blue.svg?style=flat-square)](http://www.firsttimersonly.com/)
+<!-- [![Join the chat at on Gitter.im](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/parallel-js/parallel.js) -->
 
 **Easy Parallel Computing with Javascript**
 
