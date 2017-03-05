@@ -29,7 +29,7 @@ Parallel takes advantage of Web Workers for the web, and child processes for Nod
 
 ## Installation
 
-You can download the raw javascript file [here](https://raw.github.com/adambom/parallel.js/master/lib/parallel.js)
+You can download the raw javascript file [here](https://raw.github.com/parallel-js/parallel.js/master/lib/parallel.js)
 
 Just include it via a script tag in your HTML page
 
