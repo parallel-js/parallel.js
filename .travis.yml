@@ -1,22 +1,9 @@
-sudo: false
-
-os:
-  - linux
-  - osx
-
 language: node_js
 
 node_js:
-  - 6
-  - 4
+  - node
 
-cache:
-  directories:
-    - node_modules
+cache: yarn
 
-install:
-  - npm i -g npm@latest
-  - npm install
-
-notifications:
-  email: false
+before_install:
+  - npm i -g yarn@latest

@@ -53,3 +53,7 @@ release
 
 # Editor
 .idea
+
+target
+artifacts.json
+index.node

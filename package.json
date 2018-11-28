@@ -1,21 +1,22 @@
 {
   "name": "paralleljs",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "author": "Adam Savitzky <adam.savitzky@gmail.com>",
   "contributors": [
     "Sebastian Mayr <sebmaster16@gmail.com> (http://s3bmaster.blogspot.co.at/)",
-    "Amila Welihinda <amilajack@gmail.com> (http://amilawelihinda.com/)"
+    "Amila Welihinda <amilajack@gmail.com> (https://amilajack.com)"
   ],
   "description": "parallel.js enables easy multi-thread processing in javascript",
-  "license": "BSD",
+  "license": "MIT",
   "scripts": {
-    "lint": "eslint test lib *.js",
-    "test": "npm run lint && jasmine-node --verbose test/specs"
+    "install": "neon build --release",
+    "lint": "eslint .",
+    "test": "yarn lint"
   },
-  "main": "lib/parallel.js",
+  "main": "lib/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/adambom/parallel.js.git"
+    "url": "https://github.com/parallel-js/parallel.js.git"
   },
   "directories": {
     "lib": "lib",
@@ -30,60 +31,22 @@
     "workers",
     "webworkers"
   ],
+  "dependencies": {
+    "neon-cli": "^0.2.0"
+  },
   "devDependencies": {
-    "babel-eslint": "^6.1.2",
-    "babel-plugin-add-module-exports": "^0.2.1",
-    "babel-plugin-dev-expression": "^0.2.1",
-    "babel-plugin-module-alias": "^1.6.0",
-    "babel-plugin-syntax-flow": "^6.13.0",
-    "babel-plugin-tcomb": "^0.3.14",
-    "babel-plugin-transform-flow-strip-types": "^6.14.0",
-    "babel-plugin-transform-remove-console": "^6.8.0",
-    "babel-plugin-transform-remove-debugger": "^6.8.0",
-    "babel-plugin-transform-runtime": "^6.15.0",
-    "babel-polyfill": "^6.13.0",
-    "babel-preset-stage-0": "^6.5.0",
-    "babel-register": "^6.14.0",
-    "babel-runtime": "^6.11.6",
-    "eslint": "^3.6.1",
-    "eslint-config-airbnb": "^12.0.0",
-    "eslint-formatter-pretty": "^1.0.0",
-    "eslint-import-resolver-webpack": "^0.6.0",
-    "eslint-nibble-ignore": "^3.0.0",
-    "eslint-plugin-flowtype": "^2.19.0",
-    "eslint-plugin-flowtype-errors": "^1.2.0",
-    "eslint-plugin-fp": "^2.2.0",
-    "eslint-plugin-import": "^1.16.0",
-    "eslint-plugin-jsx-a11y": "^2.2.2",
-    "eslint-plugin-mocha": "^4.5.1",
-    "eslint-plugin-promise": "^2.0.1",
-    "eslint-plugin-react": "^6.3.0",
-    "jasmine-node": "x",
-    "q": "x"
+    "@babel/core": "^7.1.6",
+    "babel-core": "^7.0.0-0",
+    "babel-jest": "^23.6.0",
+    "eslint": "^5.9.0",
+    "eslint-config-bliss": "^3.1.1"
   },
-  "browser": {
-    "child_process": false
-  },
-  "engines": {
-    "node": ">=0.9.10"
-  },
-  "testling": {
-    "scripts": [
-      "lib/parallel.js",
-      "test/jasmine/jasmine.js",
-      "test/jasmine/jasmine.tap_reporter.js",
-      "test/specs/*.js",
-      "test/runner.js"
+  "eslintConfig": {
+    "extends": [
+      "bliss"
     ],
-    "browsers": [
-      "ie/9..latest",
-      "chrome/22..latest",
-      "firefox/16..latest",
-      "safari/latest",
-      "opera/11.0..latest",
-      "iphone/6",
-      "ipad/6",
-      "android-browser/latest"
-    ]
+    "rules": {
+      "no-new": "off"
+    }
   }
 }
