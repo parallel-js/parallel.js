@@ -1,3 +1,3 @@
-﻿function myCalc(el, amount) {
-	return el + amount;
+function myCalc(el, amount) {
+  return el + amount;
 }

@@ -1,30 +1,34 @@
-﻿describe('WebWorker-API', function () {
-	var isNode = typeof module !== 'undefined' && module.exports;
-	var Worker = isNode ? require(__dirname + '/../../lib/Worker.js') : self.Worker;
+/* eslint jest/no-jasmine-globals: off */
 
-	it('should define the used API', function () {
-		expect(Worker).toEqual(jasmine.any(Function));
-		var wrk = new Worker(isNode ? __dirname + '/../../lib/eval.js' : 'lib/eval.js');
-		expect(wrk.postMessage).toEqual(jasmine.any(Function));
-		expect(wrk.terminate).toEqual(jasmine.any(Function));
-		wrk.terminate();
-	});
+describe('WebWorker-API', () => {
+  const isNode = typeof module !== 'undefined' && module.exports;
+  const Worker = isNode
+    ? require(`${__dirname}/../../lib/Worker.js`)
+    : self.Worker;
 
-	if (isNode) {
-		it('should terminate correctly', function () {
-			var wrk = new Worker(__dirname + '/../../lib/eval.js');
+  it('should define the used API', () => {
+    expect(Worker).toEqual(jasmine.any(Function));
+    const wrk = new Worker(
+      isNode ? `${__dirname}/../../lib/eval.js` : 'lib/eval.js'
+    );
+    expect(wrk.postMessage).toEqual(jasmine.any(Function));
+    expect(wrk.terminate).toEqual(jasmine.any(Function));
+    wrk.terminate();
+  });
 
-			var done = false;
-			runs(function () {
-				wrk.process.on('exit', function () {
-					done = true;
-				});
-				wrk.terminate();
-			});
+  if (isNode) {
+    it('should terminate correctly', () => {
+      const wrk = new Worker(`${__dirname}/../../lib/eval.js`);
 
-			waitsFor(function () {
-				return done;
-			}, 'terminating correctly', 500);
-		});
-	}
+      let done = false;
+      runs(() => {
+        wrk.process.on('exit', () => {
+          done = true;
+        });
+        wrk.terminate();
+      });
+
+      waitsFor(() => done, 'terminating correctly', 500);
+    });
+  }
 });
