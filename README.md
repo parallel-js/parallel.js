@@ -230,17 +230,11 @@ p.map(d => d * global.parallel.a);
 
 ---
 
-## Compatibility
-
-[![browser support](https://ci.testling.com/parallel-js/parallel.js.png)](https://ci.testling.com/parallel-js/parallel.js)
-
----
-
 ## Contributors
 
 Parallel.js is made up of four contributors:
 
-[Adam Savitzky (Adam)](https://github.com/adambom)
-[Mathias Rangel Wulff (Mathias)](https://github.com/mathiasrw)
-[Amila Welihinda (amilajack)](https://github.com/amilajack)
-[MaXwell Falstein (MaX)](https://github.com/MaXwellFalstein)
+* [Adam Savitzky (Adam)](https://github.com/adambom)
+* [Mathias Rangel Wulff (Mathias)](https://github.com/mathiasrw)
+* [Amila Welihinda (amilajack)](https://github.com/amilajack)
+* [MaXwell Falstein (MaX)](https://github.com/MaXwellFalstein)
