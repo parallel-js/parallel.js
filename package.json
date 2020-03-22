@@ -10,7 +10,7 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint lib",
-    "test": "npm run lint && jasmine-node --verbose test/specs"
+    "test": "jasmine-node --verbose test/specs"
   },
   "repository": {
     "type": "git",
@@ -65,7 +65,12 @@
   },
   "babel": {
     "presets": [
-      "@babel/preset-env"
+      ["@babel/preset-env", {
+        "targets": {
+          "chrome": "58",
+          "node": "10"
+        }
+      }]
     ]
   },
   "eslintConfig": {
