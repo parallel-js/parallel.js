@@ -1091,7 +1091,7 @@ jasmine-growl-reporter@~2.0.0:
   dependencies:
     growl "^1.10.5"
 
-jasmine-node@x:
+jasmine-node@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/jasmine-node/-/jasmine-node-3.0.0.tgz#f12b6fdd24633402ec23e8ea6fef6ffbcb464f90"
   integrity sha512-vUa5Q7bQYwHHqi6FlJYndiKqZp+d+c3MKe0QUMwwrC4JRmoRV3zkg0buxB/uQ6qLh0NO34TNstpAnvaZ6xGlAA==
@@ -1465,7 +1465,7 @@ punycode@^2.1.0:
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
   integrity sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
 
-q@x:
+q@^1.5.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/q/-/q-1.5.1.tgz#7e32f75b41381291d04611f1bf14109ac00651d7"
   integrity sha1-fjL3W0E4EpHQRhHxvxQQmsAGUdc=
