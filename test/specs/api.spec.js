@@ -242,7 +242,7 @@ describe('API', () => {
       });
 
       p.map(addOne)
-        .then(data => data.reduce(sum))
+        .then(data => data.reduce((a,b)=>a+b,0))
         .then(data => {
           expect(data).toEqual(9);
           done();
