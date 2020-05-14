@@ -38,7 +38,8 @@
     "eslint": "^6.8.0",
     "eslint-config-bliss": "^4.7.0",
     "jasmine-node": "^3.0.0",
-    "q": "^1.5.1"
+    "q": "^1.5.1",
+    "is-ci": "^2.0.0"
   },
   "browser": {
     "child_process": false
@@ -67,12 +68,15 @@
   },
   "babel": {
     "presets": [
-      ["@babel/preset-env", {
-        "targets": {
-          "chrome": "58",
-          "node": "10"
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "chrome": "58",
+            "node": "10"
+          }
         }
-      }]
+      ]
     ]
   },
   "eslintConfig": {
