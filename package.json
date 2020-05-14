@@ -32,14 +32,14 @@
     "webworkers"
   ],
   "devDependencies": {
-    "@babel/core": "^7.9.0",
+    "@babel/core": "7.9.6",
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "babel-eslint": "^10.1.0",
-    "eslint": "^6.8.0",
-    "eslint-config-bliss": "^4.7.0",
+    "eslint": "7.0.0",
+    "eslint-config-bliss": "5.0.0",
+    "is-ci": "^2.0.0",
     "jasmine-node": "^3.0.0",
-    "q": "^1.5.1",
-    "is-ci": "^2.0.0"
+    "q": "^1.5.1"
   },
   "browser": {
     "child_process": false

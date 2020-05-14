@@ -2,7 +2,7 @@ const os = require('os')
 const isCI = require('is-ci')
 const isSingleCore = 1 === os.cpus().length;
  
-let extraInfo = 'This test will be skipped on single core machines and for CI'
+let extraInfo = 'This test is flaky so please rerun. Will be skipped on single core machines and for CI'
 
 if(isSingleCore){
 	extraInfo += 'This test has been skipped as its running on a single core machine';
