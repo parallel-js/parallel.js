@@ -8,6 +8,7 @@
     "Amila Welihinda <amilajack@gmail.com> (https://amilajack.com/)"
   ],
   "license": "MIT",
+  "main": "lib/parallel.js",
   "scripts": {
     "lint": "eslint lib",
     "test": "jasmine-node --verbose test/specs"
