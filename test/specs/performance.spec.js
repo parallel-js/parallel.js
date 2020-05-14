@@ -1,8 +1,22 @@
+const os = require('os')
+
+const skipTest = 1===os.cpus().length;
+
+let skipInfo = 'Normally fails on single-core machines'
+
+if(skipTest){
+	skipInfo += ' so skipping this test on this machine';
+}
+
 describe('Performance', () => {
   const isNode = typeof module !== 'undefined' && module.exports;
   const Parallel = isNode ? require('../../lib/parallel.js') : self.Parallel;
 
-  it('.map() should be using multi-threading (could fail on single-core)', () => {
+  it(`.map() should be using multi-threading (${skipInfo})`, () => {
+    if(skipTest){  
+      return;
+    }
+
     const slowSquare = function(n) {
       let i = 0;
       while (++i < n * n) {}
