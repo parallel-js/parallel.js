@@ -1,6 +1,6 @@
 {
   "name": "paralleljs",
-  "version": "0.2.1",
+  "version": "1.0.0",
   "description": "parallel.js enables easy multi-thread processing in javascript",
   "author": "Adam Savitzky <adam.savitzky@gmail.com>",
   "contributors": [
@@ -12,7 +12,7 @@
   "scripts": {
     "lint": "eslint lib",
     "test": "jasmine-node --verbose test/specs",
-    "build": "echo 'This is not how we build, but we need the command to let CI pass'"
+    "build": "echo 'No need to build -  but we need the command to let CI pass'"
   },
   "repository": {
     "type": "git",
