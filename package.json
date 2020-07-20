@@ -1,6 +1,6 @@
 {
   "name": "paralleljs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "parallel.js enables easy multi-thread processing in javascript",
   "author": "Adam Savitzky <adam.savitzky@gmail.com>",
   "contributors": [
