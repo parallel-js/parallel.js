@@ -21,6 +21,12 @@ Parallel takes advantage of Web Workers for the web, and child processes for Nod
 npm install paralleljs
 ```
 
+or
+
+```
+<script src='https://unpkg.com/paralleljs@1.0/lib/parallel.js'></script>
+```
+
 ## Usage
 
 ### `Parallel(data, opts)`
