@@ -56,7 +56,7 @@ console.log(p.data); // prints [1, 2, 3, 4, 5]
 
 ---
 
-### `spawn(fn)`
+### `spawn(fn, opts)`
 
 This function will spawn a new process on a worker thread. Pass it the function you want to call. Your
 function will receive one argument, which is the current data. The value returned from your spawned function will
@@ -65,6 +65,8 @@ update the current data.
 **Arguments**
 
 * `fn`: A function to execute on a worker thread. Receives the wrapped data as an argument. The value returned will be assigned to the wrapped data.
+* `opts`: An optional object to pass to spawn.
+* 'opts.timeout': milliseconds to way for function to return value.  If the worker does not finish in this time, it will be killed.
 
 **Example**
 
