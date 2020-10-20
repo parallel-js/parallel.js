@@ -140,7 +140,7 @@ function log() { console.log(arguments); }
 p.require(factorial)
 
 // Approximate e^10
-p.map((n => Math.pow(10, n)).reduce(add).then(log);
+p.map(n => Math.pow(10, n)).reduce(add).then(log);
 ```
 
 ---
