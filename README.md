@@ -204,7 +204,7 @@ p.map(d => blargh(20 * cubeRoot(d)));
 
 ---
 
-## Passing environement to functions
+## Passing environment to functions
 
 You can pass data to threads that will be global to that worker. This data will be global in each called function.
 The data will be available under the `global.env` namespace. The namespace can be configured by passing the 
