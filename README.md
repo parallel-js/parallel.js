@@ -73,7 +73,7 @@ update the current data.
 ```js
 const p = new Parallel('forwards');
 
-// Spawn a remote job (we'll see more on how to use then later)
+// Spawn a remote job (we'll see more on how to use them later)
 p.spawn(data => {
   data = data.reverse();
   
