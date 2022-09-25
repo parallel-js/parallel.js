@@ -37,7 +37,7 @@
     "babel-eslint": "^10.1.0",
     "eslint": "7.15.0",
     "eslint-config-bliss": "5.0.0",
-    "is-ci": "^2.0.0",
+    "is-ci": "^3.0.1",
     "jasmine-node": "^3.0.0",
     "q": "^1.5.1"
   },
