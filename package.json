@@ -35,7 +35,7 @@
     "@babel/core": "7.12.3",
     "@babel/plugin-proposal-class-properties": "7.12.1",
     "babel-eslint": "^10.1.0",
-    "eslint": "7.15.0",
+    "eslint": "7.32.0",
     "eslint-config-bliss": "5.0.0",
     "is-ci": "^3.0.1",
     "jasmine-node": "^3.0.0",
