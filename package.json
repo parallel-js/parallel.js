@@ -45,7 +45,7 @@
     "child_process": false
   },
   "engines": {
-    "node": ">=v14.18.1"
+    "node": ">=20.18.0"
   },
   "testling": {
     "scripts": [
